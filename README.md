@@ -77,7 +77,8 @@ This secondary subprocess opens the retrieved radar image set and formats the re
 ### Locator.py
 This tertiary subprocess finally looks for phenomena of interest within the retrieved data.  In this process, velocity images are analyzed first as they are robust to false-positives.  The color content and radial distance from the station are used as preliminary image masks.  Then, color gradients are calculated and trivial solutions are removed.  Using contour-based object detection, remaining gradient data is filtered based on area, shape, and edge density.  The altidude cuts are collapsed prior to identification, exluding the lowermost quarter cuts.  Valid targets are added to a candidate list, and the spectrum width algorithm runs.  For spectrum width processing, the preliminary filtering is followed directly by object detection, applying area, shape, and density filters.  If the two data type algorithms result in a single matching scan level candidate, the algorithm loosens detection restrictions and captures all markers present in the spectrum width data.  The respective unprocessed images are saved, and the user is alerted of the altitudes and LLA positions through the Unwrapper.            
 
-	
+## to activate conda on linux: 
+	source ~/.bashrc
 
 ## rasrGet:
 	Setup:
