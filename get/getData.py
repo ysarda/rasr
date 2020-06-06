@@ -64,13 +64,14 @@ def download_content(link , max_retries=5):
     return response
 
 def write_to_file(filename, response):
+    filename = '../data/' + filename
     with open(filename, 'wb') as f:
         f.write(response.content)
 
 # def download_link(link, dirname, timerange):
 def download_link(link, timerange, data_links_list):
     # Grab the content from a specific radar link and save binary output to a file
-    namer = link.split('/')[-1]
+    namer = link.split('../data')[-1]
     #print(namer)
     namer_tmp = namer.split('_')[1]
     #if namer.split('.')[1] == 'gz': # MAJOR PROBLEM but can be fixed
@@ -283,7 +284,7 @@ def runFunction(sites, dateList, timerange, static_dir):
             else:
                 #os.remove("data_links.txt")
                 open('data_links.txt', 'w').close()
-            
+
             try:
                 os.chdir(a)
             except FileNotFoundError:
