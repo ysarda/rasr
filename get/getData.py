@@ -300,7 +300,7 @@ def runFunction(sites, dateList, timerange, static_dir):
                "Set the new date to be one day before the last download date to ensure all files are downloaded."
         print("\n\n", site_info)
         print("\n", date_info)
-        file = open("last_download_date.txt", "w")
+        file = open("../data/last_download_date.txt", "w")
         file.write(site_info + "\n" + date_info + "\n" + note)
         file.close()
         print("\nExported the last known dates before program ended to last_download_date.txt "

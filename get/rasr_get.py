@@ -34,7 +34,7 @@ if __name__== '__main__':
         runnum = sys.argv[1]
     else:
         runnum = cpu_count()
-        
+
     sites = ['KABR' ,'KENX','KABX','KAMA','PAHG','PGUA','KFFC','KBBX','PABC','KBLX','KBGM','PACG','KBMX','KBIS','KFCX','KCBX','KBOX',
          'KBRO','KBUF','KCXX','RKSG','KFDX','KCBW','KICX','KGRK','KCLX','KRLX','KCYS','KLOT','KILN','KCLE','KCAE','KGWX',
          'KCRP','KFTG','KDMX','KDTX','KDDC','KDOX','KDLH','KDYX','KEYX','KEPZ','KLRX','KBHX','KVWX','PAPD','KFSX','KSRX',
@@ -46,8 +46,8 @@ if __name__== '__main__':
          'KDAX','KMTX','KSJT','KEWX','KNKX','KMUX','KHNX','TJUA','KSOX','KATX','KSHV','KFSD','PHKI','PHWA','KOTX','KSGF',
          'KLSX','KCCX','KLWX','KTLH','KTBW','KTWX','KEMX','KINX','KVNX','KVBX','KAKQ','KICT','KLTX','KYUX']
 
-    
-    #Create storage directory 
+
+    #Create storage directory
     dirname = os.getcwd()+"/tmp"
 
     if not os.path.exists(dirname):
@@ -60,7 +60,7 @@ if __name__== '__main__':
             if os.path.exists('data_links.txt'):
                 pass
             else:
-                f = open('data_links.txt', 'wb')
+                f = open('../data/data_links.txt', 'wb')
 
     static_dir = os.getcwd() + '//tmp'
 
@@ -78,11 +78,3 @@ if __name__== '__main__':
     pool.map(runFunctionPart, sites)
 
     print('Done')
-
-
-
-
-
-
-
-
