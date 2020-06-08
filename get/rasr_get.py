@@ -57,7 +57,7 @@ if __name__== '__main__':
             # f = open('data_links.txt', 'wb')
         except FileExistsError:
             os.chdir(dirname)
-            if os.path.exists('data_links.txt'):
+            if os.path.exists('../data/data_links.txt'):
                 pass
             else:
                 f = open('../data/data_links.txt', 'wb')
