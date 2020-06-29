@@ -5,7 +5,7 @@ ver 1.0 as of Feb 01, 2019
 
 See README for details
 
-@author: Benjamin Miller 
+@author: Benjamin Miller
 """
 import warnings
 with warnings.catch_warnings():
@@ -15,11 +15,11 @@ with warnings.catch_warnings():
     import os
     os.environ["PYART_QUIET"] = "1"
     import pyart
-    import matplotlib 
+    import matplotlib
     import matplotlib.pyplot as plt
     import matplotlib.colors as color
-    matplotlib.use("agg") 
-    from lib.Locator import DetectMeteors    
+    matplotlib.use("agg")
+    from lib.Locator import DetectMeteors
     from multiprocessing import Pool, cpu_count, Lock, get_context
     from multiprocessing.pool import ThreadPool
     import numpy as np
@@ -39,9 +39,9 @@ with warnings.catch_warnings():
 #Constaints array for:
 #TX: [100,12,1e-4,0.3,30]
 #NV: [100,12,1e-4,0.0,30]
-    
+
 def getMaps():
-    #Set velocity colormap 
+    #Set velocity colormap
     cmaplist = np.array([[255,0,0],#-70
                          [255,0,0],#-60
                          [210,0,0],#-50
@@ -59,7 +59,7 @@ def getMaps():
                          [0,255,0]])/255#70
     cmaplist = np.flip(cmaplist,axis=0)
     velMap = color.LinearSegmentedColormap.from_list('velMap',cmaplist,N=256)
-    
+
     #Set spectrum width colormap
     cmaplist = np.array([[20,20,20],#0
                          [40,40,40],#6
@@ -71,26 +71,26 @@ def getMaps():
     return velMap, spwMap
 
 def getData(filename, velMap, spwMap, writeImgs):
-    cutoff = 100 
-    edgeFilter = 8#12 
+    cutoff = 100
+    edgeFilter = 8#12
     areaFraction = 1*(10**-4)
-    circRatio = 0.3 
+    circRatio = 0.3
     fillFilt = 30
     colorIntensity = cutoff
     date=filename
-        
+
     #Instantiate RadarData dictionary and lists
     RadarData = {}
     RadarData['velocity'] = []
     RadarData['spectrum_width'] = []
-    
+
     #Read in radar archive
-    RADAR_NAME = filename;  
+    RADAR_NAME = filename;
     radar = pyart.io.read_nexrad_archive(RADAR_NAME, exclude_fields='reflectivity')
-    plotter = pyart.graph.RadarDisplay(radar)  
+    plotter = pyart.graph.RadarDisplay(radar)
     plotter = pyart.graph.RadarDisplay(radar)
 
-    
+
     for x in range(radar.nsweeps):
         # Instantiate figure
         fig = plt.figure(figsize=(25,25), frameon=False)
@@ -99,7 +99,7 @@ def getData(filename, velMap, spwMap, writeImgs):
         fig.add_axes(ax)
         plotter.set_limits(xlim=(-150, 150), ylim=(-150, 150), ax=ax)
         #Get velocity data
-        vmin, vmax = pyart.graph.common.parse_vmin_vmax(radar, 'velocity', None, None) 
+        vmin, vmax = pyart.graph.common.parse_vmin_vmax(radar, 'velocity', None, None)
         data = plotter._get_data('velocity', x, mask_tuple=None, filter_transitions=True, gatefilter=None)
         #Check for empty altitude cuts
         if np.any(data)>0:
@@ -114,22 +114,22 @@ def getData(filename, velMap, spwMap, writeImgs):
             img = img.reshape(fig.canvas.get_width_height()[::1]+(3,))
             img = np.flip(img,axis=2)
             img.setflags(write=1)
-            img[np.where((img==[255,255,255]).all(axis=2))] = [0,0,0] 
+            img[np.where((img==[255,255,255]).all(axis=2))] = [0,0,0]
             #Attatch data to dictionary variable for passing
             RadarData['velocity'].append(img)
             plt.close(fig)
             plt.clf()
             plt.cla()
             gc.collect()
-    
-            # Instantiate figure 
+
+            # Instantiate figure
             fig = plt.figure(figsize=(25,25), frameon=False)
             ax = plt.Axes(fig, [0.,0.,1.,1.])
             ax.set_axis_off()
             fig.add_axes(ax)
             plotter.set_limits(xlim=(-150, 150), ylim=(-150, 150), ax=ax)
             #Get spectrum width data
-            vmin, vmax = pyart.graph.common.parse_vmin_vmax(radar, 'spectrum_width', None, None) 
+            vmin, vmax = pyart.graph.common.parse_vmin_vmax(radar, 'spectrum_width', None, None)
             data = plotter._get_data('spectrum_width', x, mask_tuple=None, filter_transitions=True, gatefilter=None)
             xDat, yDat = plotter._get_x_y(x, edges=True, filter_transitions=True)
             data = data*(30/np.max(data))
@@ -140,7 +140,7 @@ def getData(filename, velMap, spwMap, writeImgs):
             img = img.reshape(fig.canvas.get_width_height()[::1]+(3,))
             img = np.flip(img,axis=2) #convert to bgr
             img.setflags(write=1)
-            img[np.where((img==[255,255,255]).all(axis=2))] = [0,0,0] 
+            img[np.where((img==[255,255,255]).all(axis=2))] = [0,0,0]
             #Attatch data to dictionary variable for passing
             RadarData['spectrum_width'].append(img)
             plt.close(fig)
@@ -154,16 +154,16 @@ def getData(filename, velMap, spwMap, writeImgs):
             plt.clf()
             plt.cla()
             gc.collect()
-            
+
     #Double-check figure closing
     del img
-       
+
     #Run Locator
     #pyRadarData, cutoff, edgeFilter, areaFraction, colorIntensity, circRatio
     fallCount, fallId, xy= DetectMeteors(RadarData,cutoff, edgeFilter, areaFraction, colorIntensity, circRatio, fillFilt, RADAR_NAME, writeImgs)
 
     #Update user on any detections and get positions
-    if fallCount>0:    
+    if fallCount>0:
         fallId = list(map(int,fallId))
         #print('\n   FALLS DETECTED AT SCAN(S): '+str(fallId))
         lonlat0 = [radar.longitude['data'],radar.latitude['data']]
@@ -185,7 +185,7 @@ def getData(filename, velMap, spwMap, writeImgs):
             lock.release()
     os.remove(filename)
     return filename
-    
+
 def init(l):
     global lock
     lock = l
@@ -194,7 +194,7 @@ def getListOfFiles(dirName):
     listOfFile = os.listdir(dirName)
     random.shuffle(listOfFile)
     #NOTE: os.listdir returns arbitary values
-    # cant use sorted(os.listdir()) for numeric order either  
+    # cant use sorted(os.listdir()) for numeric order either
     allFiles = list()
     for entry in listOfFile:
         fullPath = os.path.join(dirName,entry)
@@ -202,13 +202,13 @@ def getListOfFiles(dirName):
             allFiles = allFiles + getListOfFiles(fullPath)
         else:
             allFiles.append(fullPath)
-    #Reducing process size, will require mutliple iteration 
+    #Reducing process size, will require mutliple iteration
     if len(allFiles)>160:
         all_files = allFiles[:160]
     else:
         all_files = allFiles
     return all_files
-    
+
 if __name__== '__main__':
     #optional spec for num pool workers, else num cpu
     if len(sys.argv)>1:
@@ -223,29 +223,29 @@ if __name__== '__main__':
             writeImgs=False
     else:
         writeImgs = False
-        
+
     outdir = os.getcwd()+"/out"
     outfile = outdir+"/out.txt"
-    if not os.path.exists(outdir):                 
+    if not os.path.exists(outdir):
         try:
                 os.mkdir(outdir)
         except FileExistsError:
                 pass
-        
+
     #dirname = os.getcwd()+"/tmp"
-    dirname = '/scratch/06582/bgmiller/gpfs/corral3/repl/utexas/MOST/NOAA_Data_Collection/'
-    os.environ['PATH'] += ':'+dirname
-    sys.path.append(dirname)
-    
-    
+    dirname = '../data'
+    #os.environ['PATH'] += ':'+dirname
+    #sys.path.append(dirname)
+
+
     #instantiate outfile
     try:
         all_files = getListOfFiles(dirname)
     except:
         all_files = []
         print('ERROR: path not found')
-        
-    if len(all_files) != 0: #os.path.exists(dirname): 
+
+    if len(all_files) != 0: #os.path.exists(dirname):
         open(outfile, 'a').close
         velMap,spwMap = getMaps()
         getDataPart = partial(getData, velMap=velMap, spwMap=spwMap, writeImgs=writeImgs)
@@ -253,13 +253,13 @@ if __name__== '__main__':
 
         #replaces pool=Pool() per https://codewithoutrules.com/2018/09/04/python-multiprocessing/
         # to avoid future hang errors on memoryerror
-        #Set to ThreadPool to limit resources 
-        n = int(runnum) 
+        #Set to ThreadPool to limit resources
+        n = int(runnum)
         for i in range(0,len(all_files),n):
             print('Batch '+str(int(i/n))+' of '+str(int(len(all_files)/n))+', initializing pool...')
-            with get_context("spawn").Pool(processes=int(runnum), initializer=init, initargs=(l,)) as pool:#, maxtasksperchild=4) as pool:  
-                #removed max tasks per child 
-            #with ThreadPool(processes=int(runnum), initializer=init, initargs=(l,)) as pool:    
+            with get_context("spawn").Pool(processes=int(runnum), initializer=init, initargs=(l,)) as pool:#, maxtasksperchild=4) as pool:
+                #removed max tasks per child
+            #with ThreadPool(processes=int(runnum), initializer=init, initargs=(l,)) as pool:
                 #threadpool functions, but still too slow, need the processing pool
                 #currently 1/4 cpu's looping 1/4 sites 4 times.  1/8 load to close
                 print('   mapping...')
@@ -267,9 +267,9 @@ if __name__== '__main__':
                     print(x)
                     gc.collect() #clear each step
                 #results = pool.map(getDataPart, all_files[i:i+n])
-                
-                #INTRODUCE ONCE I SOLVE HANG ERROR 
-                #supposedly sleep(1) will allow tasks 
+
+                #INTRODUCE ONCE I SOLVE HANG ERROR
+                #supposedly sleep(1) will allow tasks
                 time.sleep(1) #should permit maxtasksperchild=1
                 print('   closing batch...')
                 pool.close() #close chunk
@@ -280,15 +280,3 @@ if __name__== '__main__':
             gc.collect() #clear at end
     else:
         print('ERROR: path not found')
-            
-
-
-
-
-
-
-
-
-
-
-
