@@ -1,0 +1,3 @@
+The last data downloaded was from the site:  KDMX
+The last attempted download date was in the following format:  MONTH / DAY / YEAR:    07/18/2020
+NOTE: Last download date usually means an incomplete download of all the weather files. Set the new date to be one day before the last download date to ensure all files are downloaded.

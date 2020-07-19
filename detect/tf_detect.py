@@ -24,33 +24,40 @@ from tensorflow.keras import datasets, layers, models
 #########################################################################
 
 model = models.Sequential()
-model.add(layers.Conv2D(2500, (4, 4), activation='relu', input_shape=(2500, 2500, 4)))
-#model.add(layers.MaxPooling2D((2, 2)))
-#model.add(layers.Conv2D(500, (4, 4), activation='relu'))
-#model.add(layers.MaxPooling2D((2, 2)))
-#model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-#model.add(layers.Flatten())
+model.add(layers.Conv2D(250, (4, 4), activation='relu', input_shape=(250, 250, 4)))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(500, (4, 4), activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.Flatten())
 model.add(layers.Dense(32, activation='relu'))
 model.add(layers.Dense(1))
 model.summary()
 #model.load_weights('meteormodel')
 
 
-def evaluate(img,radar):
-    img = np.reshape(img, [-1, 2500, 2500, 4])
-    print(img.shape)
+def evaluate(img,radar,nd):
+    img = np.reshape(img, [-1, 250, 250, 4])
+    #print(img.shape)
     predict = model.predict(img)
-    #print(predict)
+    print(predict.shape)
     input('press enter to continue')
 
 
+def fracteval(img,radar,nd):
+    dimx, dimy, dimz = np.array(img.shape)
+    xh,yh = int(dimx/nd),int(dimy/nd)
+    for i in range(nd):
+        subX = []
+        for j in range(nd):
+            subX.append(img[i*xh:(i+1)*xh,i*xh:(i+1)*xh])
+        evaluate(subX,radar,nd)
 
 
 def detect():
-    for file in os.listdir('../data'):
+    for file in os.listdir('../testdata'):
         print(file)
-        radar = pyart.io.read('../data/' + file)
-        os.system('rm -r img/*')
+        radar = pyart.io.read('../testdata/' + file)
 
         for x in range(radar.nsweeps):
             plotter = pyart.graph.RadarDisplay(radar)
@@ -70,7 +77,9 @@ def detect():
                 canvas = FigureCanvas(fig)
                 fig.canvas.draw()
                 X = np.array(canvas.renderer.buffer_rgba())
-                evaluate(X,radar)
+                nd = 10;
+                fracteval(X, radar, nd)
+
 
             plt.cla()
             plt.clf()
