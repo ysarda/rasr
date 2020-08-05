@@ -49,7 +49,7 @@ Tested on Ubuntu 20.04 locally
 ## 4. OPERATION
 ---
 BASH File:
->#!/bin/bash
+#!/bin/bash
 cd ~
 cd Research/rasr
 conda activate rasr
