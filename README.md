@@ -4,6 +4,7 @@ ver 2.0
 
 Benjamin Miller <benjamin.g.miller@utexas.edu>  
 Yash Sarda <ysarda@utexas.edu>
+
 The University of Texas at Austin
 08/05/2020
 
@@ -47,15 +48,15 @@ Tested on Ubuntu 20.04 locally
 
 ## 4. OPERATION
 ---
->BASH File:
+BASH File:
 >#!/bin/bash
->cd ~
->cd Research/rasr
->conda activate rasr
->python get/rasr_get.py
->python detect/tf_detect.py
->conda deactivate
->cd ~
+cd ~
+cd Research/rasr
+conda activate rasr
+python get/rasr_get.py
+python detect/tf_detect.py
+conda deactivate
+cd ~
 
 
 ## 5. SUBPROCESSES
