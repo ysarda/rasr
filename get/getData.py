@@ -18,7 +18,7 @@ def save_links(page_url, dirname):
     for i in enumerate(link_time_num): # previously for i in range(0, len(link_time_num)):
         #link_file = '{}/data_links.txt'.format(dirname)
         #link_file = '{}//data_links.txt'.format('tmp')
-        link_file = '../data/data_links.txt'
+        link_file = '../links/data_links.txt'
         a = os.getcwd()
         links = []
         # print('Writing links to {}'.format(link_file))
@@ -71,7 +71,7 @@ def write_to_file(filename, response):
 # def download_link(link, dirname, timerange):
 def download_link(link, timerange, data_links_list):
     # Grab the content from a specific radar link and save binary output to a file
-    namer = link.split('../data')[-1]
+    namer = link.split('../links')[-1]
     #print(namer)
     namer_tmp = namer.split('_')[1]
     #if namer.split('.')[1] == 'gz': # MAJOR PROBLEM but can be fixed
