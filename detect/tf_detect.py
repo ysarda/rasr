@@ -29,9 +29,10 @@ with warnings.catch_warnings():
     from multiprocessing import Pool, cpu_count, Lock, get_context
     from multiprocessing.pool import ThreadPool
 
+    import json
 ##############################################################################################################################
 
-def fracteval(img,radar,sweep):
+def fracteval(img,radar,sweep,name,date):
     global thresh, h, nd
     subX = []
     for i in range(nd):
@@ -39,13 +40,9 @@ def fracteval(img,radar,sweep):
             subX = img[i*h:(i+1)*h,j*h:(j+1)*h]
             subX = np.reshape(subX, [-1, h, h, 4])
             predict = model.predict(subX)
-            alt = radar.altitude['data']
-            lon = radar.longitude['data']
-            lat = radar.latitude['data']
-            #if predict > thresh:
-                #print('Object detected:')
-                #print('Longitude: ' + str(lon) + ', Latitude: ' + str(lat))
-                #print('Altitude: ' + str(alt[0]) + ' meters, Sweep: ' + str(sweep))
+            if predict > thresh:
+                fall2json(radar, name, date)
+
 
 def detect(file):
         global thresh, h, nd
@@ -70,7 +67,7 @@ def detect(file):
                 canvas = FigureCanvas(fig)
                 fig.canvas.draw()
                 img = np.array(canvas.renderer.buffer_rgba())
-                fracteval(img, radar, x)
+                fracteval(img, radar, x, name, date)
                 plt.cla()
                 plt.clf()
                 plt.close('all')
@@ -94,11 +91,25 @@ def getListOfFiles(dirName):
 def init(l):
     global lock
     lock = l
+
+def fall2json(radar, name, date):
+    alt, lon, lat = float(radar.altitude['data']), float(radar.longitude['data']), float(radar.latitude['data'])
+    data = {}
+    data[date] = []
+    data[date].append({
+        'Altitude': str(alt),
+        'Longitude': str(lon),
+        'Latitude': str(lat)
+        })
+    fname = "out/" + name + ".json"
+    with open(fname, 'a') as outfile:
+        json.dump(data, outfile)
+
 ###############################################################################################################################
 
-start_time = time.time()
-thresh = 0.99
-nd = 5;
+#start_time = time.time()
+thresh = 0.98
+nd = 5
 dim = 2500
 h = int(dim/nd)
 cpath = os.getcwd()
