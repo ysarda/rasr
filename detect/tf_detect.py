@@ -21,6 +21,7 @@ with warnings.catch_warnings():
     from matplotlib.backends.backend_agg import FigureCanvas
 
     import tensorflow as tf
+    import tensorflow_hub as hub
     from tensorflow import keras
     from tensorflow.keras import datasets, layers, models
 
@@ -109,7 +110,7 @@ def fall2json(radar, name, date):
 
 #start_time = time.time()
 thresh = 0.98
-nd = 5
+nd = 10
 dim = 2500
 h = int(dim/nd)
 cpath = os.getcwd()
