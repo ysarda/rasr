@@ -93,18 +93,7 @@ def init(l):
     global lock
     lock = l
 
-def fall2json(radar, name, date):
-    alt, lon, lat = float(radar.altitude['data']), float(radar.longitude['data']), float(radar.latitude['data'])
-    data = {}
-    data[date] = []
-    data[date].append({
-        'Altitude': str(alt),
-        'Longitude': str(lon),
-        'Latitude': str(lat)
-        })
-    fname = "out/" + name + ".json"
-    with open(fname, 'a') as outfile:
-        json.dump(data, outfile)
+
 
 ###############################################################################################################################
 
