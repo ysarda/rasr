@@ -58,5 +58,11 @@ python detect/tf_detect.py
 conda deactivate
 cd ~
 
+## 5. Training
 
-## 5. SUBPROCESSES
+Generating training/testing records:
+---
+cd RASR/tf/scripts
+python generate_tfrecord.py -x ../images/train -l ../images/annotations/label_map.pbtxt -o ../images/annotations/train.record
+python generate_tfrecord.py -x ../images/test -l ../images/annotations/label_map.pbtxt -o ../images/annotations/test.record
+---

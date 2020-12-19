@@ -25,7 +25,7 @@ with warnings.catch_warnings():
 
 def pix2coord(i,j,radar,sweep,name,date):
     #NOTE: i and j are pixel coords from image, x and y are meter distance from site, and lat and lon are, well, lat and lon.
-    x,y = i,j #Conversion to meters, somehow. Working on it.
+    x,y = i,j #Conversion to meters, somehow. Working on it. Maybe a pyart solution?
     sitealt, sitelon, sitelat = float(radar.altitude['data']), float(radar.longitude['data']), float(radar.latitude['data']) #Site data
     lon, lat = pyart.core.cartesian_to_geographic_aeqd(x,y,sitelon,sitelat) #Conversion function from meter distance to lat/lon
     alt = sqrt(x^2 + y^2)*tan(radians(sweep)) #Lil bit of trig
