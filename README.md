@@ -61,8 +61,6 @@ cd ~
 ## 5. Training
 ---
 Generating training/testing records:
->cd RASR/tf/scripts
->
->python generate_tfrecord.py -x ../images/train -l ../images/annotations/label_map.pbtxt -o ../images/annotations/train.record
->
->python generate_tfrecord.py -x ../images/test -l ../images/annotations/label_map.pbtxt -o ../images/annotations/test.record
+  cd RASR/tf/scripts
+  python generate_tfrecord.py -x ../images/train -l ../images/annotations/label_map.pbtxt -o ../images/annotations/train.record
+  python generate_tfrecord.py -x ../images/test -l ../images/annotations/label_map.pbtxt -o ../images/annotations/test.record
