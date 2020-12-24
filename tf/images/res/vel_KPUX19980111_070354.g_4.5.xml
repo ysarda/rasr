@@ -1,0 +1,26 @@
+<annotation>
+	<folder>res</folder>
+	<filename>vel_KPUX19980111_070354.g_4.5.jpg</filename>
+	<path>/home/ysarda/RASR/tf/images/res/vel_KPUX19980111_070354.g_4.5.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1536</width>
+		<height>1536</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>fall</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>644</xmin>
+			<ymin>478</ymin>
+			<xmax>672</xmax>
+			<ymax>497</ymax>
+		</bndbox>
+	</object>
+</annotation>
