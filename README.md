@@ -1,9 +1,10 @@
 # rasr
 Re-entry Analyses from Serendipitous Radar data
-ver 2.0
+ver 3.0
 
 Benjamin Miller <benjamin.g.miller@utexas.edu>  
 Yash Sarda <ysarda@utexas.edu>
+Robby Keh <robbykeh@utexas.edu>
 
 The University of Texas at Austin
 08/05/2020

@@ -1,0 +1,26 @@
+<annotation>
+	<folder>res</folder>
+	<filename>vel_KLOT20030327_054711.g_19.5.jpg</filename>
+	<path>/home/ysarda/RASR/tf/images/res/vel_KLOT20030327_054711.g_19.5.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1536</width>
+		<height>1536</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>fall</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>856</xmin>
+			<ymin>807</ymin>
+			<xmax>873</xmax>
+			<ymax>832</ymax>
+		</bndbox>
+	</object>
+</annotation>

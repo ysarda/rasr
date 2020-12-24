@@ -1,0 +1,26 @@
+<annotation>
+	<folder>res</folder>
+	<filename>vel_KDVN20100415_030257_V03.g_2.5.jpg</filename>
+	<path>/home/ysarda/RASR/tf/images/res/vel_KDVN20100415_030257_V03.g_2.5.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1536</width>
+		<height>1536</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>fall</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>791</xmin>
+			<ymin>311</ymin>
+			<xmax>847</xmax>
+			<ymax>349</ymax>
+		</bndbox>
+	</object>
+</annotation>
