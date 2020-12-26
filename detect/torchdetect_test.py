@@ -24,7 +24,7 @@ with warnings.catch_warnings():
     import json
 ########################################################
 
-def readpyart(fdir,file):
+def readpyart(fdir,file, cint):
         radar = pyart.io.read(fdir+file)
         name = file[0:4]
         m,d,y,hh,mm,ss = file[8:10], file[10:12], file[4:8], file[13:15], file[15:17], file[17:19]
@@ -54,7 +54,7 @@ def readpyart(fdir,file):
                 plt.clf()
                 plt.close('all')
 
-def detect(radar, img, file, locDat, sweep):
+def detect(radar, img, file, locDat, sweep, cint):
     pred = model.predict(img)
     fig = plt.figure(figsize=(25,25))
     ax = fig.add_axes([0, 0, 1, 1])
@@ -76,7 +76,7 @@ def detect(radar, img, file, locDat, sweep):
                 sitealt, sitelon, sitelat = float(radar.altitude['data']), float(radar.longitude['data']), float(radar.latitude['data'])
                 lon, lat = np.around(pyart.core.cartesian_to_geographic_aeqd(x,y,sitelon,sitelat),4)
                 alt = round(np.sqrt(x**2 + y**2)*np.tan(np.radians(float(sweep))) + sitealt,3)
-                print('Detection at ' + str(float(lon)) + ' degrees East,' + ' ' + str(float(lat)) + ' degrees North,' + ' ' + str(alt) + ' km above sea level')
+                print('Detection at ' + str(float(lon)) + ' degrees East,' + ' ' + str(float(lat)) + ' degrees North,' + ' ' + str(alt) + ' m above sea level')
                 fall2json(lat, lon, alt, file)
 
 
@@ -104,8 +104,6 @@ cint = 0.8
 fdir = 'test/raw/'
 detdir = 'test/detections/'
 model = Model.load('RASRmodl.pth', ['fall'])
-loc = []
-
 
 for file in os.listdir(fdir):
     readpyart(fdir,file)

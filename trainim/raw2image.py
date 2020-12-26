@@ -76,7 +76,7 @@ def getListOfFiles(dirName):
 
 cpath = os.getcwd()
 rawdir = cpath + '/raw/'
-imdir = cpath + '/images/'
+imdir = cpath + '/im/'
 all_files = getListOfFiles(rawdir)
 for file in all_files:
     dat2vel(file, imdir)
