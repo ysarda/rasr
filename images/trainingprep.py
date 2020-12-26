@@ -182,12 +182,12 @@ if(man == "y"):
         s = input(text)
         radarSites.append(s)
 else:
-    yri = 1998
-    monthi = 1
-    dayi = 11
-    stime = 70200
-    etime = 71400
-    radarSites = ['KFTG','KPUX']
+    yri = 2017
+    monthi = 2
+    dayi = 6
+    stime = 72000
+    etime = 72200
+    radarSites = ['KMKX']
 
 start_date = date(yri, monthi, dayi)
 end_date = start_date + timedelta(1)  # date(now.year, now.month, now.day+1)

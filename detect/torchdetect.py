@@ -20,13 +20,6 @@ with warnings.catch_warnings():
     from matplotlib.figure import Figure
     from matplotlib.backends.backend_agg import FigureCanvas
 
-    import tensorflow as tf
-    import tensorflow_hub as hub
-    from tensorflow import keras
-    from tensorflow.keras import datasets, layers, models
-
-    import time
-
     from multiprocessing import Pool, cpu_count, Lock, get_context
     from multiprocessing.pool import ThreadPool
 
