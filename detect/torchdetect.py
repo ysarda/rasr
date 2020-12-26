@@ -21,6 +21,7 @@ with warnings.catch_warnings():
     from matplotlib.backends.backend_agg import FigureCanvas
 
     import tensorflow as tf
+    import tensorflow_hub as hub
     from tensorflow import keras
     from tensorflow.keras import datasets, layers, models
 
@@ -32,16 +33,7 @@ with warnings.catch_warnings():
     import json
 ##############################################################################################################################
 
-def fracteval(img,radar,sweep,name,date):
-    global thresh, h, nd
-    subX = []
-    for i in range(nd):
-        for j in range(nd):
-            subX = img[i*h:(i+1)*h,j*h:(j+1)*h]
-            subX = np.reshape(subX, [-1, h, h, 4])
-            predict = model.predict(subX)
-            if predict > thresh:
-                #fall2json(radar, name, date)
+
 
 
 def detect(file):
@@ -59,6 +51,7 @@ def detect(file):
             plotter.set_limits(xlim=(-150, 150), ylim=(-150, 150), ax=ax)
             vmin, vmax = pyart.graph.common.parse_vmin_vmax(radar, 'velocity', None, None)
             data = plotter._get_data('velocity', x, mask_tuple=None, filter_transitions=True, gatefilter=None)
+
             if np.any(data)>0:
                 xDat, yDat = plotter._get_x_y(x, edges=True, filter_transitions=True)
                 data = data*(70/np.max(np.abs(data)))
@@ -66,11 +59,10 @@ def detect(file):
                 canvas = FigureCanvas(fig)
                 fig.canvas.draw()
                 img = np.array(canvas.renderer.buffer_rgba())
-                fracteval(img, radar, x, name, date)
+
                 plt.cla()
                 plt.clf()
                 plt.close('all')
-        input('hit enter for next site')
 
 def getListOfFiles(dirName):
     listOfFile = os.listdir(dirName)
@@ -92,39 +84,11 @@ def init(l):
     global lock
     lock = l
 
-def fall2json(radar, name, date):
-    alt, lon, lat = float(radar.altitude['data']), float(radar.longitude['data']), float(radar.latitude['data'])
-    data = {}
-    data[date] = []
-    data[date].append({
-        'Altitude': str(alt),
-        'Longitude': str(lon),
-        'Latitude': str(lat)
-        })
-    fname = "out/" + name + ".json"
-    with open(fname, 'a') as outfile:
-        json.dump(data, outfile)
+
 
 ###############################################################################################################################
 
-#start_time = time.time()
-thresh = 0.98
-nd = 1
-dim = 2500
-h = int(dim/nd)
-cpath = os.getcwd()
-dirname = cpath + '/testdata/'
 
-model = models.Sequential()
-model.add(layers.Conv2D(h, (4, 4), activation='relu', input_shape=(h, h, 4)))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(500, (4, 4), activation='relu'))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model.add(layers.Flatten())
-model.add(layers.Dense(32, activation='relu'))
-model.add(layers.Dense(1, activation = "sigmoid"))
-#model.load_weights('rasrmodl')
 
 if __name__== '__main__':
     #optional spec for num pool workers, else num cpu

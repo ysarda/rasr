@@ -20,6 +20,7 @@ with warnings.catch_warnings():
     from matplotlib.figure import Figure
     from matplotlib.backends.backend_agg import FigureCanvas
 
+    import json
 
 #########################################################################################################################
 
