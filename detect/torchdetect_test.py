@@ -24,7 +24,7 @@ with warnings.catch_warnings():
     import json
 ########################################################
 
-def readpyart(fdir,file, cint):
+def readpyart(file):
         radar = pyart.io.read(fdir+file)
         name = file[0:4]
         m,d,y,hh,mm,ss = file[8:10], file[10:12], file[4:8], file[13:15], file[15:17], file[17:19]
@@ -54,7 +54,7 @@ def readpyart(fdir,file, cint):
                 plt.clf()
                 plt.close('all')
 
-def detect(radar, img, file, locDat, sweep, cint):
+def detect(radar, img, file, locDat, sweep):
     pred = model.predict(img)
     fig = plt.figure(figsize=(25,25))
     ax = fig.add_axes([0, 0, 1, 1])
@@ -81,7 +81,6 @@ def detect(radar, img, file, locDat, sweep, cint):
 
 
 def fall2json(lat, lon, alt, file):
-    outdir = "test/out/"
     name = file[0:4]
     m,d,y,hh,mm,ss = file[8:10], file[10:12], file[4:8], file[13:15], file[15:17], file[17:19]
     date = m + '/' + d + '/' + y + ' ' + hh + ':' + mm + ':' + ss
@@ -103,7 +102,8 @@ def fall2json(lat, lon, alt, file):
 cint = 0.8
 fdir = 'test/raw/'
 detdir = 'test/detections/'
+outdir = 'test/out/'
 model = Model.load('RASRmodl.pth', ['fall'])
 
 for file in os.listdir(fdir):
-    readpyart(fdir,file)
+    readpyart(file)

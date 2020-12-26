@@ -37,7 +37,6 @@ with warnings.catch_warnings():
 
 def readpyart(file):
         file = file[len(fdir):]
-        print(file,fdir)
         radar = pyart.io.read(fdir+file)
         name = file[0:4]
         m,d,y,hh,mm,ss = file[8:10], file[10:12], file[4:8], file[13:15], file[15:17], file[17:19]
@@ -134,9 +133,9 @@ def init(l):
 ###############################################################################################################################
 
 cint = 0.8
-fdir = '../data/'
-detdir = '../falls/imgs/'
-outdir = "../falls/json/"
+fdir = 'data/'
+detdir = 'falls/imgs/'
+outdir = 'falls/json/'
 model = Model.load('RASRmodl.pth', ['fall'])
 
 
