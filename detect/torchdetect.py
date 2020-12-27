@@ -36,7 +36,6 @@ with warnings.catch_warnings():
 ##############################################################################################################################
 
 def readpyart(file):
-        file = file[len(fdir):]
         radar = pyart.io.read(fdir+file)
         name = file[0:4]
         m,d,y,hh,mm,ss = file[8:10], file[10:12], file[4:8], file[13:15], file[15:17], file[17:19]
@@ -80,7 +79,7 @@ def detect(radar, img, file, locDat, sweep):
                 ax.add_patch(rect)
                 detstr = pred[0][n] + ': ' + str(round(float(pred[2][n]),2))
                 plt.text(x+w/2,y-5, detstr, fontsize = 8, color='red', ha='center')
-                imname = detdir + file + '_detected' + '.png'
+                imname = detdir + file + '_' + sweep + '_detected' + '.png'
                 plt.savefig(imname, bbox_inches='tight')
                 ipix, jpix = round(x+w/2, 2), round(y+h/2, 2)
                 norm = locDat[0].shape
@@ -106,7 +105,7 @@ def fall2json(lat, lon, alt, file):
     fname = outdir + name + ".json"
     with open(fname, 'a+') as outfile:
         json.dump(data, outfile)
-
+        
 
 def getListOfFiles(dirName):
     listOfFile = os.listdir(dirName)

@@ -68,7 +68,7 @@ def detect(radar, img, file, locDat, sweep):
                 ax.add_patch(rect)
                 detstr = pred[0][n] + ': ' + str(round(float(pred[2][n]),2))
                 plt.text(x+w/2,y-5, detstr, fontsize = 8, color='red', ha='center')
-                imname = detdir + file + '_detected' + '.png'
+                imname = detdir + file + '_' + sweep + '_detected' + '.png'
                 plt.savefig(imname, bbox_inches='tight')
                 ipix, jpix = round(x+w/2, 2), round(y+h/2, 2)
                 norm = locDat[0].shape
@@ -105,5 +105,7 @@ detdir = 'test/detections/'
 outdir = 'test/out/'
 model = Model.load('RASRmodl.pth', ['fall'])
 
+for file in os.listdir(outdir):
+    os.remove(outdir+file)
 for file in os.listdir(fdir):
     readpyart(file)
