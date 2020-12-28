@@ -48,7 +48,7 @@ if __name__== '__main__':
 
 
     #Create storage directory
-    dirname = os.getcwd()+"/tmp"
+    dirname = 'data/'
 
     if not os.path.exists(dirname):
         try:
@@ -57,10 +57,10 @@ if __name__== '__main__':
             # f = open('data_links.txt', 'wb')
         except FileExistsError:
             os.chdir(dirname)
-            if os.path.exists('../links/data_links.txt'):
+            if os.path.exists('links/data_links.txt'):
                 pass
             else:
-                f = open('../links/data_links.txt', 'wb')
+                f = open('links/data_links.txt', 'wb')
 
     static_dir = os.getcwd() + '//tmp'
 

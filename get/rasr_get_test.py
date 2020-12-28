@@ -98,12 +98,10 @@ def download_link(link, dirname, stime, etime):
     # Use last part of the link as the filename (after the final slash)
     # "http://noaa-nexrad-level2.s3.amazonaws.com/2018/01/09/KABR/KABR20180109_000242_V06"
     filename = '{}/{}'.format(dirname, link.split('/')[-1])
-    check = 'test/raw/K'
-    if(filename[0:10] == check):
-        t = int(filename[22:28])
-        if(stime < t < etime and filename[-3:] != 'MDM'):
-            print('Writing to file {}'.format(filename))
-            write_to_file(filename, response)
+    t = int(filename[22:28])
+    if(stime < t < etime and filename[-3:] != 'MDM'):
+        print('Writing to file {}'.format(filename))
+        write_to_file(filename, response)
 
 
 def daterange(start_date, end_date):
