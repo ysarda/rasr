@@ -131,7 +131,6 @@ def init(l):
 ###############################################################################################################################
 cint = 0.8
 fdir = 'data/'
-detdir = 'falls/imgs/'
 outdir = 'falls/json/'
 model = Model.load('RASRmodl.pth', ['fall'])
 
