@@ -37,12 +37,13 @@ with warnings.catch_warnings():
 
 
 def readpyart(file):
-    file = file[len(fdir):]
+    #file = file[len(fdir):]
     radar = pyart.io.read(fdir + file)
     name = file[0:4]
     m, d, y, hh, mm, ss = file[8:10], file[10:12], file[4:8], file[13:15], file[15:17], file[17:19]
     date = m + '/' + d + '/' + y + ' ' + hh + ':' + mm + ':' + ss
     print('Checking ' + name + ' at ' + date)
+    vec = []
     for x in range(radar.nsweeps):
         plotter = pyart.graph.RadarDisplay(radar)
         fig = plt.figure(figsize=(25, 25), frameon=False)
@@ -61,52 +62,48 @@ def readpyart(file):
             sweepangle = str(format(radar.fixed_angle['data'][x], ".2f"))
             print('Reading Velocity at sweep angle: ', sweepangle)
             locDat = [xDat, yDat]
-            detect(radar, img, file, locDat, sweepangle)
+            detect(radar, img, file, locDat, sweepangle, vec)
             plt.cla()
             plt.clf()
             plt.close('all')
 
 
-def detect(radar, img, file, locDat, sweep):
+def detect(radar, img, file, locDat, sweep, vec):
     pred = model.predict(img)
-    fig = plt.figure(figsize=(25, 25))
-    ax = fig.add_axes([0, 0, 1, 1])
-    ax.axis('off')
     for n in range(len(pred[1])):
         if(pred[2][n] > cint):
-            ax.imshow(img)
-            x, y, x1, y1 = float(pred[1][n][0]), float(pred[1][n][1]), float(pred[1][n][2]), float(pred[1][n][3])
-            w, h = abs(x - x1), abs(y - y1)
-            rect = patches.Rectangle((x, y), w, h, linewidth=1, edgecolor='r', facecolor='none')
-            ax.add_patch(rect)
-            detstr = pred[0][n] + ': ' + str(round(float(pred[2][n]), 2))
-            plt.text(x + w / 2, y - 5, detstr, fontsize=8, color='red', ha='center')
-            imname = detdir + file + '_' + sweep + '_detected' + '.png'
-            plt.savefig(imname, bbox_inches='tight')
             ipix, jpix = round(x + w / 2, 2), round(y + h / 2, 2)
             norm = locDat[0].shape
-            x, y = locDat[0][int(norm[0] * ipix / 2500)][0], locDat[1][0][int(norm[1] * jpix / 2500)]
+            x, y = 1000*locDat[0][int(norm[0] * ipix / 2500)][0], 1000*locDat[1][0][int(norm[1] * jpix / 2500)]
+            z = np.sqrt(x**2 + y**2) * np.tan(np.radians(float(sweep)))
             sitealt, sitelon, sitelat = float(radar.altitude['data']), float(radar.longitude['data']), float(radar.latitude['data'])
             lon, lat = np.around(pyart.core.cartesian_to_geographic_aeqd(x, y, sitelon, sitelat), 4)
-            alt = round(np.sqrt(x**2 + y**2) * np.tan(np.radians(float(sweep))) + sitealt, 3)
+            alt = round(z + sitealt, 3)
             print('Detection at ' + str(float(lon)) + ' degrees East,' + ' ' + str(float(lat)) + ' degrees North,' + ' ' + str(alt) + ' m above sea level')
-            fall2json(lat, lon, alt, file)
+            vec.append([x, y, z])
+    fall2json(radar, vec, file)
 
 
-def fall2json(lat, lon, alt, file):
-    name = file[0:4]
-    m, d, y, hh, mm, ss = file[8:10], file[10:12], file[4:8], file[13:15], file[15:17], file[17:19]
-    date = m + '/' + d + '/' + y + ' ' + hh + ':' + mm + ':' + ss
-    data = {}
-    data[date] = []
-    data[date].append({
-        'Altitude (m)': str(alt),
-        'Longitude (deg East)': str(lon),
-        'Latitude (deg North)': str(lat)
-    })
-    fname = outdir + name + ".json"
-    with open(fname, 'a+') as outfile:
-        json.dump(data, outfile)
+def fall2json(radar, vec, file):
+    if(len(vec) >= 2):
+        for dat in vec:
+            x,y,z = dat[0],dat[1],dat[2]
+            sitealt, sitelon, sitelat = float(radar.altitude['data']), float(radar.longitude['data']), float(radar.latitude['data'])
+            lon, lat = np.around(pyart.core.cartesian_to_geographic_aeqd(x, y, sitelon, sitelat), 4)
+            alt = round(z + sitealt, 3)
+            name = file[0:4]
+            m, d, y, hh, mm, ss = file[8:10], file[10:12], file[4:8], file[13:15], file[15:17], file[17:19]
+            date = m + '/' + d + '/' + y + ' ' + hh + ':' + mm + ':' + ss
+            data = {}
+            data[date] = []
+            data[date].append({
+            'Altitude (m)': str(alt),
+            'Longitude (deg East)': str(lon),
+            'Latitude (deg North)': str(lat)
+            })
+            fname = outdir + name + ".json"
+            with open(fname, 'a+') as outfile:
+                json.dump(data, outfile)
 
 
 def getListOfFiles(dirName):
