@@ -37,13 +37,11 @@ with warnings.catch_warnings():
 
 
 def readpyart(file):
-    #file = file[len(fdir):]
+    file = file[len(fdir):]
     radar = pyart.io.read(fdir + file)
-    name = file[0:4]
-    m, d, y, hh, mm, ss = file[8:10], file[10:12], file[4:8], file[13:15], file[15:17], file[17:19]
-    date = m + '/' + d + '/' + y + ' ' + hh + ':' + mm + ':' + ss
+    name, m, d, y, hh, mm, ss, date = stringed(file)
     print('Checking ' + name + ' at ' + date)
-    vec = []
+    r, dr, allr = [], [], []
     for x in range(radar.nsweeps):
         plotter = pyart.graph.RadarDisplay(radar)
         fig = plt.figure(figsize=(25, 25), frameon=False)
@@ -59,51 +57,119 @@ def readpyart(file):
             fig.canvas.draw()
             img = np.array(canvas.renderer.buffer_rgba())
             img = np.delete(img, 3, 2)
-            sweepangle = str(format(radar.fixed_angle['data'][x], ".2f"))
-            print('Reading Velocity at sweep angle: ', sweepangle)
-            locDat = [xDat, yDat]
-            detect(radar, img, file, locDat, sweepangle, vec)
+            sweepangle = format(float(radar.fixed_angle['data'][x]), ".2f")
+            t = radar.time['data'][x]
+            locDat = [xDat, yDat, t]
+            v = detect(radar, img, file, locDat, sweepangle)
+            if v is not None:
+                vc, vall = v
+                vc.append(x)
+                r.append(vc)
+                allr.append(vall)
             plt.cla()
             plt.clf()
             plt.close('all')
+    if(len(r) >= 2):
+        kinematics(r)
+        jsonsquare(file, radar, allr)
+        #jsonpoint(file, r)
 
 
-def detect(radar, img, file, locDat, sweep, vec):
+def detect(radar, img, file, locDat, sweep):
     pred = model.predict(img)
     for n in range(len(pred[1])):
         if(pred[2][n] > cint):
-            ipix, jpix = round(x + w / 2, 2), round(y + h / 2, 2)
+            x0p, y0p, x1p, y1p = float(pred[1][n][0]), float(pred[1][n][1]), float(pred[1][n][2]), float(pred[1][n][3])
+            w,h = (x0p-x1p),(y0p-y1p)
+            ipix, jpix = round(x0p + w / 2, 2), round(y0p + h / 2, 2)
             norm = locDat[0].shape
-            x, y = 1000*locDat[0][int(norm[0] * ipix / 2500)][0], 1000*locDat[1][0][int(norm[1] * jpix / 2500)]
-            z = np.sqrt(x**2 + y**2) * np.tan(np.radians(float(sweep)))
-            sitealt, sitelon, sitelat = float(radar.altitude['data']), float(radar.longitude['data']), float(radar.latitude['data'])
-            lon, lat = np.around(pyart.core.cartesian_to_geographic_aeqd(x, y, sitelon, sitelat), 4)
-            alt = round(z + sitealt, 3)
-            print('Detection at ' + str(float(lon)) + ' degrees East,' + ' ' + str(float(lat)) + ' degrees North,' + ' ' + str(alt) + ' m above sea level')
-            vec.append([x, y, z])
-    fall2json(radar, vec, file)
+            x, y = 1000 * locDat[0][int(norm[0] * ipix / 2500)][0], 1000 * locDat[1][0][int(norm[1] * jpix / 2500)]
+            x0, y0 = 1000 * locDat[0][int(norm[0] * x0p / 2500)][0], 1000 * locDat[1][0][int(norm[1] * y0p / 2500)]
+            x1, y1 = 1000 * locDat[0][int(norm[0] * x1p / 2500)][0], 1000 * locDat[1][0][int(norm[1] * y1p / 2500)]
+            z = np.sqrt(x**2 + y**2) * np.tan(np.radians(sweep))
+            t = round(locDat[2], 2)
+            return [x, y, z, t], [x0, y0, x1, y1, z, t]
+        else:
+            pass
 
 
-def fall2json(radar, vec, file):
-    if(len(vec) >= 2):
-        for dat in vec:
-            x,y,z = dat[0],dat[1],dat[2]
-            sitealt, sitelon, sitelat = float(radar.altitude['data']), float(radar.longitude['data']), float(radar.latitude['data'])
-            lon, lat = np.around(pyart.core.cartesian_to_geographic_aeqd(x, y, sitelon, sitelat), 4)
-            alt = round(z + sitealt, 3)
-            name = file[0:4]
-            m, d, y, hh, mm, ss = file[8:10], file[10:12], file[4:8], file[13:15], file[15:17], file[17:19]
-            date = m + '/' + d + '/' + y + ' ' + hh + ':' + mm + ':' + ss
-            data = {}
-            data[date] = []
-            data[date].append({
+def kinematics(vec):
+    rlsp = []
+    tmp = []
+    index = vec[0][4]
+    for dat in vec:
+        x, y, z, t, n = dat
+        if(n == index):
+            tmp.append([x, y, z, t])
+        elif(n > index):
+            index = n
+            rlsp.append(tmp)
+            tmp = [[x, y, z, t]]
+    rlsp.append(tmp)
+
+
+def jsonpoint(file, r):
+    for det in r:
+        x, y, z, t = det
+        name, m, d, y, hh, mm, ss, date = stringed(file)
+        btime = hh + ':' + mm + ':' + ss
+        atime = str((datetime.strptime(btime, '%H:%M:%S') + timedelta(seconds=t)).time())[:-4]
+
+        sitealt, sitelon, sitelat = float(radar.altitude['data']), float(
+            radar.longitude['data']), float(radar.latitude['data'])
+        lon, lat = np.around(pyart.core.cartesian_to_geographic_aeqd(x, y, sitelon, sitelat), 2)
+        alt = round(z + sitealt, 1)
+
+        print('Detection: ' + str(float(lon)) + ' degrees East,' + ' ' +
+              str(float(lat)) + ' degrees North,' + ' ' + str(alt) + ' m above sea level, at ' + atime)
+        data = {}
+        data[date] = []
+        data[date].append({
+            'Time:': atime,
             'Altitude (m)': str(alt),
             'Longitude (deg East)': str(lon),
             'Latitude (deg North)': str(lat)
-            })
-            fname = outdir + name + ".json"
-            with open(fname, 'a+') as outfile:
-                json.dump(data, outfile)
+        })
+        fname = outdir + name + ".json"
+        with open(fname, 'a+') as outfile:
+            json.dump(data, outfile)
+
+
+def jsonsquare(file, radar, allr):
+    for det in allr:
+        x0, y0, x1, y1, z, t = det
+        name, m, d, y, hh, mm, ss, date = stringed(file)
+        btime = hh + ':' + mm + ':' + ss
+        atime = str((datetime.strptime(btime, '%H:%M:%S') + timedelta(seconds=t)).time())[:-4]
+
+        sitealt, sitelon, sitelat = float(radar.altitude['data']), float(
+            radar.longitude['data']), float(radar.latitude['data'])
+        lon0, lat0 = np.around(pyart.core.cartesian_to_geographic_aeqd(x0, y0, sitelon, sitelat), 3)
+        lon1, lat1 = np.around(pyart.core.cartesian_to_geographic_aeqd(x1, y1, sitelon, sitelat), 3)
+        alt = round(z + sitealt, 1)
+
+        print('Detection centered at: ' + str(float(lon0 + lon1) / 2) + ' degrees East,' + ' ' +
+              str(float(lat0 + lat1) / 2) + ' degrees North,' + ' ' + str(alt) + ' m above sea level, at ' + atime)
+        data = {}
+        data[date] = []
+        data[date].append({
+            'Time:': atime,
+            'Altitude (m)': str(alt),
+            'Longitude0 (NW)(deg East)': str(lon0),
+            'Latitude0 (NW)(deg North)': str(lat0),
+            'Longitude1 (SE)(deg East)': str(lon1),
+            'Latitude1 (SE)(deg North)': str(lat1)
+        })
+        fname = outdir + name + ".json"
+        with open(fname, 'a+') as outfile:
+            json.dump(data, outfile)
+
+
+def stringed(file):
+    name = file[0:4]
+    m, d, y, hh, mm, ss = file[8:10], file[10:12], file[4:8], file[13:15], file[15:17], file[17:19]
+    date = m + '/' + d + '/' + y
+    return name, m, d, y, hh, mm, ss, date
 
 
 def getListOfFiles(dirName):
@@ -129,7 +195,7 @@ def init(l):
 
 
 ###############################################################################################################################
-cint = 0.8
+cint = 0.85
 fdir = 'data/'
 outdir = 'falls/json/'
 model = Model.load('RASRmodl.pth', ['fall'])
