@@ -180,7 +180,8 @@ def runFunction(sites, dateList, timerange, static_dir):
                     if day == i:
                         day = '{num:02d}'.format(num=i)
 
-            print("\n----------------------------------------Downloading data as of", str(month) + "/" + str(day) + "/" + str(year),"----------------------------------------")
+            print("\n")
+            print("Downloading data as of", str(month) + "/" + str(day) + "/" + str(year))
 
             # This is a list of radar sites that have specific end dates and not among the list of "registered" radar sites,
             # usually are considered test sites or decommissioned sites: they usually start with a T for test sites,
@@ -221,7 +222,7 @@ def runFunction(sites, dateList, timerange, static_dir):
             #for key, site in sites.items():
             #for site in sites:
             site_id = sites
-            print("\nDownloading data from radar: \"" + site_id + "\"")
+            print("Downloading data from radar: \"" + site_id + "\"")
             dirname = "{year}{month}{day}_{site_id}_{product}".format(
                 year=year, month=month, day=day, site_id=site_id, product=product)
             page_url_base = ("https://www.ncdc.noaa.gov/nexradinv/bdp-download.jsp"

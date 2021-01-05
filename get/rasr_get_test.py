@@ -166,7 +166,6 @@ start_time = time.time()
 product = 'AAL2'  # Level-II data include the original three meteorological base data quantities: reflectivity, mean radial velocity, and spectrum width,
 # as well as the dual-polarization base data of differential reflectivity, correlation coefficient, and differential phase.
 now = datetime.now()
-print('Defaulting to test case data')
 yri = 2017
 monthi = 2
 dayi = 6
@@ -195,11 +194,11 @@ for single_date in daterange(start_date, end_date):
             if day == i:
                 day = '{num:02d}'.format(num=i)
 
-    print("\n----------------------------------------Downloading data as of", str(month) +
-          "/" + str(day) + "/" + str(year), "----------------------------------------")
+    print("Downloading data as of", str(month) +
+          "/" + str(day) + "/" + str(year))
 
     for site_id in radarSites:
-        print("\nDownloading data from radar: \"" + site_id + "\"")
+        print("Downloading data from radar: \"" + site_id + "\"")
         dirname = "test/raw"
         linkname = "links"
         page_url_base = ("https://www.ncdc.noaa.gov/nexradinv/bdp-download.jsp"
