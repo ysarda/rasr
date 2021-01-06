@@ -1,32 +1,30 @@
+import warnings
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", category=FutureWarning)
+    warnings.simplefilter("ignore", category=DeprecationWarning)
+    warnings.simplefilter("ignore", category=RuntimeWarning)
 
+    import time
+    import datetime
+    from datetime import datetime, timedelta, date
 
-import time
-import datetime
-from datetime import datetime, timedelta, date
+    import json
 
-import json
-
-import numpy as np
-
-import pyart
+    import numpy as np
 
 #####################################################################################################
+
 
 def jsonpoint(file, radar, r, outdir):
 
     for det in r:
-        x, y, z, t = det
+        lat, lon, alt, t = det
         name, m, d, y, hh, mm, ss, date = stringed(file)
         btime = hh + ':' + mm + ':' + ss
         atime = str((datetime.strptime(btime, '%H:%M:%S') + timedelta(seconds=t)).time())[:-4]
 
-        sitealt, sitelon, sitelat = float(radar.altitude['data']), float(
-            radar.longitude['data']), float(radar.latitude['data'])
-        lon, lat = np.around(pyart.core.cartesian_to_geographic_aeqd(x, y, sitelon, sitelat), 2)
-        alt = round(z + sitealt, 1)
-
-        print('Detection: ' + str(float(lon)) + ' degrees East,' + ' ' +
-              str(float(lat)) + ' degrees North,' + ' ' + str(alt) + ' m above sea level, at ' + atime)
+        print('Detection: ' + str(float(lat)) + ' degrees North,' + ' ' + str(float(lon)) +
+              ' degrees West,' + ' ' + str(alt) + ' m above sea level, at ' + atime)
         data = {}
         data[date] = []
         data[date].append({
@@ -39,22 +37,17 @@ def jsonpoint(file, radar, r, outdir):
         with open(fname, 'a+') as outfile:
             json.dump(data, outfile)
 
+
 def jsonsquare(file, radar, allr, outdir):
-    
+
     for det in allr:
-        x0, y0, x1, y1, z, t = det
+        lat0, lon0, lat1, lon1, alt, t = det
         name, m, d, y, hh, mm, ss, date = stringed(file)
         btime = hh + ':' + mm + ':' + ss
         atime = str((datetime.strptime(btime, '%H:%M:%S') + timedelta(seconds=t)).time())[:-4]
 
-        sitealt, sitelon, sitelat = float(radar.altitude['data']), float(
-            radar.longitude['data']), float(radar.latitude['data'])
-        lon0, lat0 = np.around(pyart.core.cartesian_to_geographic_aeqd(x0, y0, sitelon, sitelat), 3)
-        lon1, lat1 = np.around(pyart.core.cartesian_to_geographic_aeqd(x1, y1, sitelon, sitelat), 3)
-        alt = round(z + sitealt, 1)
-
-        print('Detection centered at: ' + str(float(lon0 + lon1) / 2) + ' degrees East,' + ' ' +
-              str(float(lat0 + lat1) / 2) + ' degrees North,' + ' ' + str(alt) + ' m above sea level, at ' + atime)
+        print('Detection centered at: ' + str(round(float(lat0 + lat1) / 2,4)) + ' degrees North,' + ' ' +
+              str(round(float(lon0 + lon1) / 2,4)) + ' degrees West,' + ' ' + str(alt) + ' m above sea level, at ' + atime)
         data = {}
         data[date] = []
         data[date].append({
@@ -68,6 +61,7 @@ def jsonsquare(file, radar, allr, outdir):
         fname = outdir + name + ".json"
         with open(fname, 'a+') as outfile:
             json.dump(data, outfile)
+
 
 def stringed(file):
     name = file[0:4]

@@ -9,7 +9,7 @@ with warnings.catch_warnings():
     from matplotlib.backends.backend_agg import FigureCanvas
     from matplotlib import pyplot as plt
     from matplotlib import patches
-    matplotlib.use("TKagg")
+    #matplotlib.use("TKagg")
 
     import pyart
 
@@ -61,6 +61,7 @@ def readpyart(file, outdir, detdir):
         rlsp = org(r)
         jsonsquare(file, radar, allr, outdir)
         #jsonpoint(file, radar, r, outdir)
+
 
 
 ##########################################################

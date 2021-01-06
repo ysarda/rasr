@@ -28,7 +28,7 @@ with warnings.catch_warnings():
 
     import gc
 
-    from kinematics import kin
+    from kinematics import org
     from jsonoutput import jsonsquare, jsonpoint, stringed
     from torchdet import detect
 ##############################################################################################################################
@@ -69,7 +69,7 @@ def readpyart(file, outdir):
             plt.clf()
             plt.close('all')
     if(len(r) >= 2):
-        kin(r)
+        stsp = org(r)
         jsonsquare(file, radar, allr, outdir)
         #jsonpoint(file, radar, r, outdir)
 
