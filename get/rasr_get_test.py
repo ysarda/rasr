@@ -169,9 +169,10 @@ now = datetime.now()
 yri = 2017
 monthi = 2
 dayi = 6
-stime = 72000
+stime = 71800
 etime = 72200
-radarSites = ['KMKX']
+radarSites = ['KGRB','KMKX']
+
 
 start_date = date(yri, monthi, dayi)
 end_date = start_date + timedelta(1)  # date(now.year, now.month, now.day+1)

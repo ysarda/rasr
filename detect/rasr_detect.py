@@ -40,6 +40,7 @@ def readpyart(file, outdir):
     name, m, d, y, hh, mm, ss, date = stringed(file)
     print('Checking ' + name + ' at ' + date)
     r, dr, allr = [], [], []
+    detdir = []
     for x in range(radar.nsweeps):
         plotter = pyart.graph.RadarDisplay(radar)
         fig = plt.figure(figsize=(25, 25), frameon=False)
@@ -59,7 +60,8 @@ def readpyart(file, outdir):
             #print('Reading Velocity at sweep angle: ', sweepangle)
             t = radar.time['data'][x]
             locDat = [xDat, yDat, t]
-            v = detect(radar, img, file, locDat, sweepangle)
+            vis = False
+            v = detect(radar, img, file, locDat, sweepangle, detdir, vis)
             if v is not None:
                 vc, vall = v
                 vc.append(x)

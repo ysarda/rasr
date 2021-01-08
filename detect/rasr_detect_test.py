@@ -17,9 +17,9 @@ with warnings.catch_warnings():
 
     import numpy as np
 
-    from kinematics import org
-    from jsonoutput import jsonsquare, jsonpoint, stringed
-    from torchdet import detectvis
+    from motion import org, kin, backprop
+    from output import jsonsquare, jsonpoint, stringed
+    from torchdet import detect
 ########################################################
 
 
@@ -27,6 +27,7 @@ def readpyart(file, outdir, detdir):
     #file = file[len(fdir):]
     radar = pyart.io.read(fdir + file)
     name, m, d, y, hh, mm, ss, date = stringed(file)
+    print('\n')
     print('Checking ' + name + ' at ' + date)
     r, dr, allr = [], [], []
     for x in range(radar.nsweeps):
@@ -45,10 +46,11 @@ def readpyart(file, outdir, detdir):
             img = np.array(canvas.renderer.buffer_rgba())
             img = np.delete(img, 3, 2)
             sweepangle = str(format(radar.fixed_angle['data'][x], ".2f"))
-            print('Reading Velocity at sweep angle: ', sweepangle)
+            print('Reading velocity at sweep angle: ', sweepangle)
             t = radar.time['data'][x]
             locDat = [xDat, yDat, t]
-            v = detectvis(radar, img, file, locDat, sweepangle, detdir)
+            vis = True
+            v = detect(radar, img, file, locDat, sweepangle, detdir, vis)
             if v is not None:
                 vc, vall = v
                 vc.append(x)
@@ -59,6 +61,8 @@ def readpyart(file, outdir, detdir):
             plt.close('all')
     if(len(r) >= 2):
         rlsp = org(r)
+        rv = kin(rlsp)
+        backprop(rv,60)
         jsonsquare(file, radar, allr, outdir)
         #jsonpoint(file, radar, r, outdir)
 
