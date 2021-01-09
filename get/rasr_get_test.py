@@ -1,3 +1,12 @@
+"""
+RASR Get Test ver 1.0
+as of Jan 09, 2021
+
+See README for details
+
+@authors: Benjamin Miller, Robby Keh, and Yash Sarda
+"""
+
 import warnings
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", category=FutureWarning)
@@ -159,8 +168,6 @@ def getListOfFiles(dirName):
 
 
 ########################################################################################################################
-if os.path.exists('links/data_links.txt'):
-  os.remove('links/data_links.txt')
 start_time = time.time()
 
 product = 'AAL2'  # Level-II data include the original three meteorological base data quantities: reflectivity, mean radial velocity, and spectrum width,
@@ -171,7 +178,7 @@ monthi = 2
 dayi = 6
 stime = 71800
 etime = 72200
-radarSites = ['KGRB','KMKX']
+radarSites = ["KMKX","KGRB"]
 
 
 start_date = date(yri, monthi, dayi)
@@ -206,10 +213,9 @@ for single_date in daterange(start_date, end_date):
                          "?yyyy={year}&mm={month}&dd={day}&id={site_id}&product={product}")
         page_url = page_url_base.format(year=year, month=month, day=day,
                                         site_id=site_id, product=product)
+        if os.path.exists('links/data_links.txt'):
+          os.remove('links/data_links.txt')
         links = save_links(page_url, linkname)
 
         for link in links:
             download_link(link, dirname, stime, etime)
-
-        if os.path.exists('../links/data_links.txt'):
-          os.remove('../links/data_links.txt')

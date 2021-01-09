@@ -1,3 +1,12 @@
+"""
+TORCHDET ver 1.0
+as of Jan 09, 2021
+
+Sub-function for Py-Torch based Convolutional Neural Network Object Detection of radar data
+
+@author: Yash Sarda
+"""
+
 import warnings
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", category=FutureWarning)
@@ -28,19 +37,18 @@ with warnings.catch_warnings():
 
 #########################################################
 
-def detect(radar, img, file, locDat, sweep, detdir, vis):
-    cint = 0.75
+def detect(radar, img, file, locDat, sweep, detdir, vis, cint):
     model = Model.load('RASRmodl.pth', ['fall'])
     pred = model.predict(img)
 
     for n in range(len(pred[1])):
         if(pred[2][n] > cint):
-            bound = 0.5
+            bound = 0.5 # The unmapped location data is about 2x as far as it should be.
+                        # I don't know why this, and this is a temp solution.
             xdat,ydat = bound*1000*locDat[0], bound*1000*locDat[1]
 
             t = round(locDat[2], 2)
-            name, m, d, y, hh, mm, ss, date = stringed(file)
-            btime = m +'/' + d + '/' + y + ' ' + hh + ':' + mm + ':' + ss
+            name, date, btime, dtstr = stringed(file)
             atime = (datetime.strptime(btime, '%m/%d/%Y %H:%M:%S') + timedelta(seconds=t))
 
             x0p, y0p, x1p, y1p = float(pred[1][n][0]), float(pred[1][n][1]), float(pred[1][n][2]), float(pred[1][n][3])
@@ -55,7 +63,7 @@ def detect(radar, img, file, locDat, sweep, detdir, vis):
             x0,y0 = Xv[int(x0p)], Yv[int(y0p)]
             x1,y1 = Xv[int(x1p)], Yv[int(y1p)]
 
-            if (vis == True):
+            if (vis == True):   # Saves the image with a bounding box, detection type, and confidence level
                 fig = plt.figure(figsize=(25, 25))
                 ax = fig.add_axes([0, 0, 1, 1])
                 ax.imshow(img)
@@ -67,6 +75,7 @@ def detect(radar, img, file, locDat, sweep, detdir, vis):
                 imname = detdir + file + '_' + sweep + '_detected' + '.png'
                 plt.savefig(imname, bbox_inches='tight')
 
+            # Finding Geodetic coordinates from relative distance to site:
             z = np.sqrt(x**2 + y**2) * np.tan(np.radians(float(sweep)))
             sitealt, sitelon, sitelat = float(radar.altitude['data']), float(radar.longitude['data']), float(radar.latitude['data'])
             lon, lat = np.around(pyart.core.cartesian_to_geographic_aeqd(x, y, sitelon, sitelat), 2)

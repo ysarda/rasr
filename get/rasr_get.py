@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 17 12:58:28 2019
-ver 1.0 as of Feb 01, 2019
+RASR Get ver 1.0
+as of Jan 09, 2021
 
 See README for details
 
-@author: Benjamin Miller and Robby Keh
+@authors: Benjamin Miller and Robby Keh
 """
+
 import warnings
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", category=FutureWarning)

@@ -1,3 +1,12 @@
+"""
+Training Preparation ver 1.0
+as of Jan 09, 2021
+
+Script for downloading and converting NOAA files to images for training
+
+@authors: Benjamin Miller, Robby Keh, and Yash Sarda
+"""
+
 import warnings
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", category=FutureWarning)
@@ -161,8 +170,8 @@ def getListOfFiles(dirName):
 
 
 ########################################################################################################################
-if os.path.exists('../links/data_links.txt'):
-  os.remove('../links/data_links.txt')
+if os.path.exists('links/data_links.txt'):
+  os.remove('links/data_links.txt')
 start_time = time.time()
 
 product = 'AAL2'  # Level-II data include the original three meteorological base data quantities: reflectivity, mean radial velocity, and spectrum width,
@@ -232,8 +241,8 @@ for single_date in daterange(start_date, end_date):
 input("\nDump the files you don't need\n")
 
 cpath = os.getcwd()
-rawdir = cpath + '/raw/'
-imdir = cpath + '/im/'
+rawdir = cpath + 'training/raw/'
+imdir = cpath + 'training/im/'
 all_files = getListOfFiles(rawdir)
 for file in all_files:
     print('Reading file: ', file)

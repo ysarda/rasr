@@ -30,7 +30,8 @@ detecto (1.2.0)
 matplotlib (3.2.3)
 netCDF4 (1.5.3)    
 numpy (1.19.2)  
-pip (20.3.3)  
+pip (20.3.3)
+pymap3d (2.4.3)
 requests (2.24.0)  
 torch (1.7.1)  
 tqdm (4.54.1)  
@@ -47,8 +48,7 @@ conda env create --file rasrenv.yml
 For training on full size images, add them and their respective labels to 2500/train and 2500/test. Aim for anywhere between a 70/30 to 90/10  train-to-test split. Otherwise, adjust the learning rate, epochs, and directories as needed. Run the training script as below:
 ~~~
 conda activate rasr
-cd training
-python torchtrain.py
+python training/torchtrain.py
 conda deactivate
 ~~~
 
