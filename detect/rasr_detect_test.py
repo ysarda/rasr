@@ -20,7 +20,7 @@ with warnings.catch_warnings():
     from matplotlib.backends.backend_agg import FigureCanvas
     from matplotlib import pyplot as plt
     from matplotlib import patches
-    #matplotlib.use("TKagg")
+
 
     import pyart
 

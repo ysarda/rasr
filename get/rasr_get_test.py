@@ -25,7 +25,6 @@ with warnings.catch_warnings():
 
     import matplotlib
     import matplotlib.pyplot as plt
-    matplotlib.use("TKagg")
     from matplotlib.figure import Figure
     from matplotlib.backends.backend_agg import FigureCanvas
 
