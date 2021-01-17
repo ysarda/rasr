@@ -207,7 +207,7 @@ for single_date in daterange(start_date, end_date):
 
     for site_id in radarSites:
         print("Downloading data from radar: \"" + site_id + "\"")
-        dirname = "test/raw"
+        dirname = "test/data"
         linkname = "links"
         page_url_base = ("https://www.ncdc.noaa.gov/nexradinv/bdp-download.jsp"
                          "?yyyy={year}&mm={month}&dd={day}&id={site_id}&product={product}")
