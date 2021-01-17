@@ -106,7 +106,7 @@ def download_link(link, dirname, stime, etime):
     # Use last part of the link as the filename (after the final slash)
     # "http://noaa-nexrad-level2.s3.amazonaws.com/2018/01/09/KABR/KABR20180109_000242_V06"
     filename = '{}/{}'.format(dirname, link.split('/')[-1])
-    t = int(filename[22:28])
+    t = int(filename[23:29])
     if(stime < t < etime and filename[-3:] != 'MDM'):
         print('Writing to file {}'.format(filename))
         write_to_file(filename, response)
@@ -167,7 +167,10 @@ def getListOfFiles(dirName):
 
 
 ########################################################################################################################
-start_time = time.time()
+folders = ['links','data','vis','falls','test/data','test/vis','test/falls']
+for folder in folders:
+    if not os.path.exists(folder):
+        os.makedirs(folder)
 
 product = 'AAL2'  # Level-II data include the original three meteorological base data quantities: reflectivity, mean radial velocity, and spectrum width,
 # as well as the dual-polarization base data of differential reflectivity, correlation coefficient, and differential phase.
