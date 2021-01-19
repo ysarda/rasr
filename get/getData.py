@@ -248,7 +248,7 @@ def runFunction(sites, dateList, timerange, static_dir):
             perform_pass = False
             try:
                 if len(links) == 0:
-                    print('Not downloading data from ', radarSites, 'because no data available')
+                    print('\nNot downloading data from ',radarSites, 'because no data available')
                     perform_pass = True
                     pass
                 else:

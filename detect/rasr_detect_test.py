@@ -21,7 +21,6 @@ with warnings.catch_warnings():
     from matplotlib import pyplot as plt
     from matplotlib import patches
 
-
     import pyart
 
     import os
@@ -41,7 +40,7 @@ def readpyart(file, outdir, detdir, cint, vis): # Function to unpack the NOAA ra
     radar = pyart.io.read(fdir + file)
     name, date, btime, dtstr = stringed(file)
     print('\n')
-    print('Checking ' + name + ' at ' + date)
+    print('Checking ' + name + ' at ' + btime)
 
     for x in range(radar.nsweeps):
         plotter = pyart.graph.RadarDisplay(radar)

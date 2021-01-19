@@ -39,7 +39,7 @@ with warnings.catch_warnings():
 def detect(radar, img, file, locDat, sweep, detdir, vis, cint):
     model = Model.load('RASRmodl.pth', ['fall'])
     pred = model.predict(img)
-
+    #print(max(pred[2]))
     for n in range(len(pred[1])):
         if(pred[2][n] > cint):
             bound = 0.5 # The unmapped location data is about 2x as far as it should be.

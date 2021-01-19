@@ -23,11 +23,6 @@ with warnings.catch_warnings():
 
     import pyart
 
-    import matplotlib
-    import matplotlib.pyplot as plt
-    from matplotlib.figure import Figure
-    from matplotlib.backends.backend_agg import FigureCanvas
-
     import requests
     import time
     from bs4 import BeautifulSoup, SoupStrainer
@@ -115,39 +110,6 @@ def download_link(link, dirname, stime, etime):
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
-
-
-def dat2vel(file, imdir):
-    global thresh, h, nd
-    radar = pyart.io.read(file)
-    for x in range(radar.nsweeps):
-        plotter = pyart.graph.RadarDisplay(radar)
-        fig = plt.figure(figsize=(25, 25), frameon=False)
-        ax = plt.Axes(fig, [0., 0., 1., 1.])
-        fig.add_axes(ax)
-        plotter.set_limits(xlim=(-250, 250), ylim=(-250, 250), ax=ax)
-        data = plotter._get_data(
-            'velocity', x, mask_tuple=None, filter_transitions=True, gatefilter=None)
-        if np.any(data) > 0:
-            xDat, yDat = plotter._get_x_y(
-                x, edges=True, filter_transitions=True)
-            data = data * (70 / np.max(np.abs(data)))
-            ax.pcolormesh(xDat, yDat, data)
-            canvas = FigureCanvas(fig)
-            fig.canvas.draw()
-            img = np.array(canvas.renderer.buffer_rgba())
-            sweepangle = str(round(radar.fixed_angle['data'][x], 2))
-            imname = 'vel_' + str(file[40:-1]) + '_' + sweepangle
-            print('Saving Velocity at sweep angle: ', sweepangle)
-            if os.path.exists(imdir + imname + '.jpg'):
-                plt.savefig(imdir + imname + '_2.jpg')
-            else:
-                plt.savefig(imdir + imname + '.jpg')
-            plt.cla()
-            plt.clf()
-            plt.close('all')
-    input("\nHit enter for the next file\n")
-
 
 def getListOfFiles(dirName):
     listOfFile = os.listdir(dirName)

@@ -120,17 +120,9 @@ def init(l):    # Honestly I still have no idea what this does
 fdir = 'data/'
 outdir = 'falls/'
 detdir = 'vis/'
-cint = 0.85
+cint = 0.9
 vis = True     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O.
                # False by default for the main function
-
-try:
-    for file in os.listdir(outdir):
-        os.remove(outdir + file)
-    for file in os.listdir(detdir):
-        os.remove(detdir + file)
-except FileNotFoundError:
-    pass
 
 if __name__ == '__main__':
     # optional spec for num pool workers, else num cpu

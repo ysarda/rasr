@@ -19,7 +19,7 @@ vdataset = Dataset('training/2500/test/')     # Evaluation dataseet
 model = Model(['fall'])
 
 # Keep the learning rate low, otherwise the loss will be too high
-loss = model.fit(tdataset, vdataset, epochs=20, learning_rate=0.001,
+loss = model.fit(tdataset, vdataset, epochs=15, learning_rate=0.001,
                    gamma=0.2, lr_step_size=5, verbose=True)
 
 plt.plot(loss)
