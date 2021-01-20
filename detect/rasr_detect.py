@@ -37,7 +37,7 @@ with warnings.catch_warnings():
 
     import gc
 
-    from motion import org, kin, backprop
+    from motion import org, kin, backprop, propvis
     from output import squareout, pointout, stringed, txtout
     from torchdet import detect
 
@@ -121,7 +121,7 @@ fdir = 'data/'
 outdir = 'falls/'
 detdir = 'vis/'
 cint = 0.9
-vis = True     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O.
+vis = False     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O.
                # False by default for the main function
 
 if __name__ == '__main__':
