@@ -21,8 +21,6 @@ with warnings.catch_warnings():
 
     import numpy as np
 
-    import pyart
-
     import requests
     import time
     from bs4 import BeautifulSoup, SoupStrainer
@@ -129,7 +127,7 @@ def getListOfFiles(dirName):
 
 
 ########################################################################################################################
-folders = ['links','data','vis','falls','test/data','test/vis','test/falls']
+folders = ['links','test/data','test/vis','test/falls']
 for folder in folders:
     if not os.path.exists(folder):
         os.makedirs(folder)

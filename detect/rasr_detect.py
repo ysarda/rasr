@@ -89,7 +89,7 @@ def readpyart(file, outdir, detdir, cint, vis): # Function to unpack the NOAA ra
         #pointout(file, radar, r, outdir)
         rlsp = org(r)
         rv = kin(rlsp)
-        prop = backprop(rv,360)
+        prop = backprop(rv,120)
         if (vis == True):
             propvis(prop, detdir, name, dtstr)
         txtout(prop, file, outdir)
@@ -110,11 +110,6 @@ def getListOfFiles(dirName):    # Converts a directory of files into an object i
     return all_files
 
 
-def init(l):    # Honestly I still have no idea what this does
-    global lock
-    lock = l
-
-
 ###############################################################################################################################
 # Relevant paths, confidence value, and visualization toggle:
 fdir = 'data/'
@@ -129,34 +124,9 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         runnum = sys.argv[1]
     else:
-        runnum = cpu_count() / 4
-    try:
-        all_files = getListOfFiles(fdir)
-    except:
-        all_files = []
-        print('ERROR: path not found')
-    top = len(all_files)
-    if top != 0:
-        l = Lock()
-        n = int(runnum)
-        partreadpyart = partial(readpyart, outdir=outdir, detdir=detdir, cint=cint, vis=vis)
-        for i in range(0, top, n):
-            print('Batch ' + str(int(i / n)) + ' of ' + str(int(top / n)) + ', initializing pool...')
-            with get_context("spawn").Pool(processes=int(runnum), initializer=init, initargs=(l,)) as pool:
-                print('   mapping...')
-                for x in pool.imap(partreadpyart, all_files[i:i + n]):
-                    # print(x)
-                    gc.collect()  # clear each step
-                #results = pool.map(getDataPart, all_files[i:i+n])
-                time.sleep(1)  # should permit maxtasksperchild=1
-                print('   closing batch...')
-                pool.close()  # close chunk
-                print('joining batch...')
-                pool.join()  # join chunk to clean
-            # pool.terminate() #terminate chunk
-            print('   batch closed')
-            gc.collect()  # clear at end
-    else:
-        print('ERROR: path not found')
+        runnum = cpu_count()
 
-#print ("Program took", time.time() - start_time, "to run")
+    allfiles = getListOfFiles(fdir)
+    pool = Pool(processes=int(runnum))  
+    runFunctionPart = partial(readpyart, outdir=outdir, detdir=detdir, cint=cint, vis=vis)
+    pool.map(runFunctionPart, allfiles)

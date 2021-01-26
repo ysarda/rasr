@@ -21,6 +21,11 @@ with warnings.catch_warnings():
 
 if __name__== '__main__':
 
+    folders = ['links','data','vis','falls']
+    for folder in folders:
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
     # Configurable Parameters
     now = datetime.now()
     today = datetime.today()
