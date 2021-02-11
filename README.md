@@ -61,11 +61,7 @@ python get/rasr_get_test.py
 python detect/torchdetect_test.py
 conda deactivate
 ~~~
-You should get example detection images and a json file with relevant data in test/.
-
-## 5. OPERATION
----
-RASR should be run daily, either manually with a bash file (I don't recommend this) or as part of a cron job. The commands are as follows:
+You should get example detection images and a json file with relevant data in test/. Similarly, you can test the full code:
 ~~~
 conda activate rasr
 python get/rasr_get.py x
@@ -73,3 +69,23 @@ python detect/torchdetect.py x
 conda deactivate
 ~~~
 **Include x to specify the number of processes, useful for running with parallel computing capable machines. If you omit x, RASR will automatically detect how many CPUs you have available and proceed from there.
+
+## 5. OPERATION
+---
+The full algorithm is designed to be compiled into a set of executables, for ease of use and universality. To this end, we use PyInstaller:
+~~~
+cd detect
+pyinstaller rasr_detect.py
+cp -rf dist/rasr_detect ../rd
+~~~
+~~~
+cd get
+pyinstaller rasr_get.py
+cp -rf dist/rasr_get ../rg
+~~~
+These commands will create the executable and libraries in a folder called 'dist/name' (i.e, RASR/detect/dist/rasr_detect) and then move them to folders called rg and rd. You can then compress rg and rd and send them anywhere. As long as they are in the same directory, and you run them from one level outside rd/rg, they will work (i.e, move your working directory to the folder that holds rg and rd). Run them as follows:
+~~~
+./rg/rasr_get
+./rd/rasr_detect
+~~~
+RASR should be run daily, either manually with a bash file (I don't recommend this) or as part of a cron job. The commands are as follows:
