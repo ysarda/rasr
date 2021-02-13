@@ -85,7 +85,7 @@ cp -rf dist/rasr_get ../rg
 ~~~
 These commands will create the executable and libraries in a folder called 'dist/name' (i.e, RASR/detect/dist/rasr_detect) and then move them to folders called rg and rd. You can then compress rg and rd and send them anywhere. As long as they are in the same directory, and you run them from one level outside rd/rg, they will work (i.e, move your working directory to the folder that holds rg and rd). Run them as follows:
 ~~~
-./rg/rasr_get
-./rd/rasr_detect
+./rg/rasr_get x
+./rd/rasr_detect x
 ~~~
-RASR should be run daily, either manually with a bash file (I don't recommend this) or as part of a cron job. The commands are as follows:
+RASR should be run daily, either manually with a bash file (not recommended) or as part of a cron job. Note that sometimes, you must manually download arm-pyart/pyart from their GitHub and add that to the rd folder because it sometimes compiles said package incorrectly.

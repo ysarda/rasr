@@ -74,8 +74,8 @@ def readpyart(file, outdir, detdir, cint, vis): # Function to unpack the NOAA ra
             plt.clf()
             plt.close('all')
     if(len(r) >= 2):
-        squareout(file, radar, allr, outdir)
-        #pointout(file, radar, r, outdir)
+        #squareout(file, radar, allr, outdir)
+        pointout(file, radar, r, outdir)
         rlsp = org(r)
         rv = kin(rlsp)
         prop = backprop(rv,360)

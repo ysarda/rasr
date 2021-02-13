@@ -13,7 +13,8 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore", category=DeprecationWarning)
     warnings.simplefilter("ignore", category=RuntimeWarning)
 
-    import json
+    import geojson
+    from geojson import Point, Feature, FeatureCollection, dump
 
     import numpy as np
 
@@ -22,24 +23,21 @@ with warnings.catch_warnings():
 
 def pointout(file, radar, r, outdir):
     for det in r:
-        lat, lon, alt, t = det
+        lat, lon, alt, t, sweep = det
         trounded = str(t)[:-4]
         name, date, btime, dtstr = stringed(file)
 
         print('Detection: ' + str(float(lat)) + ' degrees North,' + ' ' + str(float(lon)) +
               ' degrees West,' + ' ' + str(alt) + ' m above sea level, at ' + trounded)
-        data = {}
-        data[date] = []
-        data[date].append({
-            'Time:': trounded,
-            'Altitude (m)': str(alt),
-            'Longitude (deg East)': str(lon),
-            'Latitude (deg North)': str(lat)
-        })
-        fname = outdir + name + dtstr + ".json"
-        with open(fname, 'a+') as outfile:
-            json.dump(data, outfile)
 
+        point = Point((int(-lon), int(lat), int(alt)))
+        features = []
+        features.append(Feature(geometry=point))
+        feature_collection = FeatureCollection(features)
+
+        fname = outdir + name + dtstr + '-' + str(sweep) + ".geojson"
+        with open(fname, 'a+') as outfile:
+            dump(feature_collection, outfile)
 
 def squareout(file, radar, allr, outdir):
     for det in allr:
