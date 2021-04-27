@@ -55,21 +55,27 @@ def readpyart(file, outdir, detdir, cint, vis): # Function to unpack the NOAA ra
             data = data * (70 / np.max(np.abs(data)))
             ax.pcolormesh(xDat, yDat, data)
             canvas = FigureCanvas(fig)
-            fig.canvas.draw()                                   # (1)
-            img = np.array(canvas.renderer.buffer_rgba())       # This whole segment is converting the data to a standard size
-            img = np.delete(img, 3, 2)                          # and readable image using matplotlib (MPL)
+            canvas.draw()                                   # (1)
+            buf, (w,h) = fig.canvas.print_to_buffer()
+            img = np.frombuffer(buf,np.uint8).reshape((h, w, 4))
+                                              # This whole segment is converting the data to a standard size
+            if img.shape != ():
+                img = np.delete(img, 3, 2)                          # and readable image using matplotlib (MPL)
+            
 
-
-            sweepangle = str(format(radar.fixed_angle['data'][x], ".2f"))
-            print('Reading velocity at sweep angle: ', sweepangle)
-            t = radar.time['data'][x]
-            locDat = [xDat, yDat, t]
-            v = detect(radar, img, file, locDat, sweepangle, detdir, vis, cint)    # detect is a function from torchdet.py
-            if v is not None:
-                vc, vall = v    # two types of output, for either point or square displays
-                vc.append(x)
-                r.append(vc)
-                allr.append(vall)
+                sweepangle = str(format(radar.fixed_angle['data'][x], ".2f"))
+                print('Reading velocity at sweep angle: ', sweepangle)
+                t = radar.time['data'][x]
+                locDat = [xDat, yDat, t]
+                v = detect(radar, img, file, locDat, sweepangle, detdir, vis, cint)    # detect is a function from torchdet.py
+                if v is not None:
+                    vc, vall = v    # two types of output, for either point or square displays
+                    vc.append(x)
+                    r.append(vc)
+                    allr.append(vall)
+                plt.cla()
+                plt.clf()
+                plt.close('all')
             plt.cla()
             plt.clf()
             plt.close('all')

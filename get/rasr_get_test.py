@@ -135,12 +135,12 @@ for folder in folders:
 product = 'AAL2'  # Level-II data include the original three meteorological base data quantities: reflectivity, mean radial velocity, and spectrum width,
 # as well as the dual-polarization base data of differential reflectivity, correlation coefficient, and differential phase.
 now = datetime.now()
-yri = 2017
-monthi = 2
-dayi = 6
-stime = 71800
-etime = 72200
-radarSites = ["KMKX","KGRB"]
+yri = 2020
+monthi = 3
+dayi = 26
+stime = 33000
+etime = 50000
+radarSites = ["KATX","KOTX","KRTX","KPDT"]
 
 
 start_date = date(yri, monthi, dayi)
