@@ -1,129 +1,111 @@
-# -*- coding: utf-8 -*-
+
 """
-Created on Thu Jan 17 12:58:28 2019
-ver 1.0 as of Feb 01, 2019
+RASR Detect Test ver 3.0
+as of Jan 09, 2021
 
 See README for details
 
-@author: Benjamin Miller 
+@authors: Benjamin Miller and Yash Sarda
 """
+
+
 import warnings
 with warnings.catch_warnings():
-    warnings.simplefilter("ignore",category=FutureWarning)
+    warnings.simplefilter("ignore", category=FutureWarning)
     warnings.simplefilter("ignore", category=DeprecationWarning)
+    warnings.simplefilter("ignore", category=RuntimeWarning)
+
+    import matplotlib
+    from matplotlib.figure import Figure
+    from matplotlib.backends.backend_agg import FigureCanvas
+    from matplotlib import pyplot as plt
+    from matplotlib import patches
+
+    import pyart
+
     import os
-    os.environ["PYART_QUIET"] = "1"
-    from lib.Unwrapper import runFunction as filterFile 
-    from multiprocessing import Pool, cpu_count, Lock
+
     import numpy as np
-    import matplotlib.colors as color
-    from functools import partial
-    import sys
+
+    from motion import org, kin, backprop, propvis
+    from output import squareout, pointout, stringed, txtout
+    from torchdet import detect
+########################################################
 
 
+def readpyart(file, outdir, detdir, cint, vis): # Function to unpack the NOAA radar files, and evaluate them
+    r, dr, allr = [], [], []
 
-#SEE README FOR OPERATING INSTRUCTIONS
-#West,TX             : KFWS 2/15/2009 16:53:32
-#Battle Mountain, NV : KLRX 8/22/2012 06:03:05
-#stations = [sys.argv[1]]
-# ADVANCED INPUT, see readme and demo
-#Constaints array for:
-#TX: [100,12,1e-4,0.3,30]
-#NV: [100,12,1e-4,0.0,30]
-    
-def getMaps():
-    #Set velocity colormap 
-    cmaplist = np.array([[255,0,0],#-70
-                         [255,0,0],#-60
-                         [210,0,0],#-50
-                         [180,0,0],#-40
-                         [150,0,0],#-30
-                         [115,0,0],#-20
-                         [70,40,40],#-10
-                         [70,70,70],#0
-                         [40,70,40],#10
-                         [0,115,0],#20
-                         [0,150,0],#30
-                         [0,180,0],#40
-                         [0,210,0],#50
-                         [0,255,0],#60
-                         [0,255,0]])/255#70
-    cmaplist = np.flip(cmaplist,axis=0)
-    velMap = color.LinearSegmentedColormap.from_list('velMap',cmaplist,N=256)
-    
-    #Set spectrum width colormap
-    cmaplist = np.array([[20,20,20],#0
-                         [40,40,40],#6
-                         [40,150,40],#12 40 150
-                         [150,40,40],#18 150 40
-                         [150,70,0],#24
-                         [255,255,0]])/255#30
-    spwMap = color.LinearSegmentedColormap.from_list('spwMap',cmaplist,N=256)
-    return velMap, spwMap
+    #file = file[len(fdir):]                           # (1)
+    radar = pyart.io.read(fdir + file)
+    name, date, btime, dtstr = stringed(file)
+    print('\n')
+    print('Checking ' + name + ' at ' + btime)
 
-def getData(filename, velMap, spwMap, writeImgs):
-    colorCutoff = 100 
-    edgeIntensity = 8#12 
-    sizeFilter = 1*(10**-4)
-    circularityFilter = 0.3 
-    fillFilter = 30
-    
-    #run program
-    fileloc = os.getcwd()+"/tmptest/"+filename
-    filterFile(fileloc, filename, velMap, spwMap, colorCutoff, edgeIntensity, sizeFilter , colorCutoff, circularityFilter, fillFilter, lock, writeImgs)
-    #os.remove(fileloc)
-    
-def init(l):
-    global lock
-    lock = l
-    
-if __name__== '__main__':
-    #optional spec for num pool workers, else num cpu
-    if len(sys.argv)>1:
-        runnum = sys.argv[1]
-    else:
-        runnum = cpu_count()
-    if len(sys.argv)>2:
-        if str(sys.argv[2]) == 'True':
-            writeImgs = True
-        else:
-            writeImgs=False
-    else:
-        writeImgs = False
-        
-    outdir = os.getcwd()+"/out"
-    outfile = outdir+"/out.txt"
-    if not os.path.exists(outdir):                 
-        try:
-                os.mkdir(outdir)
-        except FileExistsError:
-                pass
-        
-    dirname = os.getcwd()+"/tmptest"
-    if os.path.exists(dirname): 
-        #instantiate outfile
-        open(outfile, 'a').close
+    for x in range(radar.nsweeps):
+        plotter = pyart.graph.RadarDisplay(radar)
+        fig = plt.figure(figsize=(25, 25), frameon=False)
+        ax = plt.Axes(fig, [0., 0., 1., 1.])
+        fig.add_axes(ax)
+        plotter.set_limits(xlim=(-250, 250), ylim=(-250, 250), ax=ax)
+        data = plotter._get_data('velocity', x, mask_tuple=None, filter_transitions=True, gatefilter=None)
 
-        velMap,spwMap = getMaps()
-        all_files = os.listdir(dirname+"/")
-        
-        l = Lock()
-            
-        pool = Pool(processes=int(runnum), initializer=init, initargs=(l,))
-        getDataPart = partial(getData, velMap=velMap, spwMap=spwMap, writeImgs=writeImgs)
-        pool.map(getDataPart, all_files)
-        pool.close
-        pool.join
-                
+        if np.any(data) > 0:
+            xDat, yDat = plotter._get_x_y(x, edges=True, filter_transitions=True)
+            data = data * (70 / np.max(np.abs(data)))
+            ax.pcolormesh(xDat, yDat, data)
+            canvas = FigureCanvas(fig)
+            canvas.draw()                                   # (1)
+            buf, (w,h) = fig.canvas.print_to_buffer()
+            img = np.frombuffer(buf,np.uint8).reshape((h, w, 4))
+                                              # This whole segment is converting the data to a standard size
+            if img.shape != ():
+                img = np.delete(img, 3, 2)                          # and readable image using matplotlib (MPL)
             
 
+                sweepangle = str(format(radar.fixed_angle['data'][x], ".2f"))
+                print('Reading velocity at sweep angle: ', sweepangle)
+                t = radar.time['data'][x]
+                locDat = [xDat, yDat, t]
+                v = detect(radar, img, file, locDat, sweepangle, detdir, vis, cint)    # detect is a function from torchdet.py
+                if v is not None:
+                    vc, vall = v    # two types of output, for either point or square displays
+                    vc.append(x)
+                    r.append(vc)
+                    allr.append(vall)
+                plt.cla()
+                plt.clf()
+                plt.close('all')
+            plt.cla()
+            plt.clf()
+            plt.close('all')
+    if(len(r) >= 2):
+        #squareout(file, radar, allr, outdir)
+        pointout(file, radar, r, outdir)
+        rlsp = org(r)
+        rv = kin(rlsp)
+        prop = backprop(rv,360)
+        if (vis == True):
+            propvis(prop, detdir, name, dtstr)
+        txtout(prop, file, outdir)
 
 
+##########################################################
+# Relevant paths, confidence value, and visualization toggle:
+fdir = 'test/data/'
+outdir = 'test/falls/'
+detdir = 'test/vis/'
+cint = 0.75
+vis = True     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O.
+               # True aby default for the test function
 
+try:
+    for file in os.listdir(outdir):
+        os.remove(outdir + file)
+    for file in os.listdir(detdir):
+        os.remove(detdir + file)
+except FileNotFoundError:
+    pass
 
-
-
-
-
-
-
+for file in os.listdir(fdir):
+    readpyart(file, outdir, detdir, cint, vis)

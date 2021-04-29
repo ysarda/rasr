@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 17 12:58:28 2019
-ver 1.0 as of Feb 01, 2019
+RASR Get ver 1.0
+as of Jan 09, 2021
 
 See README for details
 
-@author: Benjamin Miller and Robby Keh
+@authors: Benjamin Miller and Robby Keh
 """
+
 import warnings
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", category=FutureWarning)
@@ -19,6 +20,11 @@ with warnings.catch_warnings():
     from functools import partial
 
 if __name__== '__main__':
+
+    folders = ['links','data','vis','falls']
+    for folder in folders:
+        if not os.path.exists(folder):
+            os.makedirs(folder)
 
     # Configurable Parameters
     now = datetime.now()
@@ -34,7 +40,7 @@ if __name__== '__main__':
         runnum = sys.argv[1]
     else:
         runnum = cpu_count()
-        
+
     sites = ['KABR' ,'KENX','KABX','KAMA','PAHG','PGUA','KFFC','KBBX','PABC','KBLX','KBGM','PACG','KBMX','KBIS','KFCX','KCBX','KBOX',
          'KBRO','KBUF','KCXX','RKSG','KFDX','KCBW','KICX','KGRK','KCLX','KRLX','KCYS','KLOT','KILN','KCLE','KCAE','KGWX',
          'KCRP','KFTG','KDMX','KDTX','KDDC','KDOX','KDLH','KDYX','KEYX','KEPZ','KLRX','KBHX','KVWX','PAPD','KFSX','KSRX',
@@ -46,9 +52,9 @@ if __name__== '__main__':
          'KDAX','KMTX','KSJT','KEWX','KNKX','KMUX','KHNX','TJUA','KSOX','KATX','KSHV','KFSD','PHKI','PHWA','KOTX','KSGF',
          'KLSX','KCCX','KLWX','KTLH','KTBW','KTWX','KEMX','KINX','KVNX','KVBX','KAKQ','KICT','KLTX','KYUX']
 
-    
-    #Create storage directory 
-    dirname = os.getcwd()+"/tmp"
+
+    #Create storage directory
+    dirname = 'data/'
 
     if not os.path.exists(dirname):
         try:
@@ -57,10 +63,10 @@ if __name__== '__main__':
             # f = open('data_links.txt', 'wb')
         except FileExistsError:
             os.chdir(dirname)
-            if os.path.exists('data_links.txt'):
+            if os.path.exists('links/data_links.txt'):
                 pass
             else:
-                f = open('data_links.txt', 'wb')
+                f = open('links/data_links.txt', 'wb')
 
     static_dir = os.getcwd() + '//tmp'
 
@@ -78,11 +84,3 @@ if __name__== '__main__':
     pool.map(runFunctionPart, sites)
 
     print('Done')
-
-
-
-
-
-
-
-

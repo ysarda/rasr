@@ -18,7 +18,7 @@ def save_links(page_url, dirname):
     for i in enumerate(link_time_num): # previously for i in range(0, len(link_time_num)):
         #link_file = '{}/data_links.txt'.format(dirname)
         #link_file = '{}//data_links.txt'.format('tmp')
-        link_file = 'data_links.txt'
+        link_file = 'links/data_links.txt'
         a = os.getcwd()
         links = []
         # print('Writing links to {}'.format(link_file))
@@ -64,13 +64,14 @@ def download_content(link , max_retries=5):
     return response
 
 def write_to_file(filename, response):
+    filename = 'data/' + filename
     with open(filename, 'wb') as f:
         f.write(response.content)
 
 # def download_link(link, dirname, timerange):
 def download_link(link, timerange, data_links_list):
     # Grab the content from a specific radar link and save binary output to a file
-    namer = link.split('/')[-1]
+    namer = link.split('links')[-1]
     #print(namer)
     namer_tmp = namer.split('_')[1]
     #if namer.split('.')[1] == 'gz': # MAJOR PROBLEM but can be fixed
@@ -179,7 +180,8 @@ def runFunction(sites, dateList, timerange, static_dir):
                     if day == i:
                         day = '{num:02d}'.format(num=i)
 
-            print("\n----------------------------------------Downloading data as of", str(month) + "/" + str(day) + "/" + str(year),"----------------------------------------")
+            print("\n")
+            print("Downloading data as of", str(month) + "/" + str(day) + "/" + str(year))
 
             # This is a list of radar sites that have specific end dates and not among the list of "registered" radar sites,
             # usually are considered test sites or decommissioned sites: they usually start with a T for test sites,
@@ -220,7 +222,7 @@ def runFunction(sites, dateList, timerange, static_dir):
             #for key, site in sites.items():
             #for site in sites:
             site_id = sites
-            print("\nDownloading data from radar: \"" + site_id + "\"")
+            print("Downloading data from radar: \"" + site_id + "\"")
             dirname = "{year}{month}{day}_{site_id}_{product}".format(
                 year=year, month=month, day=day, site_id=site_id, product=product)
             page_url_base = ("https://www.ncdc.noaa.gov/nexradinv/bdp-download.jsp"
@@ -246,7 +248,7 @@ def runFunction(sites, dateList, timerange, static_dir):
             perform_pass = False
             try:
                 if len(links) == 0:
-                    print('Not downloading data from ', radarSites, 'because no data available')
+                    print('\nNot downloading data from ',radarSites, 'because no data available')
                     perform_pass = True
                     pass
                 else:
@@ -283,7 +285,7 @@ def runFunction(sites, dateList, timerange, static_dir):
             else:
                 #os.remove("data_links.txt")
                 open('data_links.txt', 'w').close()
-            
+
             try:
                 os.chdir(a)
             except FileNotFoundError:
@@ -299,7 +301,7 @@ def runFunction(sites, dateList, timerange, static_dir):
                "Set the new date to be one day before the last download date to ensure all files are downloaded."
         print("\n\n", site_info)
         print("\n", date_info)
-        file = open("last_download_date.txt", "w")
+        file = open("../data/last_download_date.txt", "w")
         file.write(site_info + "\n" + date_info + "\n" + note)
         file.close()
         print("\nExported the last known dates before program ended to last_download_date.txt "

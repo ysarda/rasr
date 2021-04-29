@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH -J RASRrun           # Job name
+#SBATCH -o out       # Name of stdout output file
+#SBATCH -e err       # Name of stderr error file
+#SBATCH -p skx-normal      # Queue (partition) name
+#SBATCH -N 4               # Total # of nodes
+#SBATCH -n 32              # Total # of mpi tasks
+#SBATCH -t 01:30:00        # Run time (hh:mm:ss)
+#SBATCH --mail-user=ysarda@utexas.edu
+#SBATCH --mail-type=all    # Send email at begin and end of job
+#SBATCH -A MOST       # Allocation name (req'd if you have more than 1)
+
+rm -r data/* falls/* vis/* links/data_links.txt
+./rg/rasr_get
+./rd/rasr_detect
