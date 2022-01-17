@@ -8,38 +8,26 @@ See README for details
 @authors: Benjamin Miller and Yash Sarda
 """
 
-import warnings
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", category=FutureWarning)
-    warnings.simplefilter("ignore", category=DeprecationWarning)
-    warnings.simplefilter("ignore", category=RuntimeWarning)
 
-    import matplotlib
-    from matplotlib.figure import Figure
-    from matplotlib.backends.backend_agg import FigureCanvas
-    from matplotlib import pyplot as plt
-    from matplotlib import patches
 
-    import pyart
+from matplotlib.backends.backend_agg import FigureCanvas
+from matplotlib import pyplot as plt
 
-    import os
+import pyart
 
-    import time
+import os
 
-    import sys
+import sys
 
-    import numpy as np
+import numpy as np
 
-    from multiprocessing import Pool, cpu_count, Lock, get_context
-    from multiprocessing.pool import ThreadPool
+from multiprocessing import Pool, cpu_count
 
-    from functools import partial
+from functools import partial
 
-    import gc
-
-    from motion import org, kin, backprop, propvis
-    from output import squareout, pointout, stringed, txtout
-    from torchdet import detect
+from motion import organizeData, stateVector, backProp, propVis
+from output import squareOut, stringConvert, txtOut
+from torchdet import detectFalls
 
 ##############################################################################################################################
 
@@ -49,7 +37,7 @@ def readpyart(file, outdir, detdir, cint, vis): # Function to unpack the NOAA ra
 
     file = file[len(fdir):]                           # (1)
     radar = pyart.io.read(fdir + file)
-    name, date, btime, dtstr = stringed(file)
+    name, date, btime, dtstr = stringConvert(file)
     print('\n')
     print('Checking ' + name + ' at ' + date)
 
@@ -75,7 +63,7 @@ def readpyart(file, outdir, detdir, cint, vis): # Function to unpack the NOAA ra
             #print('Reading velocity at sweep angle: ', sweepangle)
             t = radar.time['data'][x]
             locDat = [xDat, yDat, t]
-            v = detect(radar, img, file, locDat, sweepangle, detdir, vis, cint)    # detect is a function from torchdet.py
+            v = detectFalls(radar, img, file, locDat, sweepangle, detdir, vis, cint)    # detect is a function from torchdet.py
             if v is not None:
                 vc, vall = v    # two types of output, for either point or square displays
                 vc.append(x)
@@ -85,14 +73,14 @@ def readpyart(file, outdir, detdir, cint, vis): # Function to unpack the NOAA ra
             plt.clf()
             plt.close('all')
     if(len(r) >= 2):
-        squareout(file, radar, allr, outdir)
+        squareOut(file, radar, allr, outdir)
         #pointout(file, radar, r, outdir)
-        rlsp = org(r)
-        rv = kin(rlsp)
-        prop = backprop(rv,120)
+        rlsp = organizeData(r)
+        rv = stateVector(rlsp)
+        prop = backProp(rv,120)
         if (vis == True):
-            propvis(prop, detdir, name, dtstr)
-        txtout(prop, file, outdir)
+            propVis(prop, detdir, name, dtstr)
+        txtOut(prop, file, outdir)
 
 def getListOfFiles(dirName):    # Converts a directory of files into an object iterable with pool (for parallelization)
     listOfFile = os.listdir(dirName)
