@@ -9,39 +9,45 @@ See README for details
 """
 
 
-import warnings
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", category=FutureWarning)
-    warnings.simplefilter("ignore", category=DeprecationWarning)
-    warnings.simplefilter("ignore", category=RuntimeWarning)
+from matplotlib.backends.backend_agg import FigureCanvas
+from matplotlib import pyplot as plt
 
-    import matplotlib
-    from matplotlib.figure import Figure
-    from matplotlib.backends.backend_agg import FigureCanvas
-    from matplotlib import pyplot as plt
-    from matplotlib import patches
+import pyart
 
-    import pyart
+import os
 
-    import os
+import numpy as np
 
-    import numpy as np
-
-    from motion import org, kin, backprop, propvis
-    from output import squareout, pointout, stringed, txtout
-    from torchdet import detect
-########################################################
+from motion import organizeData, stateVector, backProp, propVis
+from output import pointOut, stringConvert, txtOut
+from torchdet import detectFalls
 
 
-def readpyart(file, outdir, detdir, cint, vis): # Function to unpack the NOAA radar files, and evaluate them
-    r, dr, allr = [], [], []
+##########################################################
 
-    #file = file[len(fdir):]                           # (1)
-    radar = pyart.io.read(fdir + file)
-    name, date, btime, dtstr = stringed(file)
+# Relevant paths, confidence value, and visualization toggle:
+fdir = 'test/data/'
+outdir = 'test/falls/'
+detdir = 'test/vis/'
+cint = 0.75
+vis = True     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O.
+               # True aby default for the test function
+
+try:
+    for file in os.listdir(outdir):
+        os.remove(outdir + file)
+    for file in os.listdir(detdir):
+        os.remove(detdir + file)
+except FileNotFoundError:
+    pass
+
+for file in os.listdir(fdir):
+    name, date, btime, dtstr = stringConvert(file)
     print('\n')
     print('Checking ' + name + ' at ' + btime)
 
+    r, dr, allr = [], [], []
+    radar = pyart.io.read(fdir + file)
     for x in range(radar.nsweeps):
         plotter = pyart.graph.RadarDisplay(radar)
         fig = plt.figure(figsize=(25, 25), frameon=False)
@@ -67,7 +73,7 @@ def readpyart(file, outdir, detdir, cint, vis): # Function to unpack the NOAA ra
                 print('Reading velocity at sweep angle: ', sweepangle)
                 t = radar.time['data'][x]
                 locDat = [xDat, yDat, t]
-                v = detect(radar, img, file, locDat, sweepangle, detdir, vis, cint)    # detect is a function from torchdet.py
+                v = detectFalls(radar, img, file, locDat, sweepangle, detdir, vis, cint)    # detect is a function from torchdet.py
                 if v is not None:
                     vc, vall = v    # two types of output, for either point or square displays
                     vc.append(x)
@@ -81,31 +87,10 @@ def readpyart(file, outdir, detdir, cint, vis): # Function to unpack the NOAA ra
             plt.close('all')
     if(len(r) >= 2):
         #squareout(file, radar, allr, outdir)
-        pointout(file, radar, r, outdir)
-        rlsp = org(r)
-        rv = kin(rlsp)
-        prop = backprop(rv,360)
-        if (vis == True):
-            propvis(prop, detdir, name, dtstr)
-        txtout(prop, file, outdir)
-
-
-##########################################################
-# Relevant paths, confidence value, and visualization toggle:
-fdir = 'test/data/'
-outdir = 'test/falls/'
-detdir = 'test/vis/'
-cint = 0.75
-vis = True     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O.
-               # True aby default for the test function
-
-try:
-    for file in os.listdir(outdir):
-        os.remove(outdir + file)
-    for file in os.listdir(detdir):
-        os.remove(detdir + file)
-except FileNotFoundError:
-    pass
-
-for file in os.listdir(fdir):
-    readpyart(file, outdir, detdir, cint, vis)
+        pointOut(file, radar, r, outdir)
+        rlsp = organizeData(r)
+        rv = stateVector(rlsp)
+        prop = backProp(rv,360)
+        if vis:
+            propVis(prop, detdir, name, dtstr)
+        txtOut(prop, file, outdir)

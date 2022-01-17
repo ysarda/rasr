@@ -13,27 +13,17 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore", category=DeprecationWarning)
     warnings.simplefilter("ignore", category=RuntimeWarning)
 
-    import os
-
     import numpy as np
-
-    import math
 
     import pymap3d as pm
 
     import matplotlib.pyplot as plt
-    from mpl_toolkits import mplot3d
 
-    import time
-    import datetime
-    from datetime import datetime, timedelta, date, time
-
-    import scipy
     from scipy.integrate import odeint
 
 ####################################################################
 
-def org(vec):   # Organizes the detection data into a real space (rlsp) order
+def organizeData(vec):   # Organizes the detection data into a real space (rlsp) order
     rlsp = []
     tmp = []
     index = vec[0][4]
@@ -57,7 +47,7 @@ def lla2eci(lat, lon, alt, t):
     return x, y, z
 
 
-def kin(rlsp):  # Creates a state vector for two detections
+def stateVector(rlsp):  # Creates a state vector for two detections
     single = []
     i = 0
     fname = 'detect/fallvel.txt'
@@ -80,7 +70,7 @@ def kin(rlsp):  # Creates a state vector for two detections
     return rv
 
 
-def backprop(rv,t):    # Solves a differential model to back-propagate the detected fall
+def backProp(rv,t):    # Solves a differential model to back-propagate the detected fall
     #x, y, z, u, v, w = rv                 # Activate these two lines to see the meteor at 1/25 speed (use w/ RASR Detect Test)
     #m0 = [x, y, z, .04*u, .04*v, .04*w]   # Helps when visualizing the orbit
     m0 = rv
@@ -100,7 +90,7 @@ def dmdt(m,t):     # Differential model for reentry dynamics
     mdot = [u, v, w, a, b, c]
     return mdot
 
-def propvis(prop, detdir, name, dtstr):    # Visualize the back-propagation
+def propVis(prop, detdir, name, dtstr):    # Visualize the back-propagation
     R = 6.371 * 10**6
     xprop, yprop, zprop = prop[:,0], prop[:,1], prop[:,2]
     fig = plt.figure()

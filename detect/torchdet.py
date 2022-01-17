@@ -7,36 +7,24 @@ Sub-function for Py-Torch based Convolutional Neural Network Object Detection of
 @author: Yash Sarda
 """
 
-import warnings
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", category=FutureWarning)
-    warnings.simplefilter("ignore", category=DeprecationWarning)
-    warnings.simplefilter("ignore", category=RuntimeWarning)
 
-    import detecto
-    from detecto.core import Model, Dataset, DataLoader
-    from detecto.visualize import plot_prediction_grid
-    from detecto.utils import read_image
+from detecto.core import Model
 
-    import numpy as np
+import numpy as np
 
-    import matplotlib
-    from matplotlib.figure import Figure
-    from matplotlib.backends.backend_agg import FigureCanvas
-    from matplotlib import pyplot as plt
-    from matplotlib import patches
+from matplotlib import pyplot as plt
+from matplotlib import patches
 
-    import pyart
+import pyart
 
-    import time
-    import datetime
-    from datetime import datetime, timedelta, date
+import datetime
+from datetime import datetime, timedelta
 
-    from output import stringed
+from output import stringConvert
 
 #########################################################
 
-def detect(radar, img, file, locDat, sweep, detdir, vis, cint):
+def detectFalls(radar, img, file, locDat, sweep, detdir, vis, cint):
     model = Model.load('RASRmodl.pth', ['fall'])
     pred = model.predict(img)
     #print(max(pred[2]))
@@ -47,7 +35,7 @@ def detect(radar, img, file, locDat, sweep, detdir, vis, cint):
             xdat,ydat = bound*1000*locDat[0], bound*1000*locDat[1]
 
             t = round(locDat[2], 2)
-            name, date, btime, dtstr = stringed(file)
+            name, date, btime, dtstr = stringConvert(file)
             atime = (datetime.strptime(btime, '%m/%d/%Y %H:%M:%S') + timedelta(seconds=t))
 
             x0p, y0p, x1p, y1p = float(pred[1][n][0]), float(pred[1][n][1]), float(pred[1][n][2]), float(pred[1][n][3])
