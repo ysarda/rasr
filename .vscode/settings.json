@@ -1,6 +1,4 @@
 {
-    "python.pythonPath": "/home/ysarda/anaconda3/envs/rasr/bin/python",
-    "python.analysis.extraPaths": [
-        "./get"
-    ]
+    "python.pythonPath": "/home/ysarda/anaconda3/envs/rasr/bin/python"
+
 }
