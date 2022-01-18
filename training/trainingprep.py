@@ -35,8 +35,8 @@ with warnings.catch_warnings():
     from datetime import datetime, timedelta, date
 
     sys.path.append("..")
-    from get import getData
-    #from ..get import rasr_scrape
+    from RASR_EXP.get import getData
+    #from RASR_EXP.get.rasr_scrape import *
 
 #########################################################################################################################
 
