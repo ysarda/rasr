@@ -24,7 +24,7 @@ import time
 from datetime import datetime, timedelta, date
 
 sys.path.append("..")
-from get import getData
+from rasr.get.rasr_scrape import save_links
 #from ..get import rasr_scrape
 
 #########################################################################################################################
