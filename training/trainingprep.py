@@ -34,10 +34,6 @@ with warnings.catch_warnings():
     from bs4 import BeautifulSoup, SoupStrainer
     from datetime import datetime, timedelta, date
 
-    sys.path.append("..")
-    from get import getData
-    #from ..get import rasr_scrape
-
 #########################################################################################################################
 
 
@@ -49,7 +45,7 @@ def make_directory(dirname):
         pass
 
 
-""" def save_links(page_url, dirname):
+def save_links(page_url, dirname):
     link_time_num = []
     for i in range(0, 235960):
         q = str(i).zfill(6)
@@ -77,10 +73,10 @@ def make_directory(dirname):
                         # print(link)
                     # else:
                     # print("\nThere is no link for this link:\n", link,"\n")
-        return links """
+        return links
 
 
-""" def download_content(link, max_retries=5):
+def download_content(link, max_retries=5):
     # Try the url up to 5 times in case some error happens
     # Note: this is somewhat crude, as it will retry no matter what error happened
     num_retries = 0
@@ -94,7 +90,7 @@ def make_directory(dirname):
             num_retries += 1
             time.sleep(1)
 
-    return response """
+    return response
 
 
 def write_to_file(filename, response):
@@ -102,7 +98,7 @@ def write_to_file(filename, response):
         f.write(response.content)
 
 
-""" def download_link(link, dirname, stime, etime):
+def download_link(link, dirname, stime, etime):
     '''Grab the content from a specific radar link and save binary output to a file'''
 
     response = download_content(link)
@@ -116,7 +112,7 @@ def write_to_file(filename, response):
         t = int(filename[17:23])
         if(stime < t < etime and filename[-3:] != 'MDM'):
             print('Writing to file {}'.format(filename))
-            write_to_file(filename, response) """
+            write_to_file(filename, response)
 
 
 def daterange(start_date, end_date):
@@ -234,7 +230,7 @@ for single_date in daterange(start_date, end_date):
                          "?yyyy={year}&mm={month}&dd={day}&id={site_id}&product={product}")
         page_url = page_url_base.format(year=year, month=month, day=day,
                                         site_id=site_id, product=product)
-        links = getData.save_links(page_url, linkname)
+        links = save_links(page_url, linkname)
 
         for link in links:
             download_link(link, dirname, stime, etime)
