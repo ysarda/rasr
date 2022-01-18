@@ -10,8 +10,8 @@ rasr/detect/motion.py
 rasr/detect/output.py
 rasr/detect/torchdet.py
 rasr/get/__init__.py
-rasr/get/getData.py
-rasr/get/rasr_scrape.py
+rasr/get/getdata.py
+rasr/get/scrape.py
 rasr/get/lib/GetRealTime_Only.py
 rasr/get/lib/__init__.py
 training/__init__.py
