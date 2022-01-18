@@ -1,19 +1,22 @@
 import os
 
+
 def clearFiles(dirname):
-    print('\nClearing directory {}'.format(dirname))
+    print("\nClearing directory {}".format(dirname))
     try:
         for file in os.listdir(dirname):
             os.remove(dirname + file)
     except FileNotFoundError:
         pass
 
+
 def makeDir(dirname):
-    print('\nMaking directory {}'.format(dirname))
+    print("\nMaking directory {}".format(dirname))
     try:
         os.mkdir(dirname)
     except FileExistsError:
         pass
+
 
 def getListOfFiles(dirname):
     listOfFile = os.listdir(dirname)
