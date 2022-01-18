@@ -21,6 +21,7 @@ import numpy as np
 from rasr.detect.motion import organizeData, stateVector, backProp, propVis
 from rasr.detect.output import pointOut, stringConvert, txtOut
 from rasr.detect.torchdet import detectFalls
+from rasr.util.fileio import clearFiles
 
 
 ##########################################################
@@ -30,16 +31,10 @@ fdir = 'test/data/'
 outdir = 'test/falls/'
 detdir = 'test/vis/'
 cint = 0.75
-vis = True     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O.
-               # True aby default for the test function
+vis = True     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O, True by default for the test function
 
-try:
-    for file in os.listdir(outdir):
-        os.remove(outdir + file)
-    for file in os.listdir(detdir):
-        os.remove(detdir + file)
-except FileNotFoundError:
-    pass
+clearFiles(outdir)
+clearFiles(detdir)
 
 for file in os.listdir(fdir):
     name, date, btime, dtstr = stringConvert(file)

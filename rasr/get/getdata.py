@@ -7,10 +7,10 @@ with warnings.catch_warnings():
     import time
     from bs4 import BeautifulSoup, SoupStrainer
     from datetime import timedelta, date
-    from rasr_scrape import *
+    from rasr.get.scrape import *
 
 
-def daterange(start_date, end_date):
+def dateRange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
@@ -32,7 +32,7 @@ def runFunction(sites, dateList, timerange, static_dir):
         start_date = date(origin_year, origin_month, origin_day)
         end_date = date(end_year, end_month, end_day) # date(now.year, now.month, now.day+1)
 
-        for single_date in daterange(start_date, end_date): # --OPTION 2 DOWNLOAD WEATHER DATA FROM THE ORIGIN DATE TILL TODAY (usually run for the first time to download all the files, and then go to OPTION 2)
+        for single_date in dateRange(start_date, end_date): # --OPTION 2 DOWNLOAD WEATHER DATA FROM THE ORIGIN DATE TILL TODAY (usually run for the first time to download all the files, and then go to OPTION 2)
             dateN = single_date.strftime("%Y %m %d")
             date_arr = [int(s) for s in dateN.split() if s.isdigit()]
             year = date_arr[0]
@@ -112,7 +112,7 @@ def runFunction(sites, dateList, timerange, static_dir):
                 pass
 
             # Only get the last download link
-            links = save_links(page_url, dirname)
+            links = saveLinks(page_url, dirname)
             data_links_list = links
             perform_pass = False
             try:
@@ -135,7 +135,7 @@ def runFunction(sites, dateList, timerange, static_dir):
                 if perform_pass:
                     pass
                 else:
-                    download_link(link, timerange, data_links_list)
+                    downloadLink(link, timerange, data_links_list)
             except IndexError:
                 print(link)
                 raise Exception

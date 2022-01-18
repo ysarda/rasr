@@ -23,45 +23,11 @@ from matplotlib.backends.backend_agg import FigureCanvas
 import time
 from datetime import datetime, timedelta, date
 
-from rasr.get.rasr_scrape import saveLinks, downloadLink
+from rasr.get.scrape import saveLinks, downloadLink
+from rasr.get.getdata import dateRange
+from rasr.util.fileio import getListOfFiles
 
 #########################################################################################################################
-
-
-def make_directory(dirname):
-    print('\nMaking directory {}'.format(dirname))
-    try:
-        os.mkdir(dirname)
-    except FileExistsError:
-        pass
-
-
-""" def download_content(link, max_retries=5):
-    # Try the url up to 5 times in case some error happens
-    # Note: this is somewhat crude, as it will retry no matter what error happened
-    num_retries = 0
-    response = None
-    while num_retries < max_retries:
-        try:
-            response = requests.get(link)
-            break
-        except Exception as e:
-            print('{} errored {}: {}, retrying.'.format(link, num_retries, e))
-            num_retries += 1
-            time.sleep(1)
-
-    return response """
-
-
-def write_to_file(filename, response):
-    with open(filename, 'wb') as f:
-        f.write(response.content)
-
-
-def daterange(start_date, end_date):
-    for n in range(int((end_date - start_date).days)):
-        yield start_date + timedelta(n)
-
 
 def dat2vel(file, imdir):
     global thresh, h, nd
@@ -93,24 +59,6 @@ def dat2vel(file, imdir):
             plt.clf()
             plt.close('all')
     input("\nHit enter for the next file\n")
-
-
-def getListOfFiles(dirName):
-    listOfFile = os.listdir(dirName)
-    allFiles = list()
-    for entry in listOfFile:
-        fullPath = os.path.join(dirName, entry)
-        if os.path.isdir(fullPath):
-            allFiles = allFiles + getListOfFiles(fullPath)
-        else:
-            allFiles.append(fullPath)
-    # Reducing process size, will require mutliple iteration
-    if len(allFiles) > 160:
-        all_files = allFiles[:160]
-    else:
-        all_files = allFiles
-    return all_files
-
 
 ########################################################################################################################
 if os.path.exists('links/data_links.txt'):
@@ -144,7 +92,7 @@ else:
 start_date = date(yri, monthi, dayi)
 end_date = start_date + timedelta(1)  # date(now.year, now.month, now.day+1)
 
-for single_date in daterange(start_date, end_date):
+for single_date in dateRange(start_date, end_date):
     date = single_date.strftime("%Y %m %d")
     date_arr = [int(s) for s in date.split() if s.isdigit()]
     year = date_arr[0]

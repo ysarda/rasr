@@ -12,7 +12,7 @@ import os
 import sys
 from multiprocessing import Pool, cpu_count
 from datetime import date, datetime, timedelta
-from rasr.get.getData import runFunction
+from rasr.get.getdata import runFunction
 from functools import partial
 
 if __name__== '__main__':
