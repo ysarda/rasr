@@ -25,9 +25,9 @@ from multiprocessing import Pool, cpu_count
 
 from functools import partial
 
-from motion import organizeData, stateVector, backProp, propVis
-from output import squareOut, stringConvert, txtOut
-from torchdet import detectFalls
+from rasr.detect.motion import organizeData, stateVector, backProp, propVis
+from rasr.detect.output import squareOut, stringConvert, txtOut
+from rasr.detect.torchdet import detectFalls
 
 ##############################################################################################################################
 

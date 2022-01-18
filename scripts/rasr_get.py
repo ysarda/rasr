@@ -8,16 +8,12 @@ See README for details
 @authors: Benjamin Miller and Robby Keh
 """
 
-import warnings
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", category=FutureWarning)
-    warnings.simplefilter("ignore", category=DeprecationWarning)
-    import os
-    import sys
-    from multiprocessing import Pool, cpu_count
-    from datetime import date, datetime, timedelta
-    from getData import runFunction
-    from functools import partial
+import os
+import sys
+from multiprocessing import Pool, cpu_count
+from datetime import date, datetime, timedelta
+from rasr.get.getData import runFunction
+from functools import partial
 
 if __name__== '__main__':
 

@@ -18,9 +18,9 @@ import os
 
 import numpy as np
 
-from motion import organizeData, stateVector, backProp, propVis
-from output import pointOut, stringConvert, txtOut
-from torchdet import detectFalls
+from rasr.detect.motion import organizeData, stateVector, backProp, propVis
+from rasr.detect.output import pointOut, stringConvert, txtOut
+from rasr.detect.torchdet import detectFalls
 
 
 ##########################################################

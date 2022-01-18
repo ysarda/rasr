@@ -7,24 +7,15 @@ See README for details
 @authors: Benjamin Miller, Robby Keh, and Yash Sarda
 """
 
-import warnings
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", category=FutureWarning)
-    warnings.simplefilter("ignore", category=DeprecationWarning)
-    warnings.simplefilter("ignore", category=RuntimeWarning)
 
-    import sys
-    import imp
-    import gc
-    import os
-    os.environ["PYART_QUIET"] = "1"
 
-    import numpy as np
+import os
+os.environ["PYART_QUIET"] = "1"
 
-    import requests
-    import time
-    from bs4 import BeautifulSoup, SoupStrainer
-    from datetime import datetime, timedelta, date
+import requests
+import time
+from bs4 import BeautifulSoup, SoupStrainer
+from datetime import datetime, timedelta, date
 
 #########################################################################################################################
 

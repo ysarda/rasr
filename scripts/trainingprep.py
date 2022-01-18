@@ -8,7 +8,6 @@ Script for downloading and converting NOAA files to images for training
 """
 
 
-import sys
 import os
 os.environ["PYART_QUIET"] = "1"
 
@@ -19,6 +18,7 @@ import pyart
 import matplotlib
 import matplotlib.pyplot as plt
 matplotlib.use("TKagg")
+from matplotlib.backends.backend_agg import FigureCanvas
 
 import time
 from datetime import datetime, timedelta, date

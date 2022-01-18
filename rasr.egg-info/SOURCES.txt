@@ -8,7 +8,6 @@ rasr.egg-info/top_level.txt
 rasr/detect/__init__.py
 rasr/detect/motion.py
 rasr/detect/output.py
-rasr/detect/plotvel.py
 rasr/detect/torchdet.py
 rasr/get/__init__.py
 rasr/get/getData.py

@@ -8,7 +8,6 @@ Training script for Py-Torch based Convolutional Neural Network Object Detection
 """
 
 from detecto.core import Model, Dataset
-import matplotlib
 import matplotlib.pyplot as plt
 
 ########################################################
