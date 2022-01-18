@@ -14,4 +14,3 @@ rasr/get/getdata.py
 rasr/get/scrape.py
 rasr/get/lib/GetRealTime_Only.py
 rasr/get/lib/__init__.py
-training/__init__.py
