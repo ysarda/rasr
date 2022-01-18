@@ -1,15 +1,5 @@
-"""
-Raw to Image ver 1.0
-as of Jan 09, 2021
-
-Script for converting NOAA files to images for training
-
-@authors: Benjamin Miller and Yash Sarda
-"""
 
 import os
-os.environ["PYART_QUIET"] = "1"
-
 import numpy as np
 
 import pyart
@@ -18,13 +8,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 matplotlib.use("TKagg")
 from matplotlib.backends.backend_agg import FigureCanvas
-from rasr.util.fileio import getListOfFiles
 
-
-#########################################################################################################################
-
-def dat2vel(file, imdir):
-    global thresh, h, nd
+def datToVel(file, imdir):
     radar = pyart.io.read(file)
     for x in range(radar.nsweeps):
         plotter = pyart.graph.RadarDisplay(radar)
@@ -45,21 +30,11 @@ def dat2vel(file, imdir):
             sweepangle = str(round(radar.fixed_angle['data'][x], 2))
             imname = 'vel_' + str(file[40:-1]) + '_' + sweepangle
             print('Saving Velocity at sweep angle: ', sweepangle)
-            if os.path.exists(imdir + imname + 'jpg'):
+            if os.path.exists(imdir + imname + '.jpg'):
                 plt.savefig(imdir + imname + '_2.jpg')
             else:
                 plt.savefig(imdir + imname + '.jpg')
             plt.cla()
             plt.clf()
             plt.close('all')
-    input('hit enter for next file')
-
-########################################################################################################################
-
-
-cpath = os.getcwd()
-rawdir = cpath + 'training/raw/'
-imdir = cpath + 'training/im/'
-all_files = getListOfFiles(rawdir)
-for file in all_files:
-    dat2vel(file, imdir)
+    input("\nHit enter for the next file\n")
