@@ -23,7 +23,7 @@ matplotlib.use("TKagg")
 import time
 from datetime import datetime, timedelta, date
 
-from rasr.get.rasr_scrape import save_links
+from rasr.get.rasr_scrape import saveLinks, downloadLink
 
 #########################################################################################################################
 
@@ -34,37 +34,6 @@ def make_directory(dirname):
         os.mkdir(dirname)
     except FileExistsError:
         pass
-
-
-""" def save_links(page_url, dirname):
-    link_time_num = []
-    for i in range(0, 235960):
-        q = str(i).zfill(6)
-        link_time_num.append(q)
-    # previously for i in range(0, len(link_time_num)):
-    for i in enumerate(link_time_num):
-        link_file = '{}/data_links.txt'.format(dirname)
-        # Either read a file if we've already downloaded
-        if os.path.isfile(link_file):
-            print('Using links stored in {}'.format(link_file))
-            with open(link_file, 'r') as f:
-                links = f.read().splitlines()
-        else:  # Or read from the page and record the links
-            links = []
-            print('Writing links to {}'.format(link_file))
-            response = requests.get(page_url)
-            with open(link_file, 'w') as f:
-                for link in BeautifulSoup(response.text, 'html.parser', parse_only=SoupStrainer('a')):
-                    # if link.has_attr('href') and ('amazonaws' in link['href']) and ('2018' in link['href']):
-                    # if link.has_attr('href') and ('amazonaws' in link['href']
-                    # if link.has_attr('href') and ('amazonaws' in link['href'] and any(s in link for s in link_time_num)):
-                    if link.has_attr('href') and ('amazonaws' in link['href']) or any(s in link for s in link_time_num):
-                        f.write('{}\n'.format(link['href']))
-                        links.append(link['href'])
-                        # print(link)
-                    # else:
-                    # print("\nThere is no link for this link:\n", link,"\n")
-        return links """
 
 
 """ def download_content(link, max_retries=5):
@@ -87,23 +56,6 @@ def make_directory(dirname):
 def write_to_file(filename, response):
     with open(filename, 'wb') as f:
         f.write(response.content)
-
-
-""" def download_link(link, dirname, stime, etime):
-    '''Grab the content from a specific radar link and save binary output to a file'''
-
-    response = download_content(link)
-    if not response:
-        raise Exception
-    # Use last part of the link as the filename (after the final slash)
-    # "http://noaa-nexrad-level2.s3.amazonaws.com/2018/01/09/KABR/KABR20180109_000242_V06"
-    filename = '{}/{}'.format(dirname, link.split('/')[-1])
-    check = 'raw/K'
-    if(filename[0:5] == check):
-        t = int(filename[17:23])
-        if(stime < t < etime and filename[-3:] != 'MDM'):
-            print('Writing to file {}'.format(filename))
-            write_to_file(filename, response) """
 
 
 def daterange(start_date, end_date):
@@ -221,10 +173,10 @@ for single_date in daterange(start_date, end_date):
                          "?yyyy={year}&mm={month}&dd={day}&id={site_id}&product={product}")
         page_url = page_url_base.format(year=year, month=month, day=day,
                                         site_id=site_id, product=product)
-        links = getData.save_links(page_url, linkname)
+        links = saveLinks(page_url, linkname)
 
         for link in links:
-            download_link(link, dirname, stime, etime)
+            downloadLink(link, dirname, stime, etime)
 
         if os.path.exists('../links/data_links.txt'):
           os.remove('../links/data_links.txt')

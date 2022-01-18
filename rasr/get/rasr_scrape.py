@@ -8,17 +8,14 @@ RASR_scrape contains functions for downloading and sorting radar data from avail
 @authors: Benjamin Miller, Robby Keh, Yash Sarda and Carson Lansdowne
 """
 
-import warnings
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", category=FutureWarning)
-    warnings.simplefilter("ignore", category=DeprecationWarning)
-    import os
-    import requests
-    import time
-    from bs4 import BeautifulSoup, SoupStrainer
+
+import os
+import requests
+import time
+from bs4 import BeautifulSoup, SoupStrainer
 
 
-def save_links(page_url, dirname):
+def saveLinks(page_url, dirname):
     # Record the data links on the page for this date or read already existing file
     # These will individually be pulled down and saved as files, as well as stored in a list
     link_time_num = []
@@ -57,7 +54,7 @@ def save_links(page_url, dirname):
             '''
         return links
 
-def download_content(link , max_retries=5):
+def downloadContent(link , max_retries=5):
     # Try the url up to 5 times in case some error happens
     # Note: this is somewhat crude, as it will retry no matter what error happened
     num_retries = 0
@@ -73,13 +70,13 @@ def download_content(link , max_retries=5):
 
     return response
 
-def write_to_file(filename, response):
+def writeToFile(filename, response):
     filename = 'data/' + filename
     with open(filename, 'wb') as f:
         f.write(response.content)
 
 # def download_link(link, dirname, timerange):
-def download_link(link, timerange, data_links_list):
+def downloadLink(link, timerange, data_links_list):
     # Grab the content from a specific radar link and save binary output to a file
     namer = link.split('links')[-1]
     #print(namer)
@@ -96,7 +93,7 @@ def download_link(link, timerange, data_links_list):
         #if int(namer.split('_')[1]) in range(timerange[0], timerange[1]):
         if int(namer_tmp.split('.')[0]) in range(timerange[0], timerange[1]):
             for download_attempt in range(1, 6): # Try 5 times before raising exception
-                response = download_content(link)
+                response = downloadContent(link)
                 if response:
                     break
             if not response:
@@ -108,12 +105,12 @@ def download_link(link, timerange, data_links_list):
             #filename = '{}/{}'.format('tmp', link.split('/')[-1])
             filename = '{}/{}'.format(link.split('/')[-1], '.gz')
             # print('Writing to file {}'.format(filename))
-            write_to_file(filename, response)
+            writeToFile(filename, response)
     elif namer.split('.')[0] != '': # MAY NOT BE RIGHT for all other cases, not very robust
         # problem with this link as well http://noaa-nexrad-level2.s3.amazonaws.com/2005/01/01/KABR/NWS_NEXRAD_NXL2LG_KABR_20050101000000_20050101075959.tar
         try:
             if int(namer_tmp.split('.')[0]) in range(timerange[0], timerange[1]):
-                response = download_content(link)
+                response = downloadContent(link)
                 if not response:
                     print('No response from http get')
                     raise Exception
@@ -123,7 +120,7 @@ def download_link(link, timerange, data_links_list):
                 #filename = '{}/{}'.format('tmp', link.split('/')[-1])
                 filename = link.split('/')[-1]
                 # print('Writing to file {}'.format(filename))
-                write_to_file(filename, response)
+                writeToFile(filename, response)
         except ValueError: # This protects from the Nexrad .tar files which needs looking at
             print('Not downloading due to filename extension error - \'\' file extension ')
             print(link)
@@ -133,7 +130,7 @@ def download_link(link, timerange, data_links_list):
         try:
             namer_tmp = link.split('.')[2]
             if int(namer_tmp.split('_')[4]) and int(namer_tmp.split('_')[5]) in range(timerange[0], timerange[1]): # for nexrad cases
-                response = download_content(link)
+                response = downloadContent(link)
                 if not response:
                     print('No response from http get')
                     raise Exception
@@ -143,7 +140,7 @@ def download_link(link, timerange, data_links_list):
                 #filename = '{}/{}'.format('tmp', link.split('/')[-1])
                 filename = link.split('/')[-1]
                 # print('Writing to file {}'.format(filename))
-                write_to_file(filename, response)
+                writeToFile(filename, response)
         except ValueError: # This protects from the Nexrad .tar files which needs looking at
             print('Not downloading due to filename extension error - for all other file extensions')
             print(link)
