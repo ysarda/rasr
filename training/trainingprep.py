@@ -7,36 +7,25 @@ Script for downloading and converting NOAA files to images for training
 @authors: Benjamin Miller, Robby Keh, and Yash Sarda
 """
 
-import warnings
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", category=FutureWarning)
-    warnings.simplefilter("ignore", category=DeprecationWarning)
-    warnings.simplefilter("ignore", category=RuntimeWarning)
 
-    import sys
-    import imp
-    import gc
-    import os
-    os.environ["PYART_QUIET"] = "1"
+import sys
+import os
+os.environ["PYART_QUIET"] = "1"
 
-    import numpy as np
+import numpy as np
 
-    import pyart
+import pyart
 
-    import matplotlib
-    import matplotlib.pyplot as plt
-    matplotlib.use("TKagg")
-    from matplotlib.figure import Figure
-    from matplotlib.backends.backend_agg import FigureCanvas
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.use("TKagg")
 
-    import requests
-    import time
-    from bs4 import BeautifulSoup, SoupStrainer
-    from datetime import datetime, timedelta, date
+import time
+from datetime import datetime, timedelta, date
 
-    sys.path.append("..")
-    from RASR_EXP.get import getData
-    #from RASR_EXP.get.rasr_scrape import *
+sys.path.append("..")
+from RASR_EXP.get import getData
+#from RASR_EXP.get.rasr_scrape import *
 
 #########################################################################################################################
 
