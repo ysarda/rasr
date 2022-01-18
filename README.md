@@ -66,7 +66,7 @@ You should get example detection images and a json file with relevant data in te
 ~~~
 conda activate rasr
 python get/rasr_get.py x
-python detect/torchdetect.py x
+python detect/rasr_detect.py x
 conda deactivate
 ~~~
 **Include x to specify the number of processes, useful for running with parallel computing capable machines. If you omit x, RASR will automatically detect how many CPUs you have available and proceed from there.
