@@ -12,7 +12,7 @@ def clearFiles(dirname):
 
 def makeDir(dirname):
     try:
-        os.mkdir(dirname)
+        os.makedirs(dirname)
         print("Making directory {}".format(dirname))
     except FileExistsError:
         pass
