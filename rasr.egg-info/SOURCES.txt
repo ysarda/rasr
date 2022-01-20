@@ -1,3 +1,4 @@
+LICENSE.txt
 README.md
 setup.py
 rasr/__init__.py
@@ -12,5 +13,3 @@ rasr/detect/torchdet.py
 rasr/get/__init__.py
 rasr/get/getdata.py
 rasr/get/scrape.py
-rasr/get/lib/GetRealTime_Only.py
-rasr/get/lib/__init__.py
