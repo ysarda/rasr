@@ -24,7 +24,7 @@ loss = model.fit(
     epochs=15,
     learning_rate=0.001,
     gamma=0.2,
-    lr_step_size=5,
+    lr_step_size=1,
     verbose=True,
 )
 
