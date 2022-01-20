@@ -89,6 +89,7 @@ for single_date in dateRange(start_date, end_date):
         page_url = page_url_base.format(
             year=year, month=month, day=day, site_id=site_id, product=product
         )
+        print(page_url)
         links = saveLinks(page_url, linkname)
 
         for link in links:
