@@ -7,7 +7,6 @@ See README for details
 @authors: Benjamin Miller, Robby Keh, and Yash Sarda
 """
 
-
 import os
 
 os.environ["PYART_QUIET"] = "1"
@@ -32,7 +31,6 @@ dayi = 26
 stime = 33000
 etime = 50000
 radarSites = ["KATX", "KOTX", "KRTX", "KPDT"]
-
 
 start_date = date(yri, monthi, dayi)
 end_date = start_date + timedelta(1)  # date(now.year, now.month, now.day+1)

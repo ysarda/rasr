@@ -25,7 +25,7 @@ from rasr.detect.output import stringConvert
 #########################################################
 
 
-def detectFalls(radar, img, file, locdat, sweep, detdir, vis, cint, modelname):
+def detectFalls(img, radar, file, locdat, sweep, detdir, vis, cint, modelname):
     model = Model.load(modelname, ["fall"])
     pred = model.predict(img)
     # print(max(pred[2]))
@@ -34,7 +34,7 @@ def detectFalls(radar, img, file, locdat, sweep, detdir, vis, cint, modelname):
             bound = (
                 0.5  # The unmapped location data is about 2x as far as it should be.
             )
-            # I don't know why this, and this is a temp solution.
+            # I don't know why this is, and this is a temp solution.
             xdat, ydat = bound * 1000 * locdat[0], bound * 1000 * locdat[1]
 
             t = round(locdat[2], 2)
@@ -83,18 +83,16 @@ def detectFalls(radar, img, file, locdat, sweep, detdir, vis, cint, modelname):
                 float(radar.longitude["data"]),
                 float(radar.latitude["data"]),
             )
-            lon, lat = np.around(
-                pyart.core.cartesian_to_geographic_aeqd(x, y, sitelon, sitelat), 2
-            )
+
             lon0, lat0 = np.around(
                 pyart.core.cartesian_to_geographic_aeqd(x0, y0, sitelon, sitelat), 3
             )
             lon1, lat1 = np.around(
                 pyart.core.cartesian_to_geographic_aeqd(x1, y1, sitelon, sitelat), 3
             )
-            lon, lon0, lon1 = -lon, -lon0, -lon1
+            lon0, lon1 = -lon0, -lon1
             alt = round(z + sitealt, 2)
 
-            return [lat, lon, alt, atime], [lat0, lon0, lat1, lon1, alt, atime]
+            return [lat0, lon0, lat1, lon1, alt, atime]
         else:
             pass
