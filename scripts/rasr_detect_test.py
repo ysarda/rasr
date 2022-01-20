@@ -31,6 +31,7 @@ outdir = "test/falls/"
 detdir = "test/vis/"
 cint = 0.75
 vis = True  # Select True to print graphs and plots (good for debugging), and False to reduce file I/O, True by default for the test function
+modelname = "RASRmodl.pth"
 
 clearFiles(outdir)
 clearFiles(detdir)
@@ -69,7 +70,7 @@ for file in os.listdir(fdir):
                 t = radar.time["data"][x]
                 locDat = [xDat, yDat, t]
                 v = detectFalls(
-                    radar, img, file, locDat, sweepangle, detdir, vis, cint
+                    radar, img, file, locDat, sweepangle, detdir, vis, cint, modelname
                 )  # detect is a function from torchdet.py
                 if v is not None:
                     (

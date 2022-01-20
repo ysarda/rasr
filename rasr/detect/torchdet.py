@@ -20,13 +20,13 @@ import pyart
 import datetime
 from datetime import datetime, timedelta
 
-from output import stringConvert
+from rasr.detect.output import stringConvert
 
 #########################################################
 
 
-def detectFalls(radar, img, file, locDat, sweep, detdir, vis, cint):
-    model = Model.load("RASRmodl.pth", ["fall"])
+def detectFalls(radar, img, file, locdat, sweep, detdir, vis, cint, modelname):
+    model = Model.load(modelname, ["fall"])
     pred = model.predict(img)
     # print(max(pred[2]))
     for n in range(len(pred[1])):
@@ -35,9 +35,9 @@ def detectFalls(radar, img, file, locDat, sweep, detdir, vis, cint):
                 0.5  # The unmapped location data is about 2x as far as it should be.
             )
             # I don't know why this, and this is a temp solution.
-            xdat, ydat = bound * 1000 * locDat[0], bound * 1000 * locDat[1]
+            xdat, ydat = bound * 1000 * locdat[0], bound * 1000 * locdat[1]
 
-            t = round(locDat[2], 2)
+            t = round(locdat[2], 2)
             name, date, btime, dtstr = stringConvert(file)
             atime = datetime.strptime(btime, "%m/%d/%Y %H:%M:%S") + timedelta(seconds=t)
 
