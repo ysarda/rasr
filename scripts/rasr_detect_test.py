@@ -7,7 +7,6 @@ See README for details
 @authors: Benjamin Miller and Yash Sarda
 """
 
-
 from matplotlib.backends.backend_agg import FigureCanvas
 from matplotlib import pyplot as plt
 
@@ -20,8 +19,8 @@ import numpy as np
 from rasr.detect.motion import organizeData, stateVector, backProp, propVis
 from rasr.detect.output import pointOut, stringConvert, txtOut
 from rasr.detect.torchdet import detectFalls
+from rasr.util.unpack import datToImg
 from rasr.util.fileio import clearFiles
-
 
 ##########################################################
 
@@ -43,55 +42,15 @@ for file in os.listdir(fdir):
 
     r, dr, allr = [], [], []
     radar = pyart.io.read(fdir + file)
-    for x in range(radar.nsweeps):
-        plotter = pyart.graph.RadarDisplay(radar)
-        fig = plt.figure(figsize=(25, 25), frameon=False)
-        ax = plt.Axes(fig, [0.0, 0.0, 1.0, 1.0])
-        fig.add_axes(ax)
-        plotter.set_limits(xlim=(-250, 250), ylim=(-250, 250), ax=ax)
-        data = plotter._get_data(
-            "velocity", x, mask_tuple=None, filter_transitions=True, gatefilter=None
-        )
+    imList = datToImg(radar)
 
-        if np.any(data) > 0:
-            xDat, yDat = plotter._get_x_y(x, edges=True, filter_transitions=True)
-            data = data * (70 / np.max(np.abs(data)))
-            ax.pcolormesh(xDat, yDat, data)
-            canvas = FigureCanvas(fig)
-            canvas.draw()  # (1)
-            buf, (w, h) = fig.canvas.print_to_buffer()
-            img = np.frombuffer(buf, np.uint8).reshape((h, w, 4))
-            # This whole segment is converting the data to a standard size
-            if img.shape != ():
-                img = np.delete(img, 3, 2)  # and readable image using matplotlib (MPL)
-
-                sweepangle = str(format(radar.fixed_angle["data"][x], ".2f"))
-                print("Reading velocity at sweep angle: ", sweepangle)
-                t = radar.time["data"][x]
-                locDat = [xDat, yDat, t]
-                v = detectFalls(
-                    radar, img, file, locDat, sweepangle, detdir, vis, cint, modelname
-                )  # detect is a function from torchdet.py
-                if v is not None:
-                    (
-                        vc,
-                        vall,
-                    ) = v  # two types of output, for either point or square displays
-                    vc.append(x)
-                    r.append(vc)
-                    allr.append(vall)
-                plt.cla()
-                plt.clf()
-                plt.close("all")
-            plt.cla()
-            plt.clf()
-            plt.close("all")
-    if len(r) >= 2:
-        # squareout(file, radar, allr, outdir)
-        pointOut(file, radar, r, outdir)
-        rlsp = organizeData(r)
-        rv = stateVector(rlsp)
-        prop = backProp(rv, 360)
-        if vis:
-            propVis(prop, detdir, name, dtstr)
-        txtOut(prop, file, outdir)
+    for img, sweepangle, locDat in imList:
+        print("Reading velocity at sweep angle:", sweepangle)
+        v = detectFalls(
+            img, radar, file, locDat, sweepangle, detdir, vis, cint, modelname,
+        )  # detectFalls is a function from torchdet.py
+        if v is not None:
+            print(v)
+    plt.cla()
+    plt.clf()
+    plt.close("all")
