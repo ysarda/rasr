@@ -80,14 +80,13 @@ def downloadContent(link, max_retries=5):
     return response
 
 
-def writeToFile(filename, response):
-    filename = "data/" + filename
-    with open(filename, "wb") as f:
+def writeToFile(filename, dirname, response):
+    with open(dirname + "/" + filename, "wb") as f:
         f.write(response.content)
 
 
 # def download_link(link, dirname, timerange):
-def downloadLink(link, timerange, data_links_list):
+def downloadLink(link, dirname, timerange):
     # Grab the content from a specific radar link and save binary output to a file
     namer = link.split("links")[-1]
     # print(namer)
@@ -96,7 +95,7 @@ def downloadLink(link, timerange, data_links_list):
     # if int(namer.split('_')[1]) in range(timerange[0], timerange[1]):
     if namer.split("_")[-1] == "MDM":
         # print('Not downloading file because of MDM summary file extension')
-        link = data_links_list[-2]
+        # link = data_links_list[-2]
         namer = link.split("/")[-1]
         namer_tmp = namer.split("_")[1]
         pass
@@ -105,7 +104,7 @@ def downloadLink(link, timerange, data_links_list):
     ):  # MAJOR PROBLEM but can be fixed, some of the later files have no .gz attached, just blank
         # if int(namer.split('_')[1]) in range(timerange[0], timerange[1]):
         if int(namer_tmp.split(".")[0]) in range(timerange[0], timerange[1]):
-            for download_attempt in range(1, 6):  # Try 5 times before raising exception
+            for downloadAttempt in range(1, 6):  # Try 5 times before raising exception
                 response = downloadContent(link)
                 if response:
                     break
@@ -118,7 +117,7 @@ def downloadLink(link, timerange, data_links_list):
             # filename = '{}/{}'.format('tmp', link.split('/')[-1])
             filename = "{}/{}".format(link.split("/")[-1], ".gz")
             # print('Writing to file {}'.format(filename))
-            writeToFile(filename, response)
+            writeToFile(filename, dirname, response)
     elif (
         namer.split(".")[0] != ""
     ):  # MAY NOT BE RIGHT for all other cases, not very robust
@@ -135,7 +134,7 @@ def downloadLink(link, timerange, data_links_list):
                 # filename = '{}/{}'.format('tmp', link.split('/')[-1])
                 filename = link.split("/")[-1]
                 # print('Writing to file {}'.format(filename))
-                writeToFile(filename, response)
+                writeToFile(filename, dirname, response)
         except ValueError:  # This protects from the Nexrad .tar files which needs looking at
             print(
                 "Not downloading due to filename extension error - '' file extension "
@@ -159,7 +158,7 @@ def downloadLink(link, timerange, data_links_list):
                 # filename = '{}/{}'.format('tmp', link.split('/')[-1])
                 filename = link.split("/")[-1]
                 # print('Writing to file {}'.format(filename))
-                writeToFile(filename, response)
+                writeToFile(filename, dirname, response)
         except ValueError:  # This protects from the Nexrad .tar files which needs looking at
             print(
                 "Not downloading due to filename extension error - for all other file extensions"
