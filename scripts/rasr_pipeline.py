@@ -1,16 +1,15 @@
 """
 RASR Pipeline ver 1.0
-as of Jan 09, 2021
+as of Jan 21, 2021
 
 See README for details
 
 @authors: Carson Lansdowne
 """
 
-import os
 import shutil
 from datetime import date, datetime, timedelta
-from rasr.util.fileio import clearFiles
+from rasr.util.fileio import clearFiles, makeDir
 
 ########################################################
 
@@ -23,8 +22,7 @@ if __name__ == "__main__":
 
     folders = ["archive/", today]
     for folder in folders:
-        if not os.path.exists(folder):
-            os.makedirs(folder)
+        makeDir(folder)
 
     output = ["data/", "falls/"]
 
