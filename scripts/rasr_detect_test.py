@@ -46,10 +46,10 @@ if __name__ == "__main__":
         radar = pyart.io.read(fdir + file)
         imList = datToImg(radar)
 
-        for img, sweepangle, locDat in imList:
-            print("Reading velocity at sweep angle:", sweepangle)
+        for img, sweepAngle, locDat in imList:
+            print("Reading velocity at sweep angle:", sweepAngle)
             v = detectFalls(
-                img, radar, file, locDat, sweepangle, detdir, vis, cint, modelname,
+                img, radar, file, locDat, sweepAngle, detdir, vis, cint, modelname,
             )  # detectFalls is a function from torchdet.py
             if v is not None:
                 print(v)

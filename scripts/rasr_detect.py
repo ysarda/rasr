@@ -62,12 +62,12 @@ def readpyart(
             )  # This whole segment is converting the data to a standard size
             img = np.delete(img, 3, 2)  # and readable image using matplotlib (MPL)
 
-            sweepangle = str(format(radar.fixed_angle["data"][x], ".2f"))
-            # print('Reading velocity at sweep angle: ', sweepangle)
+            sweepAngle = str(format(radar.fixed_angle["data"][x], ".2f"))
+            # print('Reading velocity at sweep angle: ', sweepAngle)
             t = radar.time["data"][x]
             locDat = [xDat, yDat, t]
             v = detectFalls(
-                radar, img, file, locDat, sweepangle, detdir, vis, cint
+                radar, img, file, locDat, sweepAngle, detdir, vis, cint
             )  # detect is a function from torchdet.py
             if v is not None:
                 vc, vall = v  # two types of output, for either point or square displays
