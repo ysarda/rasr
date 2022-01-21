@@ -4,7 +4,7 @@ as of Jan 09, 2021
 
 Script for converting NOAA files to images for training
 
-@authors: Benjamin Miller and Yash Sarda
+@authors: Yash Sarda
 """
 
 import os
