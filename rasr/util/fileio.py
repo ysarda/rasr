@@ -5,7 +5,7 @@ def clearFiles(dirname):
     try:
         for file in os.listdir(dirname):
             os.remove(dirname + "/" + file)
-            print("\nClearing directory {}".format(dirname))
+            print("\nClearing directory: {}".format(dirname))
     except FileNotFoundError:
         pass
 
@@ -13,7 +13,7 @@ def clearFiles(dirname):
 def makeDir(dirname):
     try:
         os.makedirs(dirname)
-        print("Making directory {}".format(dirname))
+        print("Making directory: {}".format(dirname))
     except FileExistsError:
         pass
 
