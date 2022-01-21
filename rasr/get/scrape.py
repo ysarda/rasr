@@ -15,7 +15,7 @@ import time
 from bs4 import BeautifulSoup, SoupStrainer
 
 
-def saveLinks(page_url, dirname):
+def saveLinks(page_url):
     # Record the data links on the page for this date or read already existing file
     # These will individually be pulled down and saved as files, as well as stored in a list
     link_time_num = []
