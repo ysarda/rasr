@@ -12,13 +12,15 @@ import os
 os.environ["PYART_QUIET"] = "1"
 
 from rasr.util.fileio import getListOfFiles
-from rasr.util.unpack import datToVel
+from rasr.util.unpack import datToImg
 
 #########################################################################################################################
 
-cpath = os.getcwd()
-rawdir = cpath + "training/raw/"
-imdir = cpath + "training/im/"
-all_files = getListOfFiles(rawdir)
-for file in all_files:
-    datToVel(file, imdir)
+if __name__ == "__main__":
+
+    cpath = os.getcwd()
+    rawdir = cpath + "training/raw/"
+    imdir = cpath + "training/im/"
+    all_files = getListOfFiles(rawdir)
+    for file in all_files:
+        datToImg(file, imdir)

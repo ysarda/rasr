@@ -24,33 +24,35 @@ from rasr.util.fileio import clearFiles
 
 ##########################################################
 
-# Relevant paths, confidence value, and visualization toggle:
-fdir = "test/data/"
-outdir = "test/falls/"
-detdir = "test/vis/"
-cint = 0.75
-vis = True  # Select True to print graphs and plots (good for debugging), and False to reduce file I/O, True by default for the test function
-modelname = "RASRmodl.pth"
+if __name__ == "__main__":
 
-clearFiles(outdir)
-clearFiles(detdir)
+    # Relevant paths, confidence value, and visualization toggle:
+    fdir = "test/data/"
+    outdir = "test/falls/"
+    detdir = "test/vis/"
+    cint = 0.75
+    vis = True  # Select True to print graphs and plots (good for debugging), and False to reduce file I/O, True by default for the test function
+    modelname = "RASRmodl.pth"
 
-for file in os.listdir(fdir):
-    name, date, btime, dtstr = stringConvert(file)
-    print("\n")
-    print("Checking " + name + " at " + btime)
+    clearFiles(outdir)
+    clearFiles(detdir)
 
-    r, dr, allr = [], [], []
-    radar = pyart.io.read(fdir + file)
-    imList = datToImg(radar)
+    for file in os.listdir(fdir):
+        name, date, btime, dtstr = stringConvert(file)
+        print("\n")
+        print("Checking " + name + " at " + btime)
 
-    for img, sweepangle, locDat in imList:
-        print("Reading velocity at sweep angle:", sweepangle)
-        v = detectFalls(
-            img, radar, file, locDat, sweepangle, detdir, vis, cint, modelname,
-        )  # detectFalls is a function from torchdet.py
-        if v is not None:
-            print(v)
-    plt.cla()
-    plt.clf()
-    plt.close("all")
+        r, dr, allr = [], [], []
+        radar = pyart.io.read(fdir + file)
+        imList = datToImg(radar)
+
+        for img, sweepangle, locDat in imList:
+            print("Reading velocity at sweep angle:", sweepangle)
+            v = detectFalls(
+                img, radar, file, locDat, sweepangle, detdir, vis, cint, modelname,
+            )  # detectFalls is a function from torchdet.py
+            if v is not None:
+                print(v)
+        plt.cla()
+        plt.clf()
+        plt.close("all")

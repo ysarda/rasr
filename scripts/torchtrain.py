@@ -12,24 +12,26 @@ import matplotlib.pyplot as plt
 
 ########################################################
 
-tdataset = Dataset("training/2500/train/")  # Training dataset
-vdataset = Dataset("training/2500/test/")  # Evaluation dataseet
+if __name__ == "__main__":
 
-model = Model(["fall"])
+    tdataset = Dataset("training/2500/train/")  # Training dataset
+    vdataset = Dataset("training/2500/test/")  # Evaluation dataseet
 
-# Keep the learning rate low, otherwise the loss will be too high
-loss = model.fit(
-    tdataset,
-    vdataset,
-    epochs=15,
-    learning_rate=0.001,
-    gamma=0.2,
-    lr_step_size=1,
-    verbose=True,
-)
+    model = Model(["fall"])
 
-plt.plot(loss)
-plt.xlabel("Epoch")
-plt.ylabel("Loss")
-plt.show()
-model.save("RASRmodl.pth")
+    # Keep the learning rate low, otherwise the loss will be too high
+    loss = model.fit(
+        tdataset,
+        vdataset,
+        epochs=15,
+        learning_rate=0.001,
+        gamma=0.2,
+        lr_step_size=1,
+        verbose=True,
+    )
+
+    plt.plot(loss)
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.show()
+    model.save("RASRmodl.pth")
