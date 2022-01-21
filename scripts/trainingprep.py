@@ -14,17 +14,21 @@ os.environ["PYART_QUIET"] = "1"
 
 import time
 from datetime import datetime, timedelta, date
+import pyart
 
 from rasr.get.scrape import saveLinks, downloadLink
 from rasr.get.getdata import dateRange
 from rasr.util.fileio import getListOfFiles, clearFiles
-from rasr.util.unpack import datToImg
+from rasr.util.unpack import datToImg, saveVis
 
 ########################################################################################################################
 
 if __name__ == "__main__":
+    rawDir = "training/raw"
+    imDir = "training/im"
+    linkDir = "links"
 
-    clearFiles("links/")
+    clearFiles(linkDir)
     start_time = time.time()
 
     product = "AAL2"  # Level-II data include the original three meteorological base data quantities: reflectivity, mean radial velocity, and spectrum width,
@@ -82,8 +86,6 @@ if __name__ == "__main__":
 
         for site_id in radarSites:
             print('\nDownloading data from radar: "' + site_id + '"')
-            dirname = "raw"
-            linkname = "../links"
             page_url_base = (
                 "https://www.ncdc.noaa.gov/nexradinv/bdp-download.jsp"
                 "?yyyy={year}&mm={month}&dd={day}&id={site_id}&product={product}"
@@ -91,21 +93,17 @@ if __name__ == "__main__":
             page_url = page_url_base.format(
                 year=year, month=month, day=day, site_id=site_id, product=product
             )
-            print(page_url)
-            links = saveLinks(page_url, linkname)
+            links = saveLinks(page_url)
 
             for link in links:
-                downloadLink(link, dirname, stime, etime)
+                downloadLink(link, rawDir, [stime, etime])
 
-            if os.path.exists("../links/data_links.txt"):
-                os.remove("../links/data_links.txt")
+            clearFiles(linkDir)
 
-    input("\nDump the files you don't need\n")
+    input("\nDump the files you don't need! Then hit enter\n")
 
-    cpath = os.getcwd()
-    rawdir = cpath + "training/raw/"
-    imdir = cpath + "training/im/"
-    all_files = getListOfFiles(rawdir)
+    all_files = getListOfFiles(rawDir)
     for file in all_files:
-        print("Reading file: ", file)
-        datToImg(file, imdir)
+        radar = pyart.io.read(file)
+        imList = datToImg(radar)
+        saveVis(imList, file, imDir)
