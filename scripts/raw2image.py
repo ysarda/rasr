@@ -10,17 +10,20 @@ Script for converting NOAA files to images for training
 import os
 
 os.environ["PYART_QUIET"] = "1"
+import pyart
 
 from rasr.util.fileio import getListOfFiles
-from rasr.util.unpack import datToImg
+from rasr.util.unpack import datToImg, saveVis
 
 #########################################################################################################################
 
 if __name__ == "__main__":
 
-    cpath = os.getcwd()
-    rawdir = cpath + "training/raw/"
-    imdir = cpath + "training/im/"
-    all_files = getListOfFiles(rawdir)
+    rawDir = "training/raw"
+    imDir = "training/im"
+
+    all_files = getListOfFiles(rawDir)
     for file in all_files:
-        datToImg(file, imdir)
+        radar = pyart.io.read(file)
+        imList = datToImg(radar)
+        saveVis(imList, file, imDir)
