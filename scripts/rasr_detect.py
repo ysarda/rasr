@@ -1,48 +1,52 @@
 """
 RASR Detect ver 3.0
-as of Jan 09, 2021
+as of Jan 27, 2022
 
 See README for details
 
 @authors: Benjamin Miller and Yash Sarda
 """
 
+import sys
+from functools import partial
+from multiprocessing import Pool, cpu_count
 
-# from matplotlib.backends.backend_agg import FigureCanvas
-# from matplotlib import pyplot as plt
+from rasr.util.fileio import get_list_of_files
+from rasr.detect.detect import run_detect
 
-# import pyart
+if __name__ == "__main__":
 
-# import os
+    # Relevant paths, confidence value, and visualization toggle:
+    fdir = "test/data/"
+    outdir = "test/falls/"
+    detdir = "test/vis/"
+    cint = 0.75
+    vis = eval(sys.argv[2])
+    # Select True to print graphs and plots (good for debugging), and False to reduce file I/O,
+    # True by default for the test function
+    modelname = "RASRmodl.pth"
 
-# import sys
+    if len(sys.argv) > 1:
+        runnum = sys.argv[1]
+    else:
+        runnum = cpu_count()
 
-# import numpy as np
+    print(f"Running with {runnum} process(es) in parallel")
+    print(f"File Directory: {fdir}")
+    print(f"Output Directory: {outdir}")
+    print(f"Visualizing: {vis}")
+    print(f"Visualization Directory: {detdir}")
+    print(f"Model: {modelname}")
+    print(f"Confidence Level: {cint}")
 
-# from multiprocessing import Pool, cpu_count
-
-# from functools import partial
-
-# from rasr.util.fileio import get_list_of_files
-
-# Relevant paths, confidence value, and visualization toggle:
-# fdir = "data/"
-# outdir = "falls/"
-# detdir = "vis/"
-# cint = 0.9
-# vis = False  # Select True to print graphs and plots (good for debugging), and False to reduce file I/O.
-# False by default for the main function
-
-# if __name__ == "__main__":
-#     optional spec for num pool workers, else num cpu
-#     if len(sys.argv) > 1:
-#         runnum = sys.argv[1]
-#     else:
-#         runnum = cpu_count()
-
-#     allfiles = get_list_of_files(fdir)
-#     pool = Pool(processes=int(runnum))
-#     run_function_partial = partial(
-#         readpyart, outdir=outdir, detdir=detdir, cint=cint, vis=vis
-#     )
-#     pool.map(run_function_partial, allfiles)
+    allfiles = get_list_of_files(fdir)
+    pool = Pool(processes=int(runnum))
+    run_function_partial = partial(
+        run_detect,
+        outdir=outdir,
+        detdir=detdir,
+        cint=cint,
+        modelname=modelname,
+        vis=vis,
+    )
+    pool.map(run_function_partial, allfiles)

@@ -6,16 +6,8 @@ See README for details
 
 @authors: Benjamin Miller and Yash Sarda
 """
-
-
-from matplotlib import pyplot as plt
-import pyart
-import os
-
-from rasr.detect.output import string_convert
-from rasr.detect.torchdet import detect_falls
-from rasr.util.unpack import dat_to_img
-from rasr.util.fileio import clear_files
+from rasr.util.fileio import get_list_of_files
+from rasr.detect.detect import run_detect
 
 if __name__ == "__main__":
 
@@ -28,34 +20,13 @@ if __name__ == "__main__":
     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O,
     # True by default for the test function
     modelname = "RASRmodl.pth"
+    files = get_list_of_files(fdir)
 
-    clear_files(outdir)
-    clear_files(detdir)
+    print(f"File Directory: {fdir}")
+    print(f"Output Directory: {outdir}")
+    print(f"Visualizing: {vis}")
+    print(f"Visualization Directory: {detdir}")
+    print(f"Model: {modelname}")
+    print(f"Confidence Level: {cint}")
 
-    for file in os.listdir(fdir):
-        name, date, btime, dtstr = string_convert(file)
-        print("\n")
-        print("Checking " + name + " at " + btime)
-
-        r, dr, allr = [], [], []
-        radar = pyart.io.read(fdir + file)
-        im_list = dat_to_img(radar)
-
-        for img, sweep_angle, loc_dat in im_list:
-            print("Reading velocity at sweep angle:", sweep_angle)
-            v = detect_falls(
-                img,
-                radar,
-                file,
-                loc_dat,
-                sweep_angle,
-                detdir,
-                vis,
-                cint,
-                modelname,
-            )
-            if v is not None:
-                print(v)
-        plt.cla()
-        plt.clf()
-        plt.close("all")
+    run_detect(files, outdir, detdir, cint, modelname, vis)
