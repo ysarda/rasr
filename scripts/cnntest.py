@@ -7,26 +7,20 @@ CNN Testing Script
 @authors: Yash Sarda
 """
 
-import os
-
-os.environ["PYART_QUIET"] = "1"
 import pyart
 
-from rasr.util.fileio import getListOfFiles
-from rasr.util.unpack import datToImg
+from rasr.util.fileio import get_list_of_files
+from rasr.util.unpack import dat_to_img
 from rasr.network.CRNN2D import CRNN2D
-
-#########################################################################################################################
 
 if __name__ == "__main__":
 
-    rawDir = "training/raw"
+    raw_dir = "training/raw"
     model = CRNN2D()  # .to("cuda")
 
-    all_files = getListOfFiles(rawDir)
+    all_files = get_list_of_files(raw_dir)
     for file in all_files:
         radar = pyart.io.read(file)
-        imList = datToImg(radar)
-        for img, _, _ in imList[0:1]:
+        im_list = dat_to_img(radar)
+        for img, _, _ in im_list[0:1]:
             img2 = model.forward(img)
-

@@ -12,13 +12,13 @@ import numpy as np
 import pyart
 import matplotlib
 import matplotlib.pyplot as plt
-
-matplotlib.use("TKagg")
 from matplotlib.backends.backend_agg import FigureCanvas
 
+matplotlib.use("TKagg")
 
-def datToImg(radar):
-    imList = []
+
+def dat_to_img(radar):
+    im_list = []
     for x in range(radar.nsweeps):
         plotter = pyart.graph.RadarDisplay(radar)
         fig = plt.figure(figsize=(25, 25), frameon=False)
@@ -29,9 +29,9 @@ def datToImg(radar):
             "velocity", x, mask_tuple=None, filter_transitions=True, gatefilter=None
         )
         if np.any(data) > 0:
-            xDat, yDat = plotter._get_x_y(x, edges=True, filter_transitions=True)
+            x_dat, y_dat = plotter._get_x_y(x, edges=True, filter_transitions=True)
             data = data * (70 / np.max(np.abs(data)))
-            ax.pcolormesh(xDat, yDat, data)
+            ax.pcolormesh(x_dat, y_dat, data)
             canvas = FigureCanvas(fig)
             canvas.draw()
             buf, (w, h) = fig.canvas.print_to_buffer()
@@ -39,23 +39,23 @@ def datToImg(radar):
             # This whole segment is converting the data to a standard size
             if img.shape != ():
                 img = np.delete(img, 3, 2)  # and readable image using matplotlib (MPL)
-                sweepAngle = str(format(radar.fixed_angle["data"][x], ".2f"))
+                sweep_angle = str(format(radar.fixed_angle["data"][x], ".2f"))
             t = radar.time["data"][x]
-            locDat = [xDat, yDat, t]
-            imList.append([img, sweepAngle, locDat])
+            loc_dat = [x_dat, y_dat, t]
+            im_list.append([img, sweep_angle, loc_dat])
             plt.cla()
             plt.clf()
             plt.close("all")
-    return imList
+    return im_list
 
 
-def saveVis(imList, file, saveDir):
-    for img, sweepAngle, _ in imList:
-        imname = "vel_" + str(file[-23:]) + "_" + sweepAngle
+def save_vis(im_list, file, save_dir):
+    for img, sweep_angle, _ in im_list:
+        imname = "vel_" + str(file[-23:]) + "_" + sweep_angle
 
-        if os.path.exists(saveDir + imname + ".jpg"):
-            print("Saving Velocity at sweep angle:", sweepAngle, "again")
-            plt.imsave(saveDir + "/" + imname + "_2.jpg", img)
+        if os.path.exists(save_dir + imname + ".jpg"):
+            print("Saving Velocity at sweep angle:", sweep_angle, "again")
+            plt.imsave(save_dir + "/" + imname + "_2.jpg", img)
         else:
-            print("Saving Velocity at sweep angle:", sweepAngle)
-            plt.imsave(saveDir + "/" + imname + ".jpg", img)
+            print("Saving Velocity at sweep angle:", sweep_angle)
+            plt.imsave(save_dir + "/" + imname + ".jpg", img)

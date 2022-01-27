@@ -15,11 +15,11 @@ import numpy as np
 #####################################################################################################
 
 
-def pointOut(file, r, outdir):
+def point_out(file, r, outdir):
     for det in r:
         lat, lon, alt, t, sweep = det
         trounded = str(t)[:-4]
-        name, dtstr = stringConvert(file)
+        name, dtstr = string_convert(file)
 
         print(
             "Detection: "
@@ -44,11 +44,11 @@ def pointOut(file, r, outdir):
             dump(feature_collection, outfile)
 
 
-def squareOut(file, allr, outdir):
+def square_out(file, allr, outdir):
     for det in allr:
         lat0, lon0, lat1, lon1, alt, t = det
         trounded = str(t)[:-4]
-        name, dtstr = stringConvert(file)
+        name, dtstr = string_convert(file)
 
         print(
             "Detection centered at: "
@@ -78,7 +78,7 @@ def squareOut(file, allr, outdir):
             geojson.dump(data, outfile)
 
 
-def stringConvert(file):
+def string_convert(file):
     radarname = file[0:4]
     m, d, y, hh, mm, ss = (
         file[8:10],
@@ -94,7 +94,7 @@ def stringConvert(file):
     return radarname, date, btime, dtstr
 
 
-def txtOut(prop, file, outdir):
-    name, date, btime, dtstr = stringConvert(file)
+def text_out(prop, file, outdir):
+    name, date, btime, dtstr = string_convert(file)
     fname = fname = outdir + name + dtstr + ".csv"
     np.savetxt(fname, prop, delimiter=",")

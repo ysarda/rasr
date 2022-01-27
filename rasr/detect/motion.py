@@ -18,14 +18,14 @@ from scipy.integrate import odeint
 ####################################################################
 
 
-def organizeData(vec):  # Organizes the detection data into a real space (rlsp) order
+def organize_data(vec):  # Organizes the detection data into a real space (rlsp) order
     rlsp = []
     tmp = []
     index = vec[0][4]
 
     for dat in vec:
         lat, lon, alt, t, n = dat
-        x, y, z = lla2eci(lat, lon, alt, t)  # Conversion from Geodetic to ECI frame
+        x, y, z = lla_to_eci(lat, lon, alt, t)  # Conversion from Geodetic to ECI frame
         if n <= index:
             tmp.append([round(float(x), 2), round(float(y), 2), round(float(z), 2), t])
         elif n > index:
@@ -38,14 +38,13 @@ def organizeData(vec):  # Organizes the detection data into a real space (rlsp) 
     return rlsp
 
 
-def lla2eci(lat, lon, alt, t):
+def lla_to_eci(lat, lon, alt, t):
     x, y, z = pm.geodetic2eci(lat, lon, alt, t)
     return x, y, z
 
 
-def stateVector(rlsp):  # Creates a state vector for two detections
+def state_vector(rlsp):  # Creates a state vector for two detections
     single = []
-    i = 0
     fname = "detect/fallvel.txt"
 
     for sweep in rlsp:
@@ -65,8 +64,10 @@ def stateVector(rlsp):  # Creates a state vector for two detections
     return rv
 
 
-def backProp(rv, t):  # Solves a differential model to back-propagate the detected fall
-    # x, y, z, u, v, w = rv                 # Activate these two lines to see the meteor at 1/25 speed (use w/ RASR Detect Test)
+def back_prop(rv, t):
+    # Solves a differential model to back-propagate the detected fall
+    # x, y, z, u, v, w = rv                 # Activate these two lines to see the meteor at
+    # 1/25 speed (use w/ RASR Detect Test)
     # m0 = [x, y, z, .04*u, .04*v, .04*w]   # Helps when visualizing the orbit
     m0 = rv
     time = np.linspace(-t, 0, 1000)
@@ -78,7 +79,7 @@ def backProp(rv, t):  # Solves a differential model to back-propagate the detect
 def dmdt(m, t):  # Differential model for reentry dynamics
     x, y, z, u, v, w = m
     r = np.sqrt(x ** 2 + y ** 2 + z ** 2)
-    rho, T, p = atmo(r)
+    rho, _, _ = atmo(r)
     k = rho * 5
     mu = 3.986004418 * 10 ** 14
     a, b, c = (
@@ -90,17 +91,16 @@ def dmdt(m, t):  # Differential model for reentry dynamics
     return mdot
 
 
-def propVis(prop, detdir, name, dtstr):  # Visualize the back-propagation
-    R = 6.371 * 10 ** 6
+def prop_vis(prop, detdir, name, dtstr):  # Visualize the back-propagation
+    radius = 6.371 * 10 ** 6
     xprop, yprop, zprop = prop[:, 0], prop[:, 1], prop[:, 2]
-    fig = plt.figure()
     ax = plt.axes(projection="3d")
     ax.scatter3D(xprop, yprop, zprop)
 
     u, v = np.mgrid[0 : 2 * np.pi : 20j, 0 : np.pi : 10j]
-    x = R * np.cos(u) * np.sin(v)
-    y = R * np.sin(u) * np.sin(v)
-    z = R * np.cos(v)
+    x = radius * np.cos(u) * np.sin(v)
+    y = radius * np.sin(u) * np.sin(v)
+    z = radius * np.cos(v)
     ax.plot_wireframe(x, y, z, color="r")
     lim = 10 * 10 ** 6
     ax.set_xlim3d(-lim, lim)
@@ -113,18 +113,18 @@ def propVis(prop, detdir, name, dtstr):  # Visualize the back-propagation
 
 def atmo(h):  # Atmospheric density model
     if h > 25000:
-        T = -131.21 + 0.00299 * h + 273.15
-        p = 2.488 * (T / 216.6) ** (-11.388)
+        temp = -131.21 + 0.00299 * h + 273.15
+        p = 2.488 * (temp / 216.6) ** (-11.388)
     elif 11000 <= h <= 25000:
-        T = -56.46 + 273.15
+        temp = -56.46 + 273.15
         p = 22.65 * np.exp(1.73 - 0.000157 * h)
     elif h < 11000:
-        T = 15.04 - 0.00649 * h + 273.15
-        p = 101.29 * (T / 288.08) ** (5.256)
+        temp = 15.04 - 0.00649 * h + 273.15
+        p = 101.29 * (temp / 288.08) ** (5.256)
 
-    rho = p / (0.2869 * T)
+    rho = p / (0.2869 * temp)
 
-    return rho, T, p
+    return rho, temp, p
 
 
 #######################################################################

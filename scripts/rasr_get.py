@@ -10,17 +10,19 @@ See README for details
 
 import os
 import sys
-from multiprocessing import Pool, cpu_count
-from datetime import date, datetime, timedelta
-from rasr.get.getdata import runFunction
+from datetime import datetime, timedelta
 from functools import partial
+from multiprocessing import Pool, cpu_count
+
+from rasr.get.getdata import run_function
+from rasr.util.fileio import make_dir
+
 
 if __name__ == "__main__":
 
     folders = ["links", "data", "vis", "falls"]
     for folder in folders:
-        if not os.path.exists(folder):
-            os.makedirs(folder)
+        make_dir(folder)
 
     # Configurable Parameters
     now = datetime.now()
@@ -28,7 +30,7 @@ if __name__ == "__main__":
     yesterday = today - timedelta(1)
 
     # Get the most updated values from yesterday
-    dateList = [
+    date_list = [
         yesterday.year,
         yesterday.month,
         yesterday.day,
@@ -232,11 +234,10 @@ if __name__ == "__main__":
 
     pool = Pool(processes=int(runnum))  # Pool(processes=#)
     # runFunctionPart = partial(runFunction)
-    runFunctionPart = partial(
-        runFunction, dateList=dateList, timerange=timerange, static_dir=static_dir
+    run_function_partial = partial(
+        run_function, dateList=date_list, timerange=timerange, static_dir=static_dir
     )
     # pool.map(runFunction(dateList, timerange, static_dir, sites), iterable=sites)
-    pool.map(runFunctionPart, sites)
+    pool.map(run_function_partial, sites)
 
     print("Done")
-

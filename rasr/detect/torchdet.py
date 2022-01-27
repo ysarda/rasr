@@ -17,15 +17,14 @@ from matplotlib import patches
 
 import pyart
 
-import datetime
 from datetime import datetime, timedelta
 
-from rasr.detect.output import stringConvert
+from rasr.detect.output import string_convert
 
 #########################################################
 
 
-def detectFalls(img, radar, file, locdat, sweep, detdir, vis, cint, modelname):
+def detect_falls(img, radar, file, locdat, sweep, detdir, vis, cint, modelname):
     model = Model.load(modelname, ["fall"])
     pred = model.predict(img)
     # print(max(pred[2]))
@@ -38,7 +37,7 @@ def detectFalls(img, radar, file, locdat, sweep, detdir, vis, cint, modelname):
             xdat, ydat = bound * 1000 * locdat[0], bound * 1000 * locdat[1]
 
             t = round(locdat[2], 2)
-            name, date, btime, dtstr = stringConvert(file)
+            name, date, btime, dtstr = string_convert(file)
             atime = datetime.strptime(btime, "%m/%d/%Y %H:%M:%S") + timedelta(seconds=t)
 
             x0p, y0p, x1p, y1p = (
@@ -51,16 +50,15 @@ def detectFalls(img, radar, file, locdat, sweep, detdir, vis, cint, modelname):
 
             xdm = [np.amin(xdat), np.amax(xdat)]
             ydm = [np.amin(ydat), np.amax(ydat)]
-            Xv = np.linspace(xdm[0], xdm[1], 2500)
-            Yv = np.linspace(ydm[1], ydm[0], 2500)
+            xv = np.linspace(xdm[0], xdm[1], 2500)
+            yv = np.linspace(ydm[1], ydm[0], 2500)
 
-            x, y = Xv[int(xp)], Yv[int(yp)]
-            x0, y0 = Xv[int(x0p)], Yv[int(y0p)]
-            x1, y1 = Xv[int(x1p)], Yv[int(y1p)]
+            x, y = xv[int(xp)], yv[int(yp)]
+            x0, y0 = xv[int(x0p)], yv[int(y0p)]
+            x1, y1 = xv[int(x1p)], yv[int(y1p)]
 
-            if (
-                vis == True
-            ):  # Saves the image with a bounding box, detection type, and confidence level
+            if vis:
+                # Saves the image with a bounding box, detection type, and confidence level
                 fig = plt.figure(figsize=(25, 25))
                 ax = fig.add_axes([0, 0, 1, 1])
                 ax.imshow(img)

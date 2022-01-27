@@ -1,14 +1,13 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 
 class CRNN2D(nn.Module):
-    def __init__(self, inputSize=(2500, 2500, 3), outputSize=(16, 16, 256)):
+    def __init__(self, input_size=(2500, 2500, 3), output_size=(16, 16, 256)):
         super(CRNN2D, self).__init__()
 
-        iw, ih, ic = inputSize
-        ow, oh, oc = outputSize
+        iw, ih, ic = input_size
+        ow, oh, oc = output_size
 
         self.group1 = nn.Sequential(
             nn.Conv2d(ic, 64, kernel_size=6, padding=0),

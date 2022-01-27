@@ -8,8 +8,8 @@ See README for details
 """
 
 import shutil
-from datetime import date, datetime, timedelta
-from rasr.util.fileio import clearFiles, makeDir
+from datetime import datetime, timedelta
+from rasr.util.fileio import clear_files, make_dir
 
 ########################################################
 
@@ -22,13 +22,12 @@ if __name__ == "__main__":
 
     folders = ["archive/", today]
     for folder in folders:
-        makeDir(folder)
+        make_dir(folder)
 
     output = ["data/", "falls/"]
 
     for file in output:
         shutil.copy(file, today)
-        clearFiles(file)
+        clear_files(file)
 
     shutil.copy(today, "archive/")
-
