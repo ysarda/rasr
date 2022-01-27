@@ -1,27 +1,31 @@
 """
-MOTION ver 1.0
-as of Jan 09, 2021
+MOTION ver 2.0
+as of Jan 27, 2022
 
-Sub-function for kinematic analysis and back-propagation of detected falls
+Module for kinematic analysis and back-propagation of detected falls
 
 @author: Yash Sarda
 """
+
 
 import numpy as np
 import pymap3d as pm
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
+from typing import Any, List, Tuple
 
 
-def organize_data(vec):
-    # Organizes the detection data into a real space (rlsp) order
+def organize_data(vec: List[Tuple[float]]) -> List[List[Tuple[float]]]:
+    """Organizes the detection data into a real space (rlsp) order"""
+
     rl_sp = []
     tmp = []
     index = vec[0][4]
 
     for dat in vec:
         lat, lon, alt, t, n = dat
-        x, y, z = lla_to_eci(lat, lon, alt, t)  # Conversion from Geodetic to ECI frame
+        x, y, z = lla_to_eci(lat, lon, alt, t)
+        # Conversion from Geodetic to ECI frame
         if n <= index:
             tmp.append([round(float(x), 2), round(float(y), 2), round(float(z), 2), t])
         elif n > index:
@@ -34,25 +38,25 @@ def organize_data(vec):
     return rl_sp
 
 
-def lla_to_eci(lat, lon, alt, t):
+def lla_to_eci(lat: float, lon: float, alt: float, t: float) -> Tuple[float]:
+    """Converts from Lat/Lon/Alt to ECI Coordinate Frame"""
+
     x, y, z = pm.geodetic2eci(lat, lon, alt, t)
     return x, y, z
 
 
-def state_vector(rlsp):
-    # Creates a state vector for two detections
+def state_vector(rl_sp: List[List[List[float]]]) -> List[float]:
+    """Creates a state vector from two detections"""
+
     single = []
     file_name = "fallvel.txt"
-
-    for sweep in rlsp:
+    for sweep in rl_sp:
         single.append(sweep[0])
-
     x0, y0, z0 = single[0][0:3]
     x1, y1, z1 = single[1][0:3]
     dt = (single[1][3] - single[0][3]).total_seconds()
     u, v, w = (x1 - x0) / dt, (y1 - y0) / dt, (z1 - z0) / dt
     rv = [x0, y0, z0, u, v, w]
-
     drdt = np.sqrt(u ** 2 + v ** 2 + w ** 2)
     with open(file_name, "a") as file:
         file.write(str(drdt))
@@ -61,11 +65,9 @@ def state_vector(rlsp):
     return rv
 
 
-def back_prop(rv, t):
-    # Solves a differential model to back-propagate the detected fall
-    # x, y, z, u, v, w = rv                 # Activate these two lines to see the meteor at
-    # 1/25 speed (use w/ RASR Detect Test)
-    # m0 = [x, y, z, .04*u, .04*v, .04*w]   # Helps when visualizing the orbit
+def back_prop(rv: List[float], t: float) -> Any:
+    """Solves a differential model to back-propagate the detected fall"""
+
     m0 = rv
     time = np.linspace(-t, 0, 1000)
     prop = odeint(dmdt, m0, time)
@@ -73,7 +75,9 @@ def back_prop(rv, t):
     return prop
 
 
-def dmdt(m, t):  # Differential model for reentry dynamics
+def dmdt(m: List[float], t: float) -> Tuple[float]:
+    """Differential model for reentry dynamics"""
+
     x, y, z, u, v, w = m
     r = np.sqrt(x ** 2 + y ** 2 + z ** 2)
     rho, _, _ = atmo(r)
@@ -84,11 +88,12 @@ def dmdt(m, t):  # Differential model for reentry dynamics
         -(y * mu) / (r ** 3) + k * v ** 2,
         -(z * mu) / (r ** 3) + k * w ** 2,
     )
-    mdot = [u, v, w, a, b, c]
-    return mdot
+    return u, v, w, a, b, c
 
 
-def prop_vis(prop, vis_dir, name, dt_str):  # Visualize the back-propagation
+def prop_vis(prop: Any, vis_dir: str, name: str, dt_str: str) -> None:
+    """Visualize the back-propagation"""
+
     radius = 6.371 * 10 ** 6
     x_prop, y_prop, z_prop = prop[:, 0], prop[:, 1], prop[:, 2]
     ax = plt.axes(projection="3d")
@@ -108,7 +113,9 @@ def prop_vis(prop, vis_dir, name, dt_str):  # Visualize the back-propagation
     plt.savefig(file_name)
 
 
-def atmo(h):  # Atmospheric density model
+def atmo(h: float) -> Tuple[float]:
+    """Atmospheric density model"""
+
     if h > 25000:
         temp = -131.21 + 0.00299 * h + 273.15
         p = 2.488 * (temp / 216.6) ** (-11.388)
