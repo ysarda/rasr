@@ -8,18 +8,14 @@ Sub-function for kinematic analysis and back-propagation of detected falls
 """
 
 import numpy as np
-
 import pymap3d as pm
-
 import matplotlib.pyplot as plt
-
 from scipy.integrate import odeint
 
-####################################################################
 
-
-def organize_data(vec):  # Organizes the detection data into a real space (rlsp) order
-    rlsp = []
+def organize_data(vec):
+    # Organizes the detection data into a real space (rlsp) order
+    rl_sp = []
     tmp = []
     index = vec[0][4]
 
@@ -30,12 +26,12 @@ def organize_data(vec):  # Organizes the detection data into a real space (rlsp)
             tmp.append([round(float(x), 2), round(float(y), 2), round(float(z), 2), t])
         elif n > index:
             index = n
-            rlsp.append(tmp)
+            rl_sp.append(tmp)
             tmp = [[round(float(x), 2), round(float(y), 2), round(float(z), 2), t]]
 
-    rlsp.append(tmp)
-    rlsp.reverse()
-    return rlsp
+    rl_sp.append(tmp)
+    rl_sp.reverse()
+    return rl_sp
 
 
 def lla_to_eci(lat, lon, alt, t):
@@ -43,9 +39,10 @@ def lla_to_eci(lat, lon, alt, t):
     return x, y, z
 
 
-def state_vector(rlsp):  # Creates a state vector for two detections
+def state_vector(rlsp):
+    # Creates a state vector for two detections
     single = []
-    fname = "detect/fallvel.txt"
+    file_name = "fallvel.txt"
 
     for sweep in rlsp:
         single.append(sweep[0])
@@ -57,9 +54,9 @@ def state_vector(rlsp):  # Creates a state vector for two detections
     rv = [x0, y0, z0, u, v, w]
 
     drdt = np.sqrt(u ** 2 + v ** 2 + w ** 2)
-    with open(fname, "a") as myfile:
-        myfile.write(str(drdt))
-        myfile.write("\n")
+    with open(file_name, "a") as file:
+        file.write(str(drdt))
+        file.write("\n")
 
     return rv
 
@@ -91,11 +88,11 @@ def dmdt(m, t):  # Differential model for reentry dynamics
     return mdot
 
 
-def prop_vis(prop, detdir, name, dtstr):  # Visualize the back-propagation
+def prop_vis(prop, vis_dir, name, dt_str):  # Visualize the back-propagation
     radius = 6.371 * 10 ** 6
-    xprop, yprop, zprop = prop[:, 0], prop[:, 1], prop[:, 2]
+    x_prop, y_prop, z_prop = prop[:, 0], prop[:, 1], prop[:, 2]
     ax = plt.axes(projection="3d")
-    ax.scatter3D(xprop, yprop, zprop)
+    ax.scatter3D(x_prop, y_prop, z_prop)
 
     u, v = np.mgrid[0 : 2 * np.pi : 20j, 0 : np.pi : 10j]
     x = radius * np.cos(u) * np.sin(v)
@@ -107,8 +104,8 @@ def prop_vis(prop, detdir, name, dtstr):  # Visualize the back-propagation
     ax.set_ylim3d(-lim, lim)
     ax.set_zlim3d(-lim, lim)
 
-    fname = detdir + name + dtstr + "propagation.png"
-    plt.savefig(fname)
+    file_name = vis_dir + name + dt_str + "propagation.png"
+    plt.savefig(file_name)
 
 
 def atmo(h):  # Atmospheric density model
@@ -125,6 +122,3 @@ def atmo(h):  # Atmospheric density model
     rho = p / (0.2869 * temp)
 
     return rho, temp, p
-
-
-#######################################################################

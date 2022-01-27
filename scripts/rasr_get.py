@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 from functools import partial
 from multiprocessing import Pool, cpu_count
 
-from rasr.get.getdata import run_function
+from rasr.get.get import run_get
 from rasr.util.fileio import make_dir
 
 
@@ -42,9 +42,9 @@ if __name__ == "__main__":
 
     # optional spec for num pool workers, else num cpu
     if len(sys.argv) > 1:
-        runnum = sys.argv[1]
+        run_num = sys.argv[1]
     else:
-        runnum = cpu_count()
+        run_num = cpu_count()
 
     sites = [
         "KABR",
@@ -214,8 +214,7 @@ if __name__ == "__main__":
     if not os.path.exists(dirname):
         try:
             os.mkdir(dirname)
-            # os.chdir(dirname)
-            # f = open('data_links.txt', 'wb')
+
         except FileExistsError:
             os.chdir(dirname)
             if os.path.exists("links/data_links.txt"):
@@ -223,21 +222,11 @@ if __name__ == "__main__":
             else:
                 f = open("links/data_links.txt", "wb")
 
-    static_dir = os.getcwd() + "//tmp"
-
-    # runFunction(dateList, timerange, sites, static_dir)
-
     if len(sys.argv) > 1:
-        runnum = sys.argv[1]
+        run_num = sys.argv[1]
     else:
-        runnum = cpu_count()
+        run_num = cpu_count()
 
-    pool = Pool(processes=int(runnum))  # Pool(processes=#)
-    # runFunctionPart = partial(runFunction)
-    run_function_partial = partial(
-        run_function, dateList=date_list, timerange=timerange, static_dir=static_dir
-    )
-    # pool.map(runFunction(dateList, timerange, static_dir, sites), iterable=sites)
+    pool = Pool(processes=int(run_num))
+    run_function_partial = partial(run_get, dateList=date_list, timerange=timerange)
     pool.map(run_function_partial, sites)
-
-    print("Done")

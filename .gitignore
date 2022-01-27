@@ -1,5 +1,6 @@
 RASRmodl.pth
 *.pyc
 training/im/*
-training/raw/*
+training/data/*
 test/*
+data/*

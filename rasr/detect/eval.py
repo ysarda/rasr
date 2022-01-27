@@ -24,12 +24,12 @@ from rasr.detect.output import string_convert
 #########################################################
 
 
-def detect_falls(img, radar, file, locdat, sweep, detdir, vis, cint, modelname):
-    model = Model.load(modelname, ["fall"])
+def evaluate_falls(img, radar, file, locdat, sweep, vis_dir, vis, conf_int, model_name):
+    model = Model.load(model_name, ["fall"])
     pred = model.predict(img)
     # print(max(pred[2]))
     for n in range(len(pred[1])):
-        if pred[2][n] > cint:
+        if pred[2][n] > conf_int:
             bound = (
                 0.5  # The unmapped location data is about 2x as far as it should be.
             )
@@ -37,8 +37,10 @@ def detect_falls(img, radar, file, locdat, sweep, detdir, vis, cint, modelname):
             xdat, ydat = bound * 1000 * locdat[0], bound * 1000 * locdat[1]
 
             t = round(locdat[2], 2)
-            name, date, btime, dtstr = string_convert(file)
-            atime = datetime.strptime(btime, "%m/%d/%Y %H:%M:%S") + timedelta(seconds=t)
+            name, date, b_time, dt_str = string_convert(file)
+            atime = datetime.strptime(b_time, "%m/%d/%Y %H:%M:%S") + timedelta(
+                seconds=t
+            )
 
             x0p, y0p, x1p, y1p = (
                 float(pred[1][n][0]),
@@ -71,7 +73,7 @@ def detect_falls(img, radar, file, locdat, sweep, detdir, vis, cint, modelname):
                 plt.text(
                     x0p + w / 2, y0p - 5, detstr, fontsize=8, color="red", ha="center"
                 )
-                imname = detdir + file + "_" + sweep + "_detected" + ".png"
+                imname = vis_dir + file + "_" + sweep + "_detected" + ".png"
                 plt.savefig(imname, bbox_inches="tight")
 
             # Finding Geodetic coordinates from relative distance to site:

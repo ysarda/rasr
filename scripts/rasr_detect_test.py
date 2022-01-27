@@ -12,21 +12,21 @@ from rasr.detect.detect import run_detect
 if __name__ == "__main__":
 
     # Relevant paths, confidence value, and visualization toggle:
-    fdir = "test/data/"
-    outdir = "test/falls/"
-    detdir = "test/vis/"
-    cint = 0.75
+    file_dir = "test/data/"
+    output_dir = "test/falls/"
+    vis_dir = "test/vis/"
+    conf_int = 0.75
     vis = True
     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O,
     # True by default for the test function
-    modelname = "RASRmodl.pth"
-    files = get_list_of_files(fdir)
+    model_name = "RASRmodl.pth"
+    files = get_list_of_files(file_dir)
 
-    print(f"File Directory: {fdir}")
-    print(f"Output Directory: {outdir}")
+    print(f"File Directory: {file_dir}")
+    print(f"Output Directory: {output_dir}")
     print(f"Visualizing: {vis}")
-    print(f"Visualization Directory: {detdir}")
-    print(f"Model: {modelname}")
-    print(f"Confidence Level: {cint}")
+    print(f"Visualization Directory: {vis_dir}")
+    print(f"Model: {model_name}")
+    print(f"Confidence Level: {conf_int}")
 
-    run_detect(files, outdir, detdir, cint, modelname, vis)
+    run_detect(files, output_dir, vis_dir, conf_int, model_name, vis)

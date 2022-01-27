@@ -15,11 +15,11 @@ import numpy as np
 #####################################################################################################
 
 
-def point_out(file, r, outdir):
+def point_out(file, r, output_dir):
     for det in r:
         lat, lon, alt, t, sweep = det
-        trounded = str(t)[:-4]
-        name, dtstr = string_convert(file)
+        t_rounded = str(t)[:-4]
+        name, dt_str = string_convert(file)
 
         print(
             "Detection: "
@@ -31,7 +31,7 @@ def point_out(file, r, outdir):
             + " "
             + str(alt)
             + " m above sea level, at "
-            + trounded
+            + t_rounded
         )
 
         point = Point((int(-lon), int(lat), int(alt)))
@@ -39,16 +39,16 @@ def point_out(file, r, outdir):
         features.append(Feature(geometry=point))
         feature_collection = FeatureCollection(features)
 
-        fname = outdir + name + dtstr + "-" + str(sweep) + ".geojson"
-        with open(fname, "a+") as outfile:
+        file_name = output_dir + name + dt_str + "-" + str(sweep) + ".geojson"
+        with open(file_name, "a+") as outfile:
             dump(feature_collection, outfile)
 
 
-def square_out(file, allr, outdir):
-    for det in allr:
+def square_out(file, all_r, output_dir):
+    for det in all_r:
         lat0, lon0, lat1, lon1, alt, t = det
-        trounded = str(t)[:-4]
-        name, dtstr = string_convert(file)
+        t_rounded = str(t)[:-4]
+        name, _, _, dt_str = string_convert(file)
 
         print(
             "Detection centered at: "
@@ -60,11 +60,11 @@ def square_out(file, allr, outdir):
             + " "
             + str(alt)
             + " m above sea level, at "
-            + trounded
+            + t_rounded
         )
         data = {}
-        data[trounded] = []
-        data[trounded].append(
+        data[t_rounded] = []
+        data[t_rounded].append(
             {
                 "Altitude (m)": str(alt),
                 "Longitude0 (NW)(deg East)": str(lon0),
@@ -73,13 +73,13 @@ def square_out(file, allr, outdir):
                 "Latitude1 (SE)(deg North)": str(lat1),
             }
         )
-        fname = outdir + name + dtstr + ".json"
-        with open(fname, "a+") as outfile:
-            geojson.dump(data, outfile)
+        file_name = output_dir + name + dt_str + ".json"
+        with open(file_name, "a+") as out_file:
+            geojson.dump(data, out_file)
 
 
 def string_convert(file):
-    radarname = file[0:4]
+    radar_name = file[0:4]
     m, d, y, hh, mm, ss = (
         file[8:10],
         file[10:12],
@@ -89,12 +89,12 @@ def string_convert(file):
         file[17:19],
     )
     date = m + "/" + d + "/" + y
-    btime = m + "/" + d + "/" + y + " " + hh + ":" + mm + ":" + ss
-    dtstr = m + d + y + "-" + hh + mm + ss
-    return radarname, date, btime, dtstr
+    b_time = m + "/" + d + "/" + y + " " + hh + ":" + mm + ":" + ss
+    dt_str = m + d + y + "-" + hh + mm + ss
+    return radar_name, date, b_time, dt_str
 
 
-def text_out(prop, file, outdir):
-    name, date, btime, dtstr = string_convert(file)
-    fname = fname = outdir + name + dtstr + ".csv"
-    np.savetxt(fname, prop, delimiter=",")
+def text_out(prop, file, output_dir):
+    name, _, _, dt_str = string_convert(file)
+    file_name = file_name = output_dir + name + dt_str + ".csv"
+    np.savetxt(file_name, prop, delimiter=",")
