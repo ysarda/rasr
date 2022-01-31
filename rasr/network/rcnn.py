@@ -1,10 +1,19 @@
+"""
+RCNN ver 1.0
+as of Jan 31, 2022
+
+Recurrent Convolutional Neural Network Architecture
+
+@authors: Yash Sarda
+"""
+
 import torch
 import torch.nn as nn
 
 
-class CRNN2D(nn.Module):
+class RCNN2D(nn.Module):
     def __init__(self, input_size=(2500, 2500, 3), output_size=(16, 16, 256)):
-        super(CRNN2D, self).__init__()
+        super(RCNN2D, self).__init__()
 
         iw, ih, ic = input_size
         ow, oh, oc = output_size

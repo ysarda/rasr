@@ -7,16 +7,11 @@ Sub-function for Py-Torch based Convolutional Neural Network Object Detection of
 @author: Yash Sarda
 """
 
-
 from detecto.core import Model
-
 import numpy as np
-
 from matplotlib import pyplot as plt
 from matplotlib import patches
-
 import pyart
-
 from datetime import datetime, timedelta
 
 from rasr.detect.output import string_convert
