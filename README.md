@@ -59,7 +59,7 @@ To test if your environment is set up properly, run the following:
 ~~~
 conda activate rasr
 python get/rasr_get_test.py
-python detect/torchdetect_test.py
+python detect/rasr_detect_test.py
 conda deactivate
 ~~~
 You should get example detection images and a json file with relevant data in test/. Similarly, you can test the full code:
