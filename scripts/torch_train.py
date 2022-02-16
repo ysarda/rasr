@@ -7,21 +7,26 @@ Training script for Py-Torch based Convolutional Neural Network Object Detection
 @author: Yash Sarda
 """
 
-from detecto.core import Model, Dataset
+from detecto.core import Model, Dataset, DataLoader
 import matplotlib.pyplot as plt
+import torch
+
 
 ########################################################
 
 if __name__ == "__main__":
 
     tdataset = Dataset("training/2500/train/")  # Training dataset
+    loader = DataLoader(tdataset, batch_size=2)
     vdataset = Dataset("training/2500/test/")  # Evaluation dataseet
 
-    model = Model(["fall"])
+    device = torch.device("cpu")
+
+    model = Model(["fall"], device)
 
     # Keep the learning rate low, otherwise the loss will be too high
     loss = model.fit(
-        tdataset,
+        loader,
         vdataset,
         epochs=15,
         learning_rate=0.001,

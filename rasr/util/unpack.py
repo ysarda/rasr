@@ -10,11 +10,8 @@ Conversion from PyART to numpy arrays
 import os
 import numpy as np
 import pyart
-import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvas
-
-matplotlib.use("TKagg")
 
 
 def dat_to_img(radar):

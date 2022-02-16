@@ -9,12 +9,15 @@ Script for converting NOAA files to images for training
 
 import pyart
 
-from rasr.util.fileio import get_list_of_files
+from rasr.util.fileio import get_list_of_files, make_dir
 from rasr.util.unpack import dat_to_img, save_vis
 
 if __name__ == "__main__":
 
-    raw_dir = "training/raw"
+    print("test")
+    make_dir("training/im")
+
+    raw_dir = "test/data"
     im_dir = "training/im"
 
     all_files = get_list_of_files(raw_dir)
