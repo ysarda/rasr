@@ -228,5 +228,5 @@ if __name__ == "__main__":
         run_num = cpu_count()
 
     pool = Pool(processes=int(run_num))
-    run_function_partial = partial(run_get, dateList=date_list, timerange=timerange)
+    run_function_partial = partial(run_get, date_list=date_list, time_range=timerange)
     pool.map(run_function_partial, sites)
