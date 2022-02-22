@@ -1,5 +1,5 @@
 """
-RASR Get Test ver 1.0
+RASR Get Test   ver 1.0
 as of Jan 09, 2021
 
 See README for details
@@ -13,8 +13,8 @@ from rasr.get.get import run_get
 
 if __name__ == "__main__":
 
-    link_dir = "links"
-    data_dir = "test/data"
+    link_dir = "../links"
+    data_dir = "../test/data"
     folders = [link_dir, data_dir]
     for folder in folders:
         make_dir(folder)
@@ -31,7 +31,8 @@ if __name__ == "__main__":
     sites = ["KATX", "KOTX", "KRTX", "KPDT"]
 
     start_date = date(yri, monthi, dayi)
-    end_date = start_date + timedelta(1)  # date(now.year, now.month, now.day+1)
+    # date(now.year, now.month, now.day+1)
+    end_date = start_date + timedelta(1)
     date_list = [
         start_date.year,
         start_date.month,

@@ -72,17 +72,19 @@ def run_get(sites, date_list, time_range, data_dir, link_dir):
             # TIC(03/03/2009-03/03/2009),TJBQ(10/30/2017-06/28/2018),TJRV(10/30/2017-06/27/2018),
             # TLSX(03/03/2009-03/03/2009),TNAW(06/09/2017-08/16/2018),TTBW(03/03/2009-03/03/2009),KCRI(10/31/2014-10/31/2014)
 
-            radar_sites = sites
+            #radar_sites = sites
 
-            for site_id in radar_sites:
+            for site_id in sites:
                 print('\nDownloading data from radar: "' + site_id + '"')
                 page_url_base = (
                     "https://www.ncdc.noaa.gov/nexradinv/bdp-download.jsp"
                     "?yyyy={year}&mm={month}&dd={day}&id={site_id}&product={product}"
                 )
+                print(page_url_base)
                 page_url = page_url_base.format(
                     year=year, month=month, day=day, site_id=site_id, product=product
                 )
+                print(page_url)
                 links = save_links(page_url)
 
                 for link in links:
@@ -94,7 +96,8 @@ def run_get(sites, date_list, time_range, data_dir, link_dir):
         site_info = "The last data downloaded was from the site:  " + site_id
         date_info = (
             "The last attempted download date was in the following format:"
-            "  MONTH / DAY / YEAR:    " + str(month) + "/" + str(day) + "/" + str(year)
+            "  MONTH / DAY / YEAR:    " +
+            str(month) + "/" + str(day) + "/" + str(year)
         )
         note = (
             "NOTE: Last download date usually means an incomplete download of all the weather files. "
