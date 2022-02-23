@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     link_dir = "links/"
     data_dir = "test/data"
-    folders = [link_dir, data_dir]
+    folders = [link_dir, data_dir, "test/falls", "test/vis"]
     for folder in folders:
         make_dir(folder)
 

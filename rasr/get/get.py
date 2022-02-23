@@ -84,13 +84,14 @@ def run_get(sites, date_list, time_range, data_dir, link_dir):
                 page_url = page_url_base.format(
                     year=year, month=month, day=day, site_id=site_id, product=product
                 )
-                # print(page_url)
+                print(page_url)
                 links = save_links(page_url)
 
                 for link in links:
+                    print(link)
                     download_link(link, data_dir, time_range)
 
-                clear_files(link_dir)
+                # clear_files(link_dir)
 
     except KeyboardInterrupt:
         site_info = "The last data downloaded was from the site:  " + site_id

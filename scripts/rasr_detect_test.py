@@ -19,6 +19,7 @@ if __name__ == "__main__":
     vis = True
     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O,
     # True by default for the test function
+
     model_name = "RASRmodl.pth"
     files = get_list_of_files(file_dir)
 
@@ -29,4 +30,4 @@ if __name__ == "__main__":
     print(f"Model: {model_name}")
     print(f"Confidence Level: {conf_int}")
 
-    run_detect(files, output_dir, vis_dir, conf_int, model_name, vis)
+    run_detect(files, file_dir, output_dir, vis_dir, conf_int, model_name, vis)

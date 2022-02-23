@@ -46,7 +46,7 @@ def point_out(file, r, output_dir):
 
 def square_out(file, all_r, output_dir):
     for det in all_r:
-        lat0, lon0, lat1, lon1, alt, t = det
+        lat0, lon0, lat1, lon1, alt, t, w, h = det
         t_rounded = str(t)[:-4]
         name, _, _, dt_str = string_convert(file)
 
@@ -71,6 +71,8 @@ def square_out(file, all_r, output_dir):
                 "Latitude0 (NW)(deg North)": str(lat0),
                 "Longitude1 (SE)(deg East)": str(lon1),
                 "Latitude1 (SE)(deg North)": str(lat1),
+                "Width of Detection (m East-West)": str(w),
+                "Height of Detection (m North-South)": str(h)
             }
         )
         file_name = output_dir + name + dt_str + ".json"

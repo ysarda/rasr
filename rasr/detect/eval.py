@@ -66,7 +66,8 @@ def evaluate_falls(img, radar, file, locdat, sweep, vis_dir, vis, conf_int, mode
                 )
                 ax.add_patch(rect)
                 detstr = pred[0][n] + ": " + str(round(float(pred[2][n]), 2))
-                boxsize = w + ", " + h + "m"
+                boxsize = str(round(float(w), 2)) + ", " + \
+                    str(round(float(h), 2)) + "m"
                 plt.text(
                     x0p + w / 2, y0p - 5, detstr, fontsize=8, color="red", ha="center"
                 )
@@ -95,6 +96,6 @@ def evaluate_falls(img, radar, file, locdat, sweep, vis_dir, vis, conf_int, mode
             lon0, lon1 = -lon0, -lon1
             alt = round(z + sitealt, 2)
 
-            return [lat0, lon0, lat1, lon1, alt, atime]
+            return [lat0, lon0, lat1, lon1, alt, atime, w, h]
         else:
             pass
