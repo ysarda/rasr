@@ -211,8 +211,8 @@ if __name__ == "__main__":
     ]
 
     # Create storage directory
-    link_dir = "../links/"
-    data_dir = "../data/"
+    link_dir = "links/"
+    data_dir = "data/"
 
     if not os.path.exists(data_dir):
         try:

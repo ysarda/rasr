@@ -13,8 +13,8 @@ from rasr.get.get import run_get
 
 if __name__ == "__main__":
 
-    link_dir = "../links"
-    data_dir = "../test/data"
+    link_dir = "links/"
+    data_dir = "test/data"
     folders = [link_dir, data_dir]
     for folder in folders:
         make_dir(folder)

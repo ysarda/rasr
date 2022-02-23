@@ -26,7 +26,8 @@ def evaluate_falls(img, radar, file, locdat, sweep, vis_dir, vis, conf_int, mode
     for n in range(len(pred[1])):
         if pred[2][n] > conf_int:
             bound = (
-                0.5  # The unmapped location data is about 2x as far as it should be.
+                # The unmapped location data is about 2x as far as it should be.
+                0.5
             )
             # I don't know why this is, and this is a temp solution.
             xdat, ydat = bound * 1000 * locdat[0], bound * 1000 * locdat[1]
@@ -43,7 +44,7 @@ def evaluate_falls(img, radar, file, locdat, sweep, vis_dir, vis, conf_int, mode
                 float(pred[1][n][2]),
                 float(pred[1][n][3]),
             )
-            xp, yp = (x1p + x0p) / 2, (y1p + y0p) / 2
+            xp, yp = (x1p + x0p) / 2, (y1p + y0p) / 2  # center of detection
 
             xdm = [np.amin(xdat), np.amax(xdat)]
             ydm = [np.amin(ydat), np.amax(ydat)]
@@ -65,8 +66,12 @@ def evaluate_falls(img, radar, file, locdat, sweep, vis_dir, vis, conf_int, mode
                 )
                 ax.add_patch(rect)
                 detstr = pred[0][n] + ": " + str(round(float(pred[2][n]), 2))
+                boxsize = w + ", " + h + "m"
                 plt.text(
                     x0p + w / 2, y0p - 5, detstr, fontsize=8, color="red", ha="center"
+                )
+                plt.text(
+                    x0p + w / 2, y0p + 5, boxsize, fontsize=8, color="red", ha="center"
                 )
                 imname = vis_dir + file + "_" + sweep + "_detected" + ".png"
                 plt.savefig(imname, bbox_inches="tight")
@@ -80,10 +85,12 @@ def evaluate_falls(img, radar, file, locdat, sweep, vis_dir, vis, conf_int, mode
             )
 
             lon0, lat0 = np.around(
-                pyart.core.cartesian_to_geographic_aeqd(x0, y0, sitelon, sitelat), 3
+                pyart.core.cartesian_to_geographic_aeqd(
+                    x0, y0, sitelon, sitelat), 3
             )
             lon1, lat1 = np.around(
-                pyart.core.cartesian_to_geographic_aeqd(x1, y1, sitelon, sitelat), 3
+                pyart.core.cartesian_to_geographic_aeqd(
+                    x1, y1, sitelon, sitelat), 3
             )
             lon0, lon1 = -lon0, -lon1
             alt = round(z + sitealt, 2)

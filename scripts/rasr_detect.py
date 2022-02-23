@@ -17,11 +17,11 @@ from rasr.detect.detect import run_detect
 if __name__ == "__main__":
 
     # Relevant paths, confidence value, and visualization toggle:
-    file_dir = "test/data/"
-    output_dir = "test/falls/"
-    vis_dir = "test/vis/"
+    file_dir = "data/"
+    output_dir = "falls/"
+    vis_dir = "vis/"
     conf_int = 0.75
-    vis = eval(sys.argv[2])
+    vis = False
     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O,
     # True by default for the test function
     model_name = "RASRmodl.pth"
