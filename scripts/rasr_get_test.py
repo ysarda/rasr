@@ -23,11 +23,11 @@ if __name__ == "__main__":
     # Level-II data include the original three meteorological base data quantities: reflectivity, mean radial velocity,
     # and spectrum width, as well as the dual-polarization base data of differential reflectivity, correlation
     # coefficient, and differential phase.
-    yri = 2020
+    yri = 2022
     monthi = 3
-    dayi = 26
+    dayi = 21
     stime = 33000
-    etime = 50000
+    etime = 60000
     sites = ["KATX", "KOTX", "KRTX", "KPDT"]
 
     start_date = date(yri, monthi, dayi)

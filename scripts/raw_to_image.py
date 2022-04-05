@@ -14,7 +14,6 @@ from rasr.util.unpack import dat_to_img, save_vis
 
 if __name__ == "__main__":
 
-    print("test")
     make_dir("training/im")
 
     raw_dir = "test/data"

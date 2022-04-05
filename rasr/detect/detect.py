@@ -37,11 +37,12 @@ def run_detect(files, file_dir, output_dir, vis_dir, conf_int, model_name, vis):
                 model_name,
             )
             if v is not None:
-                print(v)
+                print("Detection!")
+                allr.append(v)
         plt.cla()
         plt.clf()
         plt.close("all")
 
-        if(len(allr) >= 2):
+        if(len(allr) >= 1):
             # output JSON of detection bounding data
             square_out(file, allr, output_dir)
