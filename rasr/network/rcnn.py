@@ -9,6 +9,7 @@ Recurrent Convolutional Neural Network Architecture
 
 import torch
 import torch.nn as nn
+import torch.optim as optim
 
 
 class RCNN2D(nn.Module):
@@ -88,3 +89,34 @@ class RCNN2D(nn.Module):
         x = self.fc2(x)
         print(x.shape, "fully connected 2")
         return x
+
+    def prepare_data(train_path, test_path):
+        # load dataset
+        train = ImageFolder(train_path, transform=ToTensor())
+        test = ImageFolder(test_path, transform=ToTensor())
+        # prepare data loaders
+        train_dl = DataLoader(train, batch_size=2, shuffle=True)
+        test_dl = DataLoader(test, batch_size=2, shuffle=False)
+        return train_dl, test_dl
+
+    def train_model(train_dl, model, epochs, lr):
+        # define the optimization
+        criterion = nn.CrossEntropyLoss()
+        optimizer = optim.Adam(model.parameters(), lr=lr)
+        # enumerate epochs
+        for epoch in range(epochs):
+            # enumerate mini batches
+            for i, (inputs, targets) in enumerate(train_dl):
+                # clear the gradients
+                print(len(targets))
+                optimizer.zero_grad()
+                # compute the model output
+                yhat = model(inputs)
+                # calculate loss
+                loss = criterion(yhat, targets)
+                # credit assignment
+                loss.backward()
+                # update model weights
+                optimizer.step()
+                print("target")
+            print('epoch')
