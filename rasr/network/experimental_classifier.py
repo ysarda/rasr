@@ -26,6 +26,8 @@ from torch.nn import Softmax
 from torch.nn import Module
 from torch.optim import SGD
 from torch.nn import CrossEntropyLoss
+from torch import save
+from torch import load
 from torch.nn.init import kaiming_uniform_
 from torch.nn.init import xavier_uniform_
 
@@ -179,6 +181,7 @@ print(len(train_dl.dataset), len(test_dl.dataset))
 model = CNN(3)
 # # train the model
 train_model(train_dl, model)
+save(model.state_dict(), 'classifier_model.pth')
 # evaluate the model
 acc = evaluate_model(test_dl, model)
 print('Accuracy: %.3f' % acc)

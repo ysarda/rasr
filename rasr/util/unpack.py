@@ -1,10 +1,10 @@
 """
 UNPACK ver 1.0
-as of Jan 20, 2022
+as of April 12, 2022
 
 Conversion from PyART to numpy arrays
 
-@author: Yash Sarda
+@author: Yash Sarda, Carson Lansdowne
 """
 
 import os
@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvas
 
 
-def dat_to_img(radar):
+def dat_to_img(radar, field):
     im_list = []
     for x in range(radar.nsweeps):
         plotter = pyart.graph.RadarDisplay(radar)
@@ -24,7 +24,7 @@ def dat_to_img(radar):
         plotter.set_limits(xlim=(-250, 250), ylim=(-250, 250), ax=ax)
         # plotter.plot_range_ring(10., ax=ax)
         data = plotter._get_data(
-            "velocity", x, mask_tuple=None, filter_transitions=True, gatefilter=None
+            field, x, mask_tuple=None, filter_transitions=True, gatefilter=None
         )
         if np.any(data) > 0:
             x_dat, y_dat = plotter._get_x_y(
@@ -50,12 +50,41 @@ def dat_to_img(radar):
 
 
 def save_vis(im_list, file, save_dir):
+
     for img, sweep_angle, _ in im_list:
-        imname = "vel_" + str(file[-23:]) + "_" + sweep_angle
+        # if sweep_angle[-1] == '0':
+        #     sweep_angle = sweep_angle[:-1]
+        file_short = file.split('/')
+        imname = "vel_" + file_short[-1] + "_" + sweep_angle
+        print(imname)
 
         if os.path.exists(save_dir + imname + ".jpg"):
             print("Saving Velocity at sweep angle:", sweep_angle, "again")
             plt.imsave(save_dir + "/" + imname + "_2.jpg", img)
         else:
             print("Saving Velocity at sweep angle:", sweep_angle)
+            # print(save_dir + "/" + imname + ".jpg")
             plt.imsave(save_dir + "/" + imname + ".jpg", img)
+
+
+def save_vis_compare(im_list, file, save_dir, compare_dir):
+
+    for img, sweep_angle, _ in im_list:
+        if sweep_angle[-1] == '0':
+            sweep_angle = sweep_angle[:-1]
+        file_short = file.split('/')
+        imname = "vel_" + file_short[-1] + ".g_" + sweep_angle
+
+        # print(imname)
+
+        if imname in compare_dir:
+
+            if os.path.exists(save_dir + imname + ".jpg"):
+                print("Saving Velocity at sweep angle:", sweep_angle, "again")
+                plt.imsave(save_dir + "/" + imname + "_2.jpg", img)
+            else:
+                print("Saving Velocity at sweep angle:", sweep_angle)
+                # print(save_dir + "/" + imname + ".jpg")
+                plt.imsave(save_dir + "/" + imname + ".jpg", img)
+        else:
+            print(imname, "not incl.")
