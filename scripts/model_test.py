@@ -15,11 +15,11 @@ from rasr.network.rcnn import RCNN2D
 
 if __name__ == "__main__":
 
-    raw_dir = "training/raw"
-    model = RCNN2D()  # .to("cuda")
+    raw_dir = "test/data"
+    model = RCNN2D()
 
     all_files = get_list_of_files(raw_dir)
-    for file in all_files:
+    for file in all_files[0:1]:
         radar = pyart.io.read(file)
         im_list = dat_to_img(radar)
         for img, _, _ in im_list[0:1]:
