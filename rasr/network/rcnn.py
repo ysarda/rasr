@@ -9,6 +9,7 @@ Recurrent Convolutional Neural Network Architecture
 
 import torch
 import torch.nn as nn
+import torch.optim as optim
 
 
 class RCNN2D(nn.Module):
@@ -31,29 +32,45 @@ class RCNN2D(nn.Module):
             nn.MaxPool2d(kernel_size=(8, 8), stride=(3, 3)),
         )
         self.group3 = nn.Sequential(
+            << << << < HEAD
             nn.Conv2d(128, 128, kernel_size=4, padding=0),
             nn.BatchNorm2d(128),
             nn.ReLU(),
             nn.Conv2d(128, 128, kernel_size=4, padding=0),
             nn.BatchNorm2d(128),
+            == == == =
+            nn.Conv2d(128, oc, kernel_size=4, padding=0),
+            nn.BatchNorm2d(oc),
+            nn.ReLU(),
+            nn.Conv2d(oc, oc, kernel_size=4, padding=0),
+            nn.BatchNorm2d(oc),
+            >>>>>> > d6bed8e29f23a98dfb290df7b1f55de171883823
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=(6, 6), stride=(3, 3)),
         )
         self.group4 = nn.Sequential(
+            << << << < HEAD
             nn.Conv2d(128, 128, kernel_size=4, padding=0),
             nn.BatchNorm2d(128),
             nn.ReLU(),
             nn.Conv2d(128, 128, kernel_size=4, padding=0),
             nn.BatchNorm2d(128),
+            == == == =
+            nn.Conv2d(oc, oc, kernel_size=4, padding=0),
+            nn.BatchNorm2d(oc),
+            nn.ReLU(),
+            nn.Conv2d(oc, oc, kernel_size=4, padding=0),
+            nn.BatchNorm2d(oc),
+            >>>>>> > d6bed8e29f23a98dfb290df7b1f55de171883823
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=(4, 4), stride=(2, 2)),
         )
         self.group5 = nn.Sequential(
-            nn.Conv2d(128, 128, kernel_size=4, padding=0),
-            nn.BatchNorm2d(128),
+            nn.Conv2d(oc, oc, kernel_size=4, padding=0),
+            nn.BatchNorm2d(oc),
             nn.ReLU(),
-            nn.Conv2d(128, 128, kernel_size=4, padding=0),
-            nn.BatchNorm2d(128),
+            nn.Conv2d(oc, oc, kernel_size=4, padding=0),
+            nn.BatchNorm2d(oc),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=(4, 4), stride=(2, 2)),
         )
@@ -88,3 +105,34 @@ class RCNN2D(nn.Module):
         x = self.fc2(x)
         print(x.shape, "fully connected 2")
         return x
+
+    def prepare_data(train_path, test_path):
+        # load dataset
+        train = ImageFolder(train_path, transform=ToTensor())
+        test = ImageFolder(test_path, transform=ToTensor())
+        # prepare data loaders
+        train_dl = DataLoader(train, batch_size=2, shuffle=True)
+        test_dl = DataLoader(test, batch_size=2, shuffle=False)
+        return train_dl, test_dl
+
+    def train_model(train_dl, model, epochs, lr):
+        # define the optimization
+        criterion = nn.CrossEntropyLoss()
+        optimizer = optim.Adam(model.parameters(), lr=lr)
+        # enumerate epochs
+        for epoch in range(epochs):
+            # enumerate mini batches
+            for i, (inputs, targets) in enumerate(train_dl):
+                # clear the gradients
+                print(len(targets))
+                optimizer.zero_grad()
+                # compute the model output
+                yhat = model(inputs)
+                # calculate loss
+                loss = criterion(yhat, targets)
+                # credit assignment
+                loss.backward()
+                # update model weights
+                optimizer.step()
+                print("target")
+            print('epoch')

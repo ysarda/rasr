@@ -1,8 +1,8 @@
 """
 RASR Pipeline ver 1.0
-as of Jan 21, 2021
+as of Jan 21, 2022
 
-See README for details
+Script for porting all detections and processed radar data into separate archives
 
 @authors: Carson Lansdowne
 """

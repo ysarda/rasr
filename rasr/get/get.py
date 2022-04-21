@@ -88,6 +88,7 @@ def run_get(sites, date_list, time_range, data_dir, link_dir):
                 links = save_links(page_url)
 
                 for link in links:
+                    print(link)
                     download_link(link, data_dir, time_range)
 
                 clear_files(link_dir)

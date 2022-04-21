@@ -41,8 +41,8 @@ def save_links(page_url):
                     ):
                         f.write("{}\n".format(link["href"]))
                         links.append(link["href"])
-                        # else:
-                        # print("\nThere is no link for this link:\n", link,"\n")
+                    # else:
+                    #    print("\nThere is no link for this link:\n", link, "\n")
         except OSError:
             pass
             """

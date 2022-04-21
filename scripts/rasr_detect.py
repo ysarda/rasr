@@ -9,7 +9,11 @@ See README for details
 
 import sys
 from functools import partial
-from multiprocessing import Pool, cpu_count
+from torch.multiprocessing import Pool, set_start_method, cpu_count
+try:
+    set_start_method('spawn')
+except RuntimeError:
+    pass
 
 from rasr.util.fileio import get_list_of_files
 from rasr.detect.detect import run_detect
@@ -21,7 +25,7 @@ if __name__ == "__main__":
     output_dir = "falls/"
     vis_dir = "vis/"
     conf_int = 0.75
-    vis = False
+    vis = True
     # Select True to print graphs and plots (good for debugging), and False to reduce file I/O,
     # True by default for the test function
     model_name = "RASRmodl.pth"
@@ -39,10 +43,11 @@ if __name__ == "__main__":
     print(f"Model: {model_name}")
     print(f"Confidence Level: {conf_int}")
 
-    allfiles = get_list_of_files(file_dir)
+    allfiles = [get_list_of_files(file_dir)]
     pool = Pool(processes=int(run_num))
     run_function_partial = partial(
         run_detect,
+        file_dir=file_dir,
         output_dir=output_dir,
         vis_dir=vis_dir,
         conf_int=conf_int,

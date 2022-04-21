@@ -15,8 +15,8 @@ from rasr.network.rcnn import RCNN2D
 
 if __name__ == "__main__":
 
-    raw_dir = "test/data"
-    model = RCNN2D()
+    raw_dir = "data/"
+    model = RCNN2D()  # .to("cuda")
 
     all_files = get_list_of_files(raw_dir)
     for file in all_files[0:1]:
