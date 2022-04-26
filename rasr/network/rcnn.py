@@ -1,23 +1,31 @@
 """
 RCNN ver 1.0
-as of Jan 31, 2022
+as of Apr. 24, 2022
 
 Recurrent Convolutional Neural Network Architecture
 
-@authors: Yash Sarda
+@authors: Yash Sarda, Carson Lansdowne
 """
 
+from torchvision import transforms
+from torchvision.transforms import ToTensor
+from torch.utils.data import DataLoader, Dataset, ConcatDataset
+from rasr.util.video_dataset import VideoFrameDataset
+from torchvision.datasets import ImageFolder
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(video_dataset.py), '../../'))
 
 
 class RCNN2D(nn.Module):
-    def __init__(self, input_size=(2500, 2500, 3), output_size=(16, 16, 128)):
+    def __init__(self, ic):
         super(RCNN2D, self).__init__()
 
-        iw, ih, ic = input_size
-        ow, oh, oc = output_size
+        # iw, ih, ic = input_size
+        ow, oh, oc = (16, 16, 128)
 
         self.group1 = nn.Sequential(
             nn.Conv2d(ic, 64, kernel_size=6, padding=0),
@@ -66,9 +74,9 @@ class RCNN2D(nn.Module):
         self.fc2 = nn.Sequential(nn.Linear(oh * oc, oc), nn.Sigmoid())
 
     def forward(self, x):
-        x = (
-            torch.tensor(x).permute((2, 0, 1)).unsqueeze(0).float()
-        )  # .to(device="cuda")
+        # x = (
+        #     torch.tensor(x).permute((2, 0, 1)).unsqueeze(0).float()
+        # )  # .to(device="cuda")
         print(x.shape, "input")
         x = self.group1(x)
         print(x.shape, "conv group 1")
@@ -91,15 +99,40 @@ class RCNN2D(nn.Module):
         return x
 
     def prepare_data(train_path, test_path):
-        # load dataset
-        train = ImageFolder(train_path, transform=ToTensor())
+        # def collate_batch(batch):
+        #     data = [item[0] for item in batch]
+        #     data = pad_sequence(data, batch_first=True)
+        #     targets = [item[1] for item in batch]
+        #     targets = pad_sequence(torch.tensor(
+        #         targets).unsqueeze(0), batch_first=True)
+        #     print(data, targets[:])
+        #     return data, targets
+
+        dataset = video_dataset.VideoFrameDataset()
+
+        train = []
+
+        for file in os.listdir(train_path):
+            # load dataset
+            print(file)
+            d = os.path.join(train_path, file)
+            train.append(ImageFolder((d),
+                         transform=ToTensor()))
+
+        # for i in range(len(dataset_list) - 1):
+        train_dataset = ConcatDataset((train[0], train[1]))
+
         test = ImageFolder(test_path, transform=ToTensor())
+
         # prepare data loaders
-        train_dl = DataLoader(train, batch_size=2, shuffle=True)
-        test_dl = DataLoader(test, batch_size=2, shuffle=False)
+        train_dl = DataLoader(train_dataset, batch_size=1,
+                              shuffle=False)
+        test_dl = DataLoader(test, batch_size=2,
+                             shuffle=False)
+
         return train_dl, test_dl
 
-    def train_model(train_dl, model, epochs, lr):
+    def train_model(model, train_dl, epochs, lr):
         # define the optimization
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -108,7 +141,8 @@ class RCNN2D(nn.Module):
             # enumerate mini batches
             for i, (inputs, targets) in enumerate(train_dl):
                 # clear the gradients
-                print(len(targets))
+                print(targets)
+                print(inputs.shape)
                 optimizer.zero_grad()
                 # compute the model output
                 yhat = model(inputs)

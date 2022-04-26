@@ -1,10 +1,10 @@
 """
 OUTPUT ver 1.0
-as of Jan 09, 2021
+as of March 3, 2022
 
 Converts any relevant data into useful/displayable file types for ASTRIAGraph
 
-@author: Yash Sarda
+@author: Yash Sarda, Carson Lansdowne
 """
 
 import geojson
@@ -71,8 +71,8 @@ def square_out(file, all_r, output_dir):
                 "Latitude0 (NW)(deg North)": str(lat0),
                 "Longitude1 (SE)(deg East)": str(lon1),
                 "Latitude1 (SE)(deg North)": str(lat1),
-                "Width of Detection (m East-West)": str(w),
-                "Height of Detection (m North-South)": str(h)
+                "Width of Detection Box (m East-West)": str(w),
+                "Height of Detection Box (m North-South)": str(h)
             }
         )
         file_name = output_dir + name + dt_str + ".json"

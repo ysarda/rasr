@@ -67,7 +67,7 @@ def save_vis(im_list, file, save_dir):
             plt.imsave(save_dir + "/" + imname + ".jpg", img)
 
 
-def save_vis_compare(im_list, file, save_dir, compare_dir):
+def save_vis_compare(im_list, file, save_dir, compare_dir, field):
 
     for img, sweep_angle, _ in im_list:
         if sweep_angle[-1] == '0':
@@ -78,6 +78,8 @@ def save_vis_compare(im_list, file, save_dir, compare_dir):
         # print(imname)
 
         if imname in compare_dir:
+
+            imname = field[:3] + "_" + file_short[-1] + ".g_" + sweep_angle
 
             if os.path.exists(save_dir + imname + ".jpg"):
                 print("Saving Velocity at sweep angle:", sweep_angle, "again")
