@@ -40,6 +40,11 @@ class RCNN2D(nn.Module):
             nn.MaxPool2d(kernel_size=(8, 8), stride=(3, 3)),
         )
         self.group3 = nn.Sequential(
+            nn.Conv2d(128, 128, kernel_size=4, padding=0),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            nn.Conv2d(128, 128, kernel_size=4, padding=0),
+            nn.BatchNorm2d(128),
             nn.Conv2d(128, oc, kernel_size=4, padding=0),
             nn.BatchNorm2d(oc),
             nn.ReLU(),
@@ -49,6 +54,11 @@ class RCNN2D(nn.Module):
             nn.MaxPool2d(kernel_size=(6, 6), stride=(3, 3)),
         )
         self.group4 = nn.Sequential(
+            nn.Conv2d(128, 128, kernel_size=4, padding=0),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            nn.Conv2d(128, 128, kernel_size=4, padding=0),
+            nn.BatchNorm2d(128),
             nn.Conv2d(oc, oc, kernel_size=4, padding=0),
             nn.BatchNorm2d(oc),
             nn.ReLU(),
