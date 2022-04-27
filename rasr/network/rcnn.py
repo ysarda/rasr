@@ -7,17 +7,24 @@ Recurrent Convolutional Neural Network Architecture
 @authors: Yash Sarda, Carson Lansdowne
 """
 
-from torchvision import transforms
-from torchvision.transforms import ToTensor
-from torch.utils.data import DataLoader, Dataset, ConcatDataset
-from rasr.util.video_dataset import VideoFrameDataset
-from torchvision.datasets import ImageFolder
-import torch
-import torch.nn as nn
-import torch.optim as optim
 import os
+import torch.optim as optim
+import torch.nn as nn
+import torch
+from torchvision.datasets import ImageFolder
+from torch.utils.data import DataLoader, Dataset, ConcatDataset
+from torchvision.transforms import ToTensor
+from torchvision import transforms
 import sys
-sys.path.append(os.path.join(os.path.dirname(video_dataset.py), '../../'))
+from pathlib import Path
+from rasr.util.video_dataset import VideoFrameDataset, ImglistToTensor
+# path_root = Path(__file__).parents[2]
+# sys.path.append(str(path_root))
+# print(sys.path)
+
+
+# print(sys.path)
+# sys.path.append(os.path.join(os.path.dirname(video_dataset.py), '../../'))
 
 
 class RCNN2D(nn.Module):
@@ -28,7 +35,7 @@ class RCNN2D(nn.Module):
         ow, oh, oc = (16, 16, 128)
 
         self.group1 = nn.Sequential(
-            nn.Conv2d(ic, 64, kernel_size=6, padding=0),
+            nn.Conv3d(ic, 64, kernel_size=3, padding=0),
             nn.BatchNorm2d(64),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=(8, 8), stride=(3, 3)),
@@ -40,11 +47,6 @@ class RCNN2D(nn.Module):
             nn.MaxPool2d(kernel_size=(8, 8), stride=(3, 3)),
         )
         self.group3 = nn.Sequential(
-            nn.Conv2d(128, 128, kernel_size=4, padding=0),
-            nn.BatchNorm2d(128),
-            nn.ReLU(),
-            nn.Conv2d(128, 128, kernel_size=4, padding=0),
-            nn.BatchNorm2d(128),
             nn.Conv2d(128, oc, kernel_size=4, padding=0),
             nn.BatchNorm2d(oc),
             nn.ReLU(),
@@ -54,11 +56,6 @@ class RCNN2D(nn.Module):
             nn.MaxPool2d(kernel_size=(6, 6), stride=(3, 3)),
         )
         self.group4 = nn.Sequential(
-            nn.Conv2d(128, 128, kernel_size=4, padding=0),
-            nn.BatchNorm2d(128),
-            nn.ReLU(),
-            nn.Conv2d(128, 128, kernel_size=4, padding=0),
-            nn.BatchNorm2d(128),
             nn.Conv2d(oc, oc, kernel_size=4, padding=0),
             nn.BatchNorm2d(oc),
             nn.ReLU(),
@@ -118,26 +115,49 @@ class RCNN2D(nn.Module):
         #     print(data, targets[:])
         #     return data, targets
 
-        dataset = video_dataset.VideoFrameDataset()
+        train_annotation_file = os.path.join(train_path, 'annotations.txt')
+        test_annotation_file = os.path.join(test_path, 'annotations.txt')
 
-        train = []
+        train_dataset = VideoFrameDataset(
+            root_path=train_path,
+            annotationfile_path=train_annotation_file,
+            num_segments=1,
+            frames_per_segment=12,
+            imagefile_template='img_{:03d}.jpg',
+            transform=ImglistToTensor(),
+            main_mode=True
+        )
 
-        for file in os.listdir(train_path):
-            # load dataset
-            print(file)
-            d = os.path.join(train_path, file)
-            train.append(ImageFolder((d),
-                         transform=ToTensor()))
+        test_dataset = VideoFrameDataset(
+            root_path=test_path,
+            annotationfile_path=test_annotation_file,
+            num_segments=1,
+            frames_per_segment=12,
+            imagefile_template='img_{:03d}.jpg',
+            transform=ImglistToTensor(),
+            main_mode=True
+        )
 
-        # for i in range(len(dataset_list) - 1):
-        train_dataset = ConcatDataset((train[0], train[1]))
+        sample = train_dataset[0]
+        frames = sample[0]  # list of PIL images
+        label = sample[1]   # integer label
 
-        test = ImageFolder(test_path, transform=ToTensor())
+        # for file in os.listdir(train_path):
+        #     # load dataset
+        #     print(file)
+        #     d = os.path.join(train_path, file)
+        #     train.append(ImageFolder((d),
+        #                              transform=ToTensor()))
+
+        # # for i in range(len(dataset_list) - 1):
+        # train_dataset = ConcatDataset((train[0], train[1]))
+
+        # test = ImageFolder(test_path, transform=ToTensor())
 
         # prepare data loaders
         train_dl = DataLoader(train_dataset, batch_size=1,
                               shuffle=False)
-        test_dl = DataLoader(test, batch_size=2,
+        test_dl = DataLoader(test_dataset, batch_size=2,
                              shuffle=False)
 
         return train_dl, test_dl
@@ -149,7 +169,7 @@ class RCNN2D(nn.Module):
         # enumerate epochs
         for epoch in range(epochs):
             # enumerate mini batches
-            for i, (inputs, targets) in enumerate(train_dl):
+            for inputs, targets in train_dl:
                 # clear the gradients
                 print(targets)
                 print(inputs.shape)
