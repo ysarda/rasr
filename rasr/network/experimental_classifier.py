@@ -94,12 +94,12 @@ class CNN(Module):
         # X = self.act4(X)
         # X = self.pool4(X)
         # flatten
-        print(X.shape)
+        # print(X.shape)
         X = X.view(-1, 128*(133**2))
-        print(X.shape)
+        # print(X.shape)
         # fifth hidden layer
         X = self.hidden5(X)
-        print("yay")
+        # print("yay")
         X = self.act5(X)
         # output layer
         X = self.hidden6(X)
@@ -118,8 +118,8 @@ def prepare_data(train_path, test_path):
     train = ImageFolder(train_path, transform=ToTensor())
     test = ImageFolder(test_path, transform=ToTensor())
     # prepare data loaders
-    train_dl = DataLoader(train, batch_size=2, shuffle=True)
-    test_dl = DataLoader(test, batch_size=2, shuffle=False)
+    train_dl = DataLoader(train, batch_size=4, shuffle=True)
+    test_dl = DataLoader(test, batch_size=4, shuffle=False)
     return train_dl, test_dl
 
 # train the model
@@ -130,8 +130,9 @@ def train_model(train_dl, model):
     criterion = CrossEntropyLoss()
     optimizer = SGD(model.parameters(), lr=0.001, momentum=0.9)
     # enumerate epochs
-    for epoch in range(10):
+    for epoch in range(3):
         # enumerate mini batches
+        print(epoch)
         for i, (inputs, targets) in enumerate(train_dl):
             # clear the gradients
             print(len(targets))
