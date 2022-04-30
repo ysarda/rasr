@@ -1,0 +1,26 @@
+<annotation>
+	<folder>Addison, AL</folder>
+	<filename>vel_KBMX20121030_223024_V06.g_3.52.jpg</filename>
+	<path>/home/ysarda/Projects/rasr/training/set/Addison, AL/vel_KBMX20121030_223024_V06.g_3.52.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>2500</width>
+		<height>2500</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>fall</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1011</xmin>
+			<ymin>558</ymin>
+			<xmax>1073</xmax>
+			<ymax>619</ymax>
+		</bndbox>
+	</object>
+</annotation>

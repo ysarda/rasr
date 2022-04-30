@@ -1,0 +1,26 @@
+<annotation verified="yes">
+	<folder>Mount Blanco, TX</folder>
+	<filename>vel_KLBB20160218_034243_V06.g_2.5.jpg</filename>
+	<path>/home/ysarda/Projects/rasr/training/set/Mount Blanco, TX/vel_KLBB20160218_034243_V06.g_2.5.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>2500</width>
+		<height>2500</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>fall</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1503</xmin>
+			<ymin>1188</ymin>
+			<xmax>1524</xmax>
+			<ymax>1205</ymax>
+		</bndbox>
+	</object>
+</annotation>

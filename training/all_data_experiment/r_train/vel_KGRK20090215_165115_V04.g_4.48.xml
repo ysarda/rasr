@@ -1,0 +1,26 @@
+<annotation>
+	<folder>Ash Creek, TX</folder>
+	<filename>vel_KGRK20090215_165115_V04.g_4.48.jpg</filename>
+	<path>/home/ysarda/Projects/rasr/training/set/Ash Creek, TX/vel_KGRK20090215_165115_V04.g_4.48.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>2500</width>
+		<height>2500</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>fall</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1336</xmin>
+			<ymin>608</ymin>
+			<xmax>1372</xmax>
+			<ymax>649</ymax>
+		</bndbox>
+	</object>
+</annotation>
