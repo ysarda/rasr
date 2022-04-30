@@ -36,42 +36,42 @@ class RCNN2D(nn.Module):
 
         self.group1 = nn.Sequential(
             nn.Conv3d(ic, 64, kernel_size=3, padding=0),
-            nn.BatchNorm2d(64),
+            nn.BatchNorm3d(64),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=(8, 8), stride=(3, 3)),
+            nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group2 = nn.Sequential(
-            nn.Conv2d(64, 128, kernel_size=6, padding=0),
+            nn.Conv3d(64, 128, kernel_size=6, padding=6),
             nn.BatchNorm2d(128),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=(8, 8), stride=(3, 3)),
+            nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group3 = nn.Sequential(
-            nn.Conv2d(128, oc, kernel_size=4, padding=0),
-            nn.BatchNorm2d(oc),
+            nn.Conv3d(128, oc, kernel_size=4, padding=0),
+            nn.BatchNorm3d(oc),
             nn.ReLU(),
-            nn.Conv2d(oc, oc, kernel_size=4, padding=0),
-            nn.BatchNorm2d(oc),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            nn.BatchNorm3d(oc),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=(6, 6), stride=(3, 3)),
+            nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group4 = nn.Sequential(
-            nn.Conv2d(oc, oc, kernel_size=4, padding=0),
-            nn.BatchNorm2d(oc),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            nn.BatchNorm3d(oc),
             nn.ReLU(),
-            nn.Conv2d(oc, oc, kernel_size=4, padding=0),
-            nn.BatchNorm2d(oc),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            nn.BatchNorm3d(oc),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=(4, 4), stride=(2, 2)),
+            nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group5 = nn.Sequential(
-            nn.Conv2d(oc, oc, kernel_size=4, padding=0),
-            nn.BatchNorm2d(oc),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            nn.BatchNorm3d(oc),
             nn.ReLU(),
-            nn.Conv2d(oc, oc, kernel_size=4, padding=0),
-            nn.BatchNorm2d(oc),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            nn.BatchNorm3d(oc),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=(4, 4), stride=(2, 2)),
+            nn.MaxPool3d(kernel_size=4, stride=2, padding=4),
         )
         self.fc1 = nn.Sequential(
             nn.Linear(ow * oh * oc, oh * oc), nn.Sigmoid())

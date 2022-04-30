@@ -77,8 +77,8 @@ class CNN(Module):
 
     # forward propagate input
     def forward(self, X):
-        print(X)
-        print('forward', X.shape)
+        # print(X)
+        #print('forward', X.shape)
         # input to first hidden layer
         X = self.hidden1(X)
         X = self.act1(X)
@@ -137,7 +137,7 @@ def train_model(train_dl, model):
         print(epoch)
         for i, (inputs, targets) in enumerate(train_dl):
             # clear the gradients
-            print(len(targets))
+            # print(len(targets))
             optimizer.zero_grad()
             # compute the model output
             yhat = model(inputs)
