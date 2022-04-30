@@ -67,7 +67,7 @@ class CNN(Module):
         # self.pool4 = MaxPool2d((8, 8), stride=(2, 2))
 
         # fully connected layer
-        self.hidden5 = Linear(128*(133**2), 100)
+        self.hidden5 = Linear(128 * (133**2), 100)
         kaiming_uniform_(self.hidden3.weight, nonlinearity='relu')
         self.act5 = ReLU()
         # output layer
@@ -77,6 +77,8 @@ class CNN(Module):
 
     # forward propagate input
     def forward(self, X):
+        print(X)
+        print('forward', X.shape)
         # input to first hidden layer
         X = self.hidden1(X)
         X = self.act1(X)

@@ -1,0 +1,14 @@
+<annotation verified="yes">
+	<folder>im</folder>
+	<filename>vel_KATX20220307_194703_V06_2.42.jpg</filename>
+	<path>\\wsl.localhost\Ubuntu\home\carsonlans\rasr\training\im\vel_KATX20220307_194703_V06_2.42.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>2500</width>
+		<height>2500</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+</annotation>
