@@ -1,5 +1,6 @@
 import pyart
 from matplotlib import pyplot as plt
+import shutil
 
 from rasr.util.fileio import clear_files
 from rasr.util.unpack import dat_to_img
@@ -21,7 +22,7 @@ def run_detect(files, file_dir, output_dir, vis_dir, conf_int, model_name, vis):
         print("Checking " + name + " at " + b_time)
 
         radar = pyart.io.read(file_dir + file)
-        im_list = dat_to_img(radar)
+        im_list = dat_to_img(radar, "velocity")
 
         for img, sweep_angle, loc_dat in im_list:
             print("Reading velocity at sweep angle:", sweep_angle)
@@ -31,7 +32,7 @@ def run_detect(files, file_dir, output_dir, vis_dir, conf_int, model_name, vis):
                 file,
                 loc_dat,
                 sweep_angle,
-                vis_dir,
+                vis_dir, py
                 vis,
                 conf_int,
                 model_name,
@@ -39,6 +40,7 @@ def run_detect(files, file_dir, output_dir, vis_dir, conf_int, model_name, vis):
             if v is not None:
                 print("Detection!")
                 allr.append(v)
+                shutil.copy(file, output_dir)
         plt.cla()
         plt.clf()
         plt.close("all")
