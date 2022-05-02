@@ -18,6 +18,9 @@ from torchvision import transforms
 import sys
 from pathlib import Path
 from rasr.util.video_dataset import VideoFrameDataset, ImglistToTensor
+from numpy import vstack
+from numpy import argmax
+from sklearn.metrics import accuracy_score
 # path_root = Path(__file__).parents[2]
 # sys.path.append(str(path_root))
 # print(sys.path)
@@ -138,10 +141,6 @@ class RCNN2D(nn.Module):
             main_mode=True
         )
 
-        sample = train_dataset[0]
-        frames = sample[0]  # list of PIL images
-        label = sample[1]   # integer label
-
         # for file in os.listdir(train_path):
         #     # load dataset
         #     print(file)
@@ -184,3 +183,24 @@ class RCNN2D(nn.Module):
                 optimizer.step()
                 print("target")
             print('epoch')
+
+    def evaluate_model(test_dl, model):
+        predictions, actuals = list(), list()
+        for inputs, targets in test_dl:
+            # evaluate the model on the test set
+            yhat = model(inputs)
+            # retrieve numpy array
+            yhat = yhat.detach().numpy()
+            actual = targets.numpy()
+            # convert to class labels
+            yhat = argmax(yhat, axis=1)
+            # reshape for stacking
+            actual = actual.reshape((len(actual), 1))
+            yhat = yhat.reshape((len(yhat), 1))
+            # store
+            predictions.append(yhat)
+            actuals.append(actual)
+        predictions, actuals = vstack(predictions), vstack(actuals)
+        # calculate accuracy
+        acc = accuracy_score(actuals, predictions)
+        return acc
