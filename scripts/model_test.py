@@ -35,7 +35,7 @@ if __name__ == "__main__":
     train_dl, test_dl = RCNN2D.prepare_data(train_path, test_path)
     print(len(train_dl.dataset), len(test_dl.dataset))
     # define the network
-    model = RCNN2D(6)
+    model = RCNN2D(5)
     # define hyperparameters
     epoch = 2
     lr = .001

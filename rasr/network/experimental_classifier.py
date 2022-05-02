@@ -78,7 +78,7 @@ class CNN(Module):
     # forward propagate input
     def forward(self, X):
         # print(X)
-        #print('forward', X.shape)
+        # print('forward', X.shape)
         # input to first hidden layer
         X = self.hidden1(X)
         X = self.act1(X)
@@ -184,7 +184,7 @@ print(len(train_dl.dataset), len(test_dl.dataset))
 model = CNN(3)
 # # train the model
 train_model(train_dl, model)
-save(model.state_dict(), 'classifier_model.pth')
+save(model.state_dict(), '/network/classifier_model.pth')
 # evaluate the model
 acc = evaluate_model(test_dl, model)
 print('Accuracy: %.3f' % acc)
