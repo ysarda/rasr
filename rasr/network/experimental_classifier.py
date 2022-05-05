@@ -10,7 +10,7 @@ Testing ground for binary meteor fall detection
 from numpy import vstack
 from numpy import argmax
 from pandas import read_csv
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score
 from torchvision.datasets import ImageFolder
 import torchvision.transforms as transforms
 from torchvision.transforms import Resize
@@ -172,7 +172,8 @@ def evaluate_model(test_dl, model):
     predictions, actuals = vstack(predictions), vstack(actuals)
     # calculate accuracy
     acc = accuracy_score(actuals, predictions)
-    return acc
+    pre = precision_score(actuals, predictions)
+    return acc, pre
 
 
 # prepare the data
@@ -186,5 +187,6 @@ model = CNN(3)
 train_model(train_dl, model)
 save(model.state_dict(), '/network/classifier_model.pth')
 # evaluate the model
-acc = evaluate_model(test_dl, model)
+acc, pre = evaluate_model(test_dl, model)
 print('Accuracy: %.3f' % acc)
+print('Precision: %.3f' % pre)
