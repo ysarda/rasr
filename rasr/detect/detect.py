@@ -32,7 +32,7 @@ def run_detect(files, file_dir, output_dir, vis_dir, conf_int, model_name, vis):
                 file,
                 loc_dat,
                 sweep_angle,
-                vis_dir, py
+                vis_dir,
                 vis,
                 conf_int,
                 model_name,
