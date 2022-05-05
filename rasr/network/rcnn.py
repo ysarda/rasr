@@ -20,7 +20,7 @@ from pathlib import Path
 from rasr.util.video_dataset import VideoFrameDataset, ImglistToTensor
 from numpy import vstack
 from numpy import argmax
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score
 # path_root = Path(__file__).parents[2]
 # sys.path.append(str(path_root))
 # print(sys.path)
@@ -203,4 +203,5 @@ class RCNN2D(nn.Module):
         predictions, actuals = vstack(predictions), vstack(actuals)
         # calculate accuracy
         acc = accuracy_score(actuals, predictions)
-        return acc
+        pre = precision_score(actuals, predictions)
+        return acc, pre
