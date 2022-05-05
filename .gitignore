@@ -5,5 +5,3 @@ training/data/*
 test/*
 data/*
 *.pth
-*.e
-*.o

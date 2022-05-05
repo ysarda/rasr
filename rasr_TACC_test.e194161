@@ -1,4 +1,0 @@
-  File "/work/07965/clans/ls6/Spring_RASR/run/rasr_activator_test", line 11
-    python /work2/07965/clans/ls6/Spring_RASR/rasr/scripts/rasr_get_test.py
-                      ^
-SyntaxError: leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers
