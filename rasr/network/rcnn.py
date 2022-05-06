@@ -20,7 +20,7 @@ from pathlib import Path
 from rasr.util.video_dataset import VideoFrameDataset, ImglistToTensor
 from numpy import vstack
 from numpy import argmax
-from sklearn.metrics import accuracy_score, precision_score
+from sklearn.metrics import accuracy_score, precision_score, confusion_matrix
 # path_root = Path(__file__).parents[2]
 # sys.path.append(str(path_root))
 # print(sys.path)
@@ -45,33 +45,33 @@ class RCNN2D(nn.Module):
         )
         self.group2 = nn.Sequential(
             nn.Conv3d(64, 128, kernel_size=6, padding=6),
-            nn.BatchNorm3d(128),
+            nn.BatchNorm2d(128),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group3 = nn.Sequential(
-            nn.Conv3d(128, oc, kernel_size=4, padding=0),
+            nn.Conv3d(128, oc, kernel_size=4, padding=6),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
-            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=6),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group4 = nn.Sequential(
-            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=6),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
-            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=6),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group5 = nn.Sequential(
-            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=6),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
-            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=6),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=4, stride=2, padding=4),
@@ -204,4 +204,5 @@ class RCNN2D(nn.Module):
         # calculate accuracy
         acc = accuracy_score(actuals, predictions)
         pre = precision_score(actuals, predictions)
-        return acc, pre
+        tn, fp, fn, tp = confusion_matrix(actuals, predictions).ravel()
+        return acc, pre, tn, fp, fn, tp

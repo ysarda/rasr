@@ -43,6 +43,7 @@ if __name__ == "__main__":
     RCNN2D.train_model(model, train_dl, epoch, lr)
     torch.save(model.state_dict(), 'lstm_model.pth')
     # evaluate the model
-    acc, pre = RCNN2D.evaluate_model(test_dl, model)
+    acc, pre, tn, fp, fn, tp = RCNN2D.evaluate_model(test_dl, model)
     print('Accuracy: %.3f' % acc)
     print('Precision: %.3f' % pre)
+    print(tn, fp, fn, tp)
