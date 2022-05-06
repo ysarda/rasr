@@ -10,7 +10,7 @@ Testing ground for binary meteor fall detection
 from numpy import vstack
 from numpy import argmax
 from pandas import read_csv
-from sklearn.metrics import accuracy_score, precision_score
+from sklearn.metrics import accuracy_score, precision_score, confusion_matrix
 from torchvision.datasets import ImageFolder
 import torchvision.transforms as transforms
 from torchvision.transforms import Resize
@@ -172,7 +172,8 @@ def evaluate_model(test_dl, model):
     # calculate accuracy
     acc = accuracy_score(actuals, predictions)
     pre = precision_score(actuals, predictions)
-    return acc, pre
+    tn, fp, fn, tp = confusion_matrix(actuals, predictions).ravel()
+    return acc, pre, tn, fp, fn, tp
 
 
 # prepare the data
@@ -182,10 +183,12 @@ train_dl, test_dl = prepare_data(train_path, test_path)
 print(len(train_dl.dataset), len(test_dl.dataset))
 # define the network
 model = CNN(3)
+model.load_state_dict(load('network/classifier_model.pth'))
 # # train the model
-train_model(train_dl, model)
-save(model.state_dict(), '/work/07965/clans/ls6/Spring_RASR/rasr/rasr/network/classifier_model1.pth')
+#train_model(train_dl, model)
+#save(model.state_dict(), '/work/07965/clans/ls6/Spring_RASR/rasr/rasr/network/classifier_model1.pth')
 # evaluate the model
-acc, pre = evaluate_model(test_dl, model)
+acc, pre, tn, fp, fn, tp = evaluate_model(test_dl, model)
 print('Accuracy: %.3f' % acc)
 print('Precision: %.3f' % pre)
+print(tn, fp, fn, tp)
