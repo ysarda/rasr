@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/work/07965/clans/ls6/Spring_RASR/rasr/scripts/model_test.py", line 43, in <module>
+    RCNN2D.train_model(model, train_dl, epoch, lr)
+  File "/work/07965/clans/ls6/Spring_RASR/rasr/rasr/network/rcnn.py", line 177, in train_model
+    yhat = model(inputs)
+  File "/work2/07965/clans/miniconda3/envs/rasr/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1110, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/work/07965/clans/ls6/Spring_RASR/rasr/rasr/network/rcnn.py", line 95, in forward
+    x = self.group3(x)
+  File "/work2/07965/clans/miniconda3/envs/rasr/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1110, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/work2/07965/clans/miniconda3/envs/rasr/lib/python3.8/site-packages/torch/nn/modules/container.py", line 141, in forward
+    input = module(input)
+  File "/work2/07965/clans/miniconda3/envs/rasr/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1110, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/work2/07965/clans/miniconda3/envs/rasr/lib/python3.8/site-packages/torch/nn/modules/conv.py", line 592, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+  File "/work2/07965/clans/miniconda3/envs/rasr/lib/python3.8/site-packages/torch/nn/modules/conv.py", line 587, in _conv_forward
+    return F.conv3d(
+RuntimeError: Calculated padded input size per channel: (3 x 281 x 281). Kernel size: (4 x 4 x 4). Kernel size can't be greater than actual input size

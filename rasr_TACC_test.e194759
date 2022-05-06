@@ -1,8 +1,0 @@
-ERROR conda.cli.main_run:execute(33): Subprocess for 'conda run ['python', '/work2/07965/clans/ls6/Spring_RASR/rasr/scripts/rasr_pipeline_test.py']' command failed.  (See above for error)
-Traceback (most recent call last):
-  File "/work2/07965/clans/ls6/Spring_RASR/rasr/scripts/rasr_pipeline_test.py", line 37, in <module>
-    clear_files(files)
-  File "/work/07965/clans/ls6/Spring_RASR/rasr/rasr/util/fileio.py", line 12, in clear_files
-    for file in os.listdir(dirname):
-TypeError: listdir: path should be string, bytes, os.PathLike, integer or None, not list
-
