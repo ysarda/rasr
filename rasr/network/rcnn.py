@@ -45,7 +45,7 @@ class RCNN2D(nn.Module):
         )
         self.group2 = nn.Sequential(
             nn.Conv3d(64, 128, kernel_size=6, padding=6),
-            nn.BatchNorm2d(128),
+            nn.BatchNorm3d(128),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )

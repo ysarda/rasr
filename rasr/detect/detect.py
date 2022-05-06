@@ -40,7 +40,7 @@ def run_detect(files, file_dir, output_dir, vis_dir, conf_int, model_name, vis):
             if v is not None:
                 print("Detection!")
                 allr.append(v)
-                shutil.copy(file, output_dir)
+                shutil.copy(file_dir + file, output_dir)
         plt.cla()
         plt.clf()
         plt.close("all")

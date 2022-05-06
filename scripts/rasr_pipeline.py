@@ -22,26 +22,29 @@ if __name__ == "__main__":
     yesterday = today - timedelta(1)
 
     # create archive
-    folders = ["archive/", "archive/" +
-               today.strftime("%m:%d:%Y"), today.strftime("%m:%d:%Y")]
+    folders = ["/work/07965/clans/ls6/Spring_RASR/rasr/archive/", "/work/07965/clans/ls6/Spring_RASR/rasr/archive/" +
+               today.strftime("%m:%d:%Y"), "/work/07965/clans/ls6/Spring_RASR/rasr/" +  today.strftime("%m:%d:%Y")]
     for folder in folders:
         make_dir(folder)
 
-    files = get_list_of_files("falls")
+    files = get_list_of_files("/work/07965/clans/ls6/Spring_RASR/rasr/falls/")
 
+    # get vis
+    files = get_list_of_files("/work/07965/clans/ls6/Spring_RASR/rasr/vis/")  
+    
     # move output to current date folder and clear output
     for file in files:
-        shutil.copy(file, today.strftime("%m:%d:%Y"))
+        shutil.copy(file, today.strftime("%m:%d:%Y") + "/vis")
         # copy current date folder to archive
-        shutil.copy(file, "archive/" + today.strftime("%m:%d:%Y"))
-        clear_files(file)
+        shutil.copy(file, "/work/07965/clans/ls6/Spring_RASR/rasr/archive/" + today.strftime("%m:%d:%Y"))
+    clear_files("/work/07965/clans/ls6/Spring_RASR/rasr/vis/")
 
     # check old folder added and clear
     yesterdaypath = yesterday.strftime("%m:%d:%Y")
 
-    if os.path.isfile(yesterdaypath):
-        os.remove(yesterdaypath)
-    print(yesterdaypath)
+    if os.path.isdir("/work/07965/clans/ls6/Spring_RASR/rasr/" + yesterdaypath):
+        shutil.rmtree("/work/07965/clans/ls6/Spring_RASR/rasr/" + yesterdaypath)
+        print(yesterdaypath + " removed")
     # check for detections, run alert script for each one
     detections = get_list_of_files("falls/")
     # alert

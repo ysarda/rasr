@@ -5,3 +5,4 @@ training/data/*
 test/*
 data/*
 *.pth
+archive/*

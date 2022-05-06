@@ -147,7 +147,6 @@ def train_model(train_dl, model):
             loss.backward()
             # update model weights
             optimizer.step()
-            print("target")
         print('epoch')
 
 # evaluate the model
@@ -185,7 +184,7 @@ print(len(train_dl.dataset), len(test_dl.dataset))
 model = CNN(3)
 # # train the model
 train_model(train_dl, model)
-save(model.state_dict(), '/network/classifier_model.pth')
+save(model.state_dict(), '/work/07965/clans/ls6/Spring_RASR/rasr/rasr/network/classifier_model1.pth')
 # evaluate the model
 acc, pre = evaluate_model(test_dl, model)
 print('Accuracy: %.3f' % acc)
