@@ -37,17 +37,26 @@ if __name__ == "__main__":
 
     # move output to current date folder and clear output
     for file in vis_files:
-        shutil.copy(file, today.strftime("%m:%d:%Y") + "/vis/")
+        make_dir("/work/07965/clans/ls6/Spring_RASR/rasr/" +
+                 today.strftime("%m:%d:%Y") + "/vis")
+        make_dir("/work/07965/clans/ls6/Spring_RASR/rasr/archive/" +
+                 today.strftime("%m:%d:%Y") + "/vis")
+        shutil.copy(file, today.strftime("%m:%d:%Y") + "/vis")
         # copy current date folder to archive
         shutil.copy(
             file, "/work/07965/clans/ls6/Spring_RASR/rasr/archive/" + today.strftime("%m:%d:%Y") + "/vis")
-    clear_files("/work/07965/clans/ls6/Spring_RASR/rasr/test/vis/")
+    clear_files("/work/07965/clans/ls6/Spring_RASR/rasr/vis/")
+
     for file in fall_files:
-        shutil.copy(file, today.strftime("%m:%d:%Y") + "/falls/")
+        make_dir("/work/07965/clans/ls6/Spring_RASR/rasr/" +
+                 today.strftime("%m:%d:%Y") + "/falls")
+        make_dir("/work/07965/clans/ls6/Spring_RASR/rasr/archive/" +
+                 today.strftime("%m:%d:%Y") + "/falls")
+        shutil.copy(file, today.strftime("%m:%d:%Y") + "/falls")
         # copy current date folder to archive
         shutil.copy(
-            file, "/work/07965/clans/ls6/Spring_RASR/rasr/archive/" + today.strftime("%m:%d:%Y") + "/falls")
-    clear_files("/work/07965/clans/ls6/Spring_RASR/rasr/test/falls/")
+            file, "/work/07965/clans/ls6/Spring_RASR/rasr/archive/" + today.strftime("%m:%d:%Y") + "/fall")
+    clear_files("/work/07965/clans/ls6/Spring_RASR/rasr/falls/")
 
     # check old folder added and clear
     yesterdaypath = yesterday.strftime("%m:%d:%Y")
