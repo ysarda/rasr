@@ -1,0 +1,26 @@
+<annotation verified="yes">
+	<folder>Hamburg, MI</folder>
+	<filename>vel_KDTX20180117_010726_V0_2.5.jpg</filename>
+	<path>/home/ysarda/Projects/rasr/training/set/Hamburg, MI/vel_KDTX20180117_010726_V0_2.5.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>2500</width>
+		<height>2500</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>fall</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1089</xmin>
+			<ymin>1379</ymin>
+			<xmax>1104</xmax>
+			<ymax>1398</ymax>
+		</bndbox>
+	</object>
+</annotation>

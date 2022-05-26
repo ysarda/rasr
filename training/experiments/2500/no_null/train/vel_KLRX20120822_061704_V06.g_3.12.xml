@@ -1,0 +1,26 @@
+<annotation>
+	<folder>Battle Mountain, NV</folder>
+	<filename>vel_KLRX20120822_061704_V06.g_3.12.jpg</filename>
+	<path>/home/ysarda/Projects/rasr/tf/images/sites/Battle Mountain, NV/vel_KLRX20120822_061704_V06.g_3.12.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>2500</width>
+		<height>2500</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>fall</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1082</xmin>
+			<ymin>1297</ymin>
+			<xmax>1112</xmax>
+			<ymax>1324</ymax>
+		</bndbox>
+	</object>
+</annotation>
