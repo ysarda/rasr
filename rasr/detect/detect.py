@@ -22,7 +22,7 @@ def run_detect(files, file_dir, output_dir, vis_dir, conf_int, model_name, vis):
         print("Checking " + name + " at " + b_time)
 
         radar = pyart.io.read(file_dir + file)
-        im_list = dat_to_img(radar, "velocity")
+        im_list = dat_to_img(radar, 'velocity')
 
         for img, sweep_angle, loc_dat in im_list:
             print("Reading velocity at sweep angle:", sweep_angle)
@@ -42,11 +42,7 @@ def run_detect(files, file_dir, output_dir, vis_dir, conf_int, model_name, vis):
                 allr.append(v)
 
 
-<< << << < HEAD
-shutil.copy(file_dir + file, output_dir)
-== == == =
 shutil.copy(file, output_dir)
->>>>>> > 4e7959db(test changes)
 plt.cla()
 plt.clf()
 plt.close("all")
