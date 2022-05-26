@@ -50,28 +50,49 @@ class RCNN2D(nn.Module):
             nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group3 = nn.Sequential(
+            << << << < HEAD
             nn.Conv3d(128, oc, kernel_size=4, padding=6),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.Conv3d(oc, oc, kernel_size=4, padding=6),
+            == == == =
+            nn.Conv3d(128, oc, kernel_size=4, padding=0),
+            nn.BatchNorm3d(oc),
+            nn.ReLU(),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            >>>>>> > 4e7959db(test changes)
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group4 = nn.Sequential(
+            << << << < HEAD
             nn.Conv3d(oc, oc, kernel_size=4, padding=6),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.Conv3d(oc, oc, kernel_size=4, padding=6),
+            == == == =
+            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            nn.BatchNorm3d(oc),
+            nn.ReLU(),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            >>>>>> > 4e7959db(test changes)
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group5 = nn.Sequential(
+            << << << < HEAD
             nn.Conv3d(oc, oc, kernel_size=4, padding=6),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.Conv3d(oc, oc, kernel_size=4, padding=6),
+            == == == =
+            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            nn.BatchNorm3d(oc),
+            nn.ReLU(),
+            nn.Conv3d(oc, oc, kernel_size=4, padding=0),
+            >>>>>> > 4e7959db(test changes)
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=4, stride=2, padding=4),
@@ -203,6 +224,12 @@ class RCNN2D(nn.Module):
         predictions, actuals = vstack(predictions), vstack(actuals)
         # calculate accuracy
         acc = accuracy_score(actuals, predictions)
-        pre = precision_score(actuals, predictions)
-        tn, fp, fn, tp = confusion_matrix(actuals, predictions).ravel()
-        return acc, pre, tn, fp, fn, tp
+
+
+<< << << < HEAD
+pre = precision_score(actuals, predictions)
+tn, fp, fn, tp = confusion_matrix(actuals, predictions).ravel()
+return acc, pre, tn, fp, fn, tp
+== == == =
+return acc
+>>>>>> > 4e7959db(test changes)

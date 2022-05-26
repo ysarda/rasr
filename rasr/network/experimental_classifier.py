@@ -185,8 +185,8 @@ print(len(train_dl.dataset), len(test_dl.dataset))
 model = CNN(3)
 model.load_state_dict(load('network/classifier_model.pth'))
 # # train the model
-#train_model(train_dl, model)
-#save(model.state_dict(), '/work/07965/clans/ls6/Spring_RASR/rasr/rasr/network/classifier_model1.pth')
+train_model(train_dl, model)
+save(model.state_dict(), '/network/classifier_model.pth')
 # evaluate the model
 acc, pre, tn, fp, fn, tp = evaluate_model(test_dl, model)
 print('Accuracy: %.3f' % acc)
