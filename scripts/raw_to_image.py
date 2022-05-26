@@ -18,18 +18,18 @@ if __name__ == "__main__":
 
     # raw_dir = "test/data"
     base_dir = "training/2500/Reflectivity/all/"
-    raw_dir = "training/2500/Raw_dual_detections/"
-    im_dir = "training/all_fields/"
+    raw_dir = "training/2500/All_raw_detections/"
+    im_dir = "training/all_fields/corrected/"
     # raw_dir = "training/test_null/"
     # im_dir = "training/all_data_experiment/test_null/"
 
     # radar objects prior to 2011 do not have all fields
-    fields = [  # 'velocity',
-        # 'differential_reflectivity',
-        # 'differential_phase',
-        'cross_correlation_ratio']
-    # 'reflectivity',
-    # 'spectrum_width']
+    fields = ['velocity',
+              # 'differential_reflectivity',
+              # 'differential_phase',
+              # 'cross_correlation_ratio']
+              'reflectivity',
+              'spectrum_width']
 
     all_files = get_list_of_files(raw_dir)
 
@@ -46,4 +46,5 @@ if __name__ == "__main__":
             make_dir(im_dir + field)
             radar = pyart.io.read(file)
             im_list = dat_to_img(radar, field)
-            save_vis_compare(im_list, file, im_dir + field, compare_files)
+            save_vis_compare(im_list, file, im_dir +
+                             field, compare_files, field)

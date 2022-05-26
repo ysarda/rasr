@@ -1,44 +1,10 @@
-from typing import List, Union, Tuple, Any
-import torch
-from torchvision import transforms
-from PIL import Image
-import numpy as np
-import os.path
 import os
-
-
-def clear_files(dirname):
-    try:
-        for file in os.listdir(dirname):
-            os.remove(dirname + "/" + file)
-            print("\nClearing directory: {}".format(dirname))
-    except FileNotFoundError:
-        pass
-
-
-def make_dir(dirname):
-    try:
-        os.makedirs(dirname)
-        print("Making directory: {}".format(dirname))
-    except FileExistsError:
-        pass
-
-
-def get_list_of_files(dirname):
-    list_of_files = os.listdir(dirname)
-    all_files = list()
-    for entry in list_of_files:
-        full_path = os.path.join(dirname, entry)
-        if os.path.isdir(full_path):
-            all_files = all_files + get_list_of_files(full_path)
-        else:
-            all_files.append(full_path)
-    # Reducing process size, will require mutliple iteration
-    if len(all_files) > 160:
-        all_files = all_files[:160]
-    else:
-        all_files = all_files
-    return all_files
+import os.path
+import numpy as np
+from PIL import Image
+from torchvision import transforms
+import torch
+from typing import List, Union, Tuple, Any
 
 
 class VideoRecord(object):
@@ -88,7 +54,7 @@ class VideoRecord(object):
 
 
 class VideoFrameDataset(torch.utils.data.Dataset):
-    """
+    r"""
     A highly efficient and adaptable dataset class for videos.
     Instead of loading every frame of a video,
     loads x RGB frames of a video (sparse temporal sampling) and evenly
@@ -154,7 +120,8 @@ class VideoFrameDataset(torch.utils.data.Dataset):
                  frames_per_segment: int = 1,
                  imagefile_template: str = 'img_{:05d}.jpg',
                  transform=None,
-                 test_mode: bool = False):
+                 test_mode: bool = False,
+                 main_mode: bool = False):
         super(VideoFrameDataset, self).__init__()
 
         self.root_path = root_path
@@ -164,6 +131,7 @@ class VideoFrameDataset(torch.utils.data.Dataset):
         self.imagefile_template = imagefile_template
         self.transform = transform
         self.test_mode = test_mode
+        self.main_mode = main_mode
 
         self._parse_annotationfile()
         self._sanity_check_samples()
@@ -207,6 +175,8 @@ class VideoFrameDataset(torch.utils.data.Dataset):
             start_indices = np.array([int(distance_between_indices / 2.0 + distance_between_indices * x)
                                       for x in range(self.num_segments)])
         # randomly sample start indices that are approximately evenly spread across the video frames.
+        elif self.main_mode:
+            start_indices = np.array([0])
         else:
             max_valid_start_index = (
                 record.num_frames - self.frames_per_segment + 1) // self.num_segments
@@ -268,6 +238,9 @@ class VideoFrameDataset(torch.utils.data.Dataset):
 
         frame_start_indices = frame_start_indices + record.start_frame
         images = list()
+
+        # set variable frame counts
+        self.frames_per_segment = record.num_frames
 
         # from each start_index, load self.frames_per_segment
         # consecutive frames

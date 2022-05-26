@@ -67,7 +67,7 @@ class CNN(Module):
         # self.pool4 = MaxPool2d((8, 8), stride=(2, 2))
 
         # fully connected layer
-        self.hidden5 = Linear(128*(133**2), 100)
+        self.hidden5 = Linear(128 * (133**2), 100)
         kaiming_uniform_(self.hidden3.weight, nonlinearity='relu')
         self.act5 = ReLU()
         # output layer
@@ -77,6 +77,8 @@ class CNN(Module):
 
     # forward propagate input
     def forward(self, X):
+        # print(X)
+        # print('forward', X.shape)
         # input to first hidden layer
         X = self.hidden1(X)
         X = self.act1(X)
@@ -134,7 +136,7 @@ def train_model(train_dl, model):
         # enumerate mini batches
         for i, (inputs, targets) in enumerate(train_dl):
             # clear the gradients
-            print(len(targets))
+            # print(len(targets))
             optimizer.zero_grad()
             # compute the model output
             yhat = model(inputs)
@@ -181,7 +183,7 @@ print(len(train_dl.dataset), len(test_dl.dataset))
 model = CNN(3)
 # # train the model
 train_model(train_dl, model)
-save(model.state_dict(), 'classifier_model.pth')
+save(model.state_dict(), '/network/classifier_model.pth')
 # evaluate the model
 acc = evaluate_model(test_dl, model)
 print('Accuracy: %.3f' % acc)

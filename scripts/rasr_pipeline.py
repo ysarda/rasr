@@ -21,25 +21,27 @@ if __name__ == "__main__":
     today = datetime.today()
     yesterday = today - timedelta(1)
 
-    # create archive and current date folder
-    folders = ["archive/", today]
+    # create archive
+    folders = ["archive/", "archive/" +
+               today.strftime("%m:%d:%Y"), today.strftime("%m:%d:%Y")]
     for folder in folders:
         make_dir(folder)
 
-    output = ["data/", "falls/"]
+    files = get_list_of_files("falls")
 
     # move output to current date folder and clear output
-    for file in output:
-        shutil.copy(file, today)
+    for file in files:
+        shutil.copy(file, today.strftime("%m:%d:%Y"))
+        # copy current date folder to archive
+        shutil.copy(file, "archive/" + today.strftime("%m:%d:%Y"))
         clear_files(file)
 
-    # copy current date folder to archive
-    shutil.copy(today, "archive/")
     # check old folder added and clear
-    yesterdaypath = "archive/" + yesterday.strftime()
+    yesterdaypath = yesterday.strftime("%m:%d:%Y")
+
     if os.path.isfile(yesterdaypath):
         os.remove(yesterdaypath)
-
+    print(yesterdaypath)
     # check for detections, run alert script for each one
     detections = get_list_of_files("falls/")
     # alert
