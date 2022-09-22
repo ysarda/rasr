@@ -120,8 +120,7 @@ class VideoFrameDataset(torch.utils.data.Dataset):
                  frames_per_segment: int = 1,
                  imagefile_template: str = 'img_{:05d}.jpg',
                  transform=None,
-                 test_mode: bool = False,
-                 main_mode: bool = False):
+                 test_mode: bool = False):
         super(VideoFrameDataset, self).__init__()
 
         self.root_path = root_path
@@ -131,7 +130,6 @@ class VideoFrameDataset(torch.utils.data.Dataset):
         self.imagefile_template = imagefile_template
         self.transform = transform
         self.test_mode = test_mode
-        self.main_mode = main_mode
 
         self._parse_annotationfile()
         self._sanity_check_samples()
@@ -175,8 +173,6 @@ class VideoFrameDataset(torch.utils.data.Dataset):
             start_indices = np.array([int(distance_between_indices / 2.0 + distance_between_indices * x)
                                       for x in range(self.num_segments)])
         # randomly sample start indices that are approximately evenly spread across the video frames.
-        elif self.main_mode:
-            start_indices = np.array([0])
         else:
             max_valid_start_index = (
                 record.num_frames - self.frames_per_segment + 1) // self.num_segments
@@ -238,9 +234,6 @@ class VideoFrameDataset(torch.utils.data.Dataset):
 
         frame_start_indices = frame_start_indices + record.start_frame
         images = list()
-
-        # set variable frame counts
-        self.frames_per_segment = record.num_frames
 
         # from each start_index, load self.frames_per_segment
         # consecutive frames

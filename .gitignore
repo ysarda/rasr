@@ -1,8 +1,5 @@
-RASRmodl.pth
-*.pyc
-training/im/*
-training/data/*
-test/*
-data/*
 *.pth
-archive/*
+*.pyc
+/data
+/models
+
