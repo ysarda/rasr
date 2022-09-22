@@ -1,0 +1,26 @@
+<annotation>
+	<folder>Elbert, CO</folder>
+	<filename>vel_KFTG19980111_070920.g_2.5.jpg</filename>
+	<path>/home/ysarda/Projects/rasr/training/set/Elbert, CO/vel_KFTG19980111_070920.g_2.5.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>2500</width>
+		<height>2500</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>fall</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1188</xmin>
+			<ymin>1543</ymin>
+			<xmax>1235</xmax>
+			<ymax>1593</ymax>
+		</bndbox>
+	</object>
+</annotation>

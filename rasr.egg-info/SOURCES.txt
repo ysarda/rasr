@@ -1,0 +1,15 @@
+LICENSE.txt
+README.md
+setup.py
+rasr/__init__.py
+rasr.egg-info/PKG-INFO
+rasr.egg-info/SOURCES.txt
+rasr.egg-info/dependency_links.txt
+rasr.egg-info/top_level.txt
+rasr/detect/__init__.py
+rasr/detect/motion.py
+rasr/detect/output.py
+rasr/detect/torchdet.py
+rasr/get/__init__.py
+rasr/get/getdata.py
+rasr/get/scrape.py
