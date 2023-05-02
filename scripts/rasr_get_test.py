@@ -11,8 +11,11 @@ from datetime import timedelta, date
 from rasr.util.fileio import make_dir, clear_files
 from rasr.get.get import run_get
 
-if __name__ == "__main__":
+import time
+import resource
 
+if __name__ == "__main__":
+    time_start = time.perf_counter()
     link_dir = "links/"
     data_dir = "test/data"
     folders = [link_dir, data_dir, "test/falls", "test/vis"]
@@ -42,5 +45,9 @@ if __name__ == "__main__":
         end_date.day,
     ]
     run_get(sites, date_list, [stime, etime], data_dir, link_dir)
+
+    time_elapsed = time.perf_counter() - time_start
+    memMb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024.0 / 1024.0
+    print("%5.1f secs %5.1f MByte" % (time_elapsed, memMb))
 
     clear_files("links")

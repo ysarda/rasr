@@ -15,14 +15,12 @@ import torch
 ########################################################
 
 if __name__ == "__main__":
-
     tdataset = Dataset("training/2500/Reflectivity/train/")  # Training dataset
     loader = DataLoader(tdataset, batch_size=2)
     # Evaluation dataseet
     vdataset = Dataset("training/2500/Reflectivity/test/")
 
-    #device = torch.device("cpu")
-
+    device = torch.device("cpu")
     model = Model(["fall"], device)
 
     # Keep the learning rate low, otherwise the loss will be too high

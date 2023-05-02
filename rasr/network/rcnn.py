@@ -11,16 +11,12 @@ import os
 import torch.optim as optim
 import torch.nn as nn
 import torch
-from torchvision.datasets import ImageFolder
-from torch.utils.data import DataLoader, Dataset, ConcatDataset
-from torchvision.transforms import ToTensor
-from torchvision import transforms
-import sys
-from pathlib import Path
+from torch.utils.data import DataLoader
 from rasr.util.video_dataset import VideoFrameDataset, ImglistToTensor
 from numpy import vstack
 from numpy import argmax
 from sklearn.metrics import accuracy_score, precision_score, confusion_matrix
+
 # path_root = Path(__file__).parents[2]
 # sys.path.append(str(path_root))
 # print(sys.path)
@@ -50,55 +46,45 @@ class RCNN2D(nn.Module):
             nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group3 = nn.Sequential(
-            << << << < HEAD
             nn.Conv3d(128, oc, kernel_size=4, padding=6),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.Conv3d(oc, oc, kernel_size=4, padding=6),
-            == == == =
             nn.Conv3d(128, oc, kernel_size=4, padding=0),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.Conv3d(oc, oc, kernel_size=4, padding=0),
-            >>>>>> > 4e7959db(test changes)
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group4 = nn.Sequential(
-            << << << < HEAD
             nn.Conv3d(oc, oc, kernel_size=4, padding=6),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.Conv3d(oc, oc, kernel_size=4, padding=6),
-            == == == =
             nn.Conv3d(oc, oc, kernel_size=4, padding=0),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.Conv3d(oc, oc, kernel_size=4, padding=0),
-            >>>>>> > 4e7959db(test changes)
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=8, stride=3, padding=4),
         )
         self.group5 = nn.Sequential(
-            << << << < HEAD
             nn.Conv3d(oc, oc, kernel_size=4, padding=6),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.Conv3d(oc, oc, kernel_size=4, padding=6),
-            == == == =
             nn.Conv3d(oc, oc, kernel_size=4, padding=0),
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.Conv3d(oc, oc, kernel_size=4, padding=0),
-            >>>>>> > 4e7959db(test changes)
             nn.BatchNorm3d(oc),
             nn.ReLU(),
             nn.MaxPool3d(kernel_size=4, stride=2, padding=4),
         )
-        self.fc1 = nn.Sequential(
-            nn.Linear(ow * oh * oc, oh * oc), nn.Sigmoid())
+        self.fc1 = nn.Sequential(nn.Linear(ow * oh * oc, oh * oc), nn.Sigmoid())
         self.cell = torch.zeros(1, oh * oc)
         self.hidden = torch.zeros(1, oh * oc)
         self.lstm = nn.LSTMCell(oh * oc, oh * oc)
@@ -139,17 +125,17 @@ class RCNN2D(nn.Module):
         #     print(data, targets[:])
         #     return data, targets
 
-        train_annotation_file = os.path.join(train_path, 'annotations.txt')
-        test_annotation_file = os.path.join(test_path, 'annotations.txt')
+        train_annotation_file = os.path.join(train_path, "annotations.txt")
+        test_annotation_file = os.path.join(test_path, "annotations.txt")
 
         train_dataset = VideoFrameDataset(
             root_path=train_path,
             annotationfile_path=train_annotation_file,
             num_segments=1,
             frames_per_segment=12,
-            imagefile_template='img_{:03d}.jpg',
+            imagefile_template="img_{:03d}.jpg",
             transform=ImglistToTensor(),
-            main_mode=True
+            main_mode=True,
         )
 
         test_dataset = VideoFrameDataset(
@@ -157,9 +143,9 @@ class RCNN2D(nn.Module):
             annotationfile_path=test_annotation_file,
             num_segments=1,
             frames_per_segment=12,
-            imagefile_template='img_{:03d}.jpg',
+            imagefile_template="img_{:03d}.jpg",
             transform=ImglistToTensor(),
-            main_mode=True
+            main_mode=True,
         )
 
         # for file in os.listdir(train_path):
@@ -175,10 +161,8 @@ class RCNN2D(nn.Module):
         # test = ImageFolder(test_path, transform=ToTensor())
 
         # prepare data loaders
-        train_dl = DataLoader(train_dataset, batch_size=1,
-                              shuffle=False)
-        test_dl = DataLoader(test_dataset, batch_size=2,
-                             shuffle=False)
+        train_dl = DataLoader(train_dataset, batch_size=1, shuffle=False)
+        test_dl = DataLoader(test_dataset, batch_size=2, shuffle=False)
 
         return train_dl, test_dl
 
@@ -203,7 +187,7 @@ class RCNN2D(nn.Module):
                 # update model weights
                 optimizer.step()
                 print("target")
-            print('epoch')
+            print("epoch")
 
     def evaluate_model(test_dl, model):
         predictions, actuals = list(), list()
@@ -224,12 +208,6 @@ class RCNN2D(nn.Module):
         predictions, actuals = vstack(predictions), vstack(actuals)
         # calculate accuracy
         acc = accuracy_score(actuals, predictions)
-
-
-<< << << < HEAD
-pre = precision_score(actuals, predictions)
-tn, fp, fn, tp = confusion_matrix(actuals, predictions).ravel()
-return acc, pre, tn, fp, fn, tp
-== == == =
-return acc
->>>>>> > 4e7959db(test changes)
+        pre = precision_score(actuals, predictions)
+        tn, fp, fn, tp = confusion_matrix(actuals, predictions).ravel()
+        return acc, pre, tn, fp, fn, tp

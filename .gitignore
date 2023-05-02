@@ -2,4 +2,4 @@
 *.pyc
 /data
 /models
-
+/test/data
