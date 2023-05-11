@@ -8,11 +8,7 @@ Script used for the evalution of Detecto NN
 """
 
 from detecto.core import Dataset, Model
-import matplotlib
 import matplotlib.pyplot as plt
-
-from detecto.utils import xml_to_csv
-#xml_to_csv = my_xml_to_csv
 
 from glob import glob
 import xml.etree.ElementTree as ET
@@ -47,24 +43,33 @@ def my_xml_to_csv(xml_folder, output_file=None):
     xml_list = []
     image_id = 0
     # Loop through every XML file
-    for xml_file in glob(xml_folder + '/*.xml'):
+    for xml_file in glob(xml_folder + "/*.xml"):
         tree = ET.parse(xml_file)
         root = tree.getroot()
 
-        filename = root.find('filename').text
-        size = root.find('size')
-        width = int(size.find('width').text)
-        height = int(size.find('height').text)
+        filename = root.find("filename").text
+        size = root.find("size")
+        width = int(size.find("width").text)
+        height = int(size.find("height").text)
 
-        if root.find('object'):
+        if root.find("object"):
             # Each object represents each actual image label
-            for member in root.findall('object'):
-                box = member.find('bndbox')
-                label = member.find('name').text
+            for member in root.findall("object"):
+                box = member.find("bndbox")
+                label = member.find("name").text
 
                 # Add image file name, image size, label, and box coordinates to CSV file
-                row = (filename, width, height, label, int(float(box.find('xmin').text)),
-                       int(float(box.find('ymin').text)), int(float(box.find('xmax').text)), int(float(box.find('ymax').text)), image_id)
+                row = (
+                    filename,
+                    width,
+                    height,
+                    label,
+                    int(float(box.find("xmin").text)),
+                    int(float(box.find("ymin").text)),
+                    int(float(box.find("xmax").text)),
+                    int(float(box.find("ymax").text)),
+                    image_id,
+                )
                 xml_list.append(row)
         else:
             row = (filename, width, height, "none", 0, 0, 0, 0, image_id)
@@ -73,8 +78,17 @@ def my_xml_to_csv(xml_folder, output_file=None):
         image_id += 1
 
     # Save as a CSV file
-    column_names = ['filename', 'width', 'height', 'class',
-                    'xmin', 'ymin', 'xmax', 'ymax', 'image_id']
+    column_names = [
+        "filename",
+        "width",
+        "height",
+        "class",
+        "xmin",
+        "ymin",
+        "xmax",
+        "ymax",
+        "image_id",
+    ]
     xml_df = pd.DataFrame(xml_list, columns=column_names)
 
     if output_file is not None:
@@ -82,9 +96,10 @@ def my_xml_to_csv(xml_folder, output_file=None):
 
     return xml_df
 
-#my_xml_to_csv('training/experiments/2500/w_null/validation/', 'training/experiments//2500/w_null/vlabel.csv')
+
+# my_xml_to_csv('training/experiments/2500/w_null/validation/', 'training/experiments//2500/w_null/vlabel.csv')
 # df
-#my_xml_to_csv("training/experiments//2500/w_null/train/", 'training/experiments/o/2500/w_null/tlabel.csv')
+# my_xml_to_csv("training/experiments//2500/w_null/train/", 'training/experiments/o/2500/w_null/tlabel.csv')
 # df2
 
 # set epoch count
@@ -92,22 +107,33 @@ def my_xml_to_csv(xml_folder, output_file=None):
 
 e = 15
 
-tdataset_null = Dataset('training/experiments/2500/w_null/tlabel.csv',
-                        'training/experiments/2500/w_null/train/')    # Training dataset
-vdataset_null = Dataset('training/experiments/2500/w_null/vlabel.csv',
-                        'training/experiments/2500/w_null/validation/')   # Evaluation dataset
+tdataset_null = Dataset(
+    "training/experiments/2500/w_null/tlabel.csv",
+    "training/experiments/2500/w_null/train/",
+)  # Training dataset
+vdataset_null = Dataset(
+    "training/experiments/2500/w_null/vlabel.csv",
+    "training/experiments/2500/w_null/validation/",
+)  # Evaluation dataset
 
 print(len(tdataset_null))
 print(len(vdataset_null))
 
-model_null = Model(['fall', 'none'])
+model_null = Model(["fall", "none"])
 
 # Keep the learning rate low, otherwise the loss will be too high
-loss_null = model_null.fit(tdataset_null, vdataset_null, epochs=e, learning_rate=0.001,
-                           gamma=0.2, lr_step_size=5, verbose=True)
+loss_null = model_null.fit(
+    tdataset_null,
+    vdataset_null,
+    epochs=e,
+    learning_rate=0.001,
+    gamma=0.2,
+    lr_step_size=5,
+    verbose=True,
+)
 
 plt.plot(loss_null)
-plt.xlabel('Epoch')
-plt.ylabel('Loss (w/ null)')
+plt.xlabel("Epoch")
+plt.ylabel("Loss (w/ null)")
 plt.show()
-model_null.save('RASRmodl_null.pth')
+model_null.save("RASRmodl_null.pth")

@@ -16,8 +16,8 @@ from rasr.util.fileio import get_list_of_files, clear_files
 from rasr.util.unpack import dat_to_img, save_vis
 
 if __name__ == "__main__":
-    data_dir = "training/data"
-    im_dir = "training/im"
+    data_dir = "training/all/raw"
+    im_dir = "training/all/images"
     link_dir = "links"
 
     clear_files(link_dir)
@@ -68,5 +68,5 @@ if __name__ == "__main__":
     all_files = get_list_of_files(data_dir)
     for file in all_files:
         radar = pyart.io.read(file)
-        im_list = dat_to_img(radar)
+        im_list = dat_to_img(radar, "velocity")
         save_vis(im_list, file, im_dir)
