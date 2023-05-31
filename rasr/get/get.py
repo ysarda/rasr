@@ -10,7 +10,6 @@ def date_range(start_date, end_date):
 
 
 def run_get(sites, date_list, time_range, data_dir, link_dir):
-
     # Parse input
     origin_year = date_list[0]
     origin_month = date_list[1]
@@ -97,8 +96,7 @@ def run_get(sites, date_list, time_range, data_dir, link_dir):
         site_info = "The last data downloaded was from the site:  " + site_id
         date_info = (
             "The last attempted download date was in the following format:"
-            "  MONTH / DAY / YEAR:    " +
-            str(month) + "/" + str(day) + "/" + str(year)
+            "  MONTH / DAY / YEAR:    " + str(month) + "/" + str(day) + "/" + str(year)
         )
         note = (
             "NOTE: Last download date usually means an incomplete download of all the weather files. "

@@ -40,21 +40,21 @@ class CNN(Module):
         super(CNN, self).__init__()
         # input to first hidden layer
         self.hidden1 = Conv2d(n_channels, 64, (6, 6))
-        kaiming_uniform_(self.hidden1.weight, nonlinearity='relu')
+        kaiming_uniform_(self.hidden1.weight, nonlinearity="relu")
         self.act1 = ReLU()
         # first pooling layer
         self.pool1 = MaxPool2d((8, 8), stride=(3, 3))
 
         # second hidden layer
         self.hidden2 = Conv2d(64, 128, (6, 6))
-        kaiming_uniform_(self.hidden2.weight, nonlinearity='relu')
+        kaiming_uniform_(self.hidden2.weight, nonlinearity="relu")
         self.act2 = ReLU()
         # second pooling layer
         self.pool2 = MaxPool2d((8, 8), stride=(3, 3))
 
         # third hidden layer
         self.hidden3 = Conv2d(128, 128, (4, 4))
-        kaiming_uniform_(self.hidden2.weight, nonlinearity='relu')
+        kaiming_uniform_(self.hidden2.weight, nonlinearity="relu")
         self.act3 = ReLU()
         # third pooling layer
         self.pool3 = MaxPool2d((6, 6), stride=(2, 2))
@@ -68,7 +68,7 @@ class CNN(Module):
 
         # fully connected layer
         self.hidden5 = Linear(128 * (133**2), 100)
-        kaiming_uniform_(self.hidden3.weight, nonlinearity='relu')
+        kaiming_uniform_(self.hidden3.weight, nonlinearity="relu")
         self.act5 = ReLU()
         # output layer
         self.hidden6 = Linear(100, 10)
@@ -97,7 +97,7 @@ class CNN(Module):
         # X = self.pool4(X)
         # flatten
         # print(X.shape)
-        X = X.view(-1, 128*(133**2))
+        X = X.view(-1, 128 * (133**2))
         # print(X.shape)
         # fifth hidden layer
         X = self.hidden5(X)
@@ -107,6 +107,7 @@ class CNN(Module):
         X = self.hidden6(X)
         X = self.act6(X)
         return X
+
 
 # prepare the dataset
 
@@ -123,6 +124,7 @@ def prepare_data(train_path, test_path):
     train_dl = DataLoader(train, batch_size=4, shuffle=True)
     test_dl = DataLoader(test, batch_size=4, shuffle=False)
     return train_dl, test_dl
+
 
 # train the model
 
@@ -147,7 +149,8 @@ def train_model(train_dl, model):
             loss.backward()
             # update model weights
             optimizer.step()
-        print('epoch')
+        print("epoch")
+
 
 # evaluate the model
 
@@ -177,18 +180,18 @@ def evaluate_model(test_dl, model):
 
 
 # prepare the data
-train_path = '../../Data Repo/train/'
-test_path = '../../Data Repo/validation/'
+train_path = "../../Data Repo/train/"
+test_path = "../../Data Repo/validation/"
 train_dl, test_dl = prepare_data(train_path, test_path)
 print(len(train_dl.dataset), len(test_dl.dataset))
 # define the network
 model = CNN(3)
-model.load_state_dict(load('network/classifier_model.pth'))
+model.load_state_dict(load("network/classifier_model.pth"))
 # # train the model
 train_model(train_dl, model)
-save(model.state_dict(), '/network/classifier_model.pth')
+save(model.state_dict(), "/network/classifier_model.pth")
 # evaluate the model
 acc, pre, tn, fp, fn, tp = evaluate_model(test_dl, model)
-print('Accuracy: %.3f' % acc)
-print('Precision: %.3f' % pre)
+print("Accuracy: %.3f" % acc)
+print("Precision: %.3f" % pre)
 print(tn, fp, fn, tp)

@@ -72,7 +72,7 @@ def square_out(file, all_r, output_dir):
                 "Longitude1 (SE)(deg East)": str(lon1),
                 "Latitude1 (SE)(deg North)": str(lat1),
                 "Width of Detection Box (m East-West)": str(w),
-                "Height of Detection Box (m North-South)": str(h)
+                "Height of Detection Box (m North-South)": str(h),
             }
         )
         file_name = output_dir + name + dt_str + ".json"

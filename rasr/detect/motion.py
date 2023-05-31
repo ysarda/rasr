@@ -57,7 +57,7 @@ def state_vector(rl_sp: List[List[List[float]]]) -> List[float]:
     dt = (single[1][3] - single[0][3]).total_seconds()
     u, v, w = (x1 - x0) / dt, (y1 - y0) / dt, (z1 - z0) / dt
     rv = [x0, y0, z0, u, v, w]
-    drdt = np.sqrt(u ** 2 + v ** 2 + w ** 2)
+    drdt = np.sqrt(u**2 + v**2 + w**2)
     with open(file_name, "a") as file:
         file.write(str(drdt))
         file.write("\n")
@@ -79,14 +79,14 @@ def dmdt(m: List[float], t: float) -> Tuple[float]:
     """Differential model for reentry dynamics"""
 
     x, y, z, u, v, w = m
-    r = np.sqrt(x ** 2 + y ** 2 + z ** 2)
+    r = np.sqrt(x**2 + y**2 + z**2)
     rho, _, _ = atmo(r)
     k = rho * 5
-    mu = 3.986004418 * 10 ** 14
+    mu = 3.986004418 * 10**14
     a, b, c = (
-        -(x * mu) / (r ** 3) + k * u ** 2,
-        -(y * mu) / (r ** 3) + k * v ** 2,
-        -(z * mu) / (r ** 3) + k * w ** 2,
+        -(x * mu) / (r**3) + k * u**2,
+        -(y * mu) / (r**3) + k * v**2,
+        -(z * mu) / (r**3) + k * w**2,
     )
     return u, v, w, a, b, c
 
@@ -94,7 +94,7 @@ def dmdt(m: List[float], t: float) -> Tuple[float]:
 def prop_vis(prop: Any, vis_dir: str, name: str, dt_str: str) -> None:
     """Visualize the back-propagation"""
 
-    radius = 6.371 * 10 ** 6
+    radius = 6.371 * 10**6
     x_prop, y_prop, z_prop = prop[:, 0], prop[:, 1], prop[:, 2]
     ax = plt.axes(projection="3d")
     ax.scatter3D(x_prop, y_prop, z_prop)
@@ -104,7 +104,7 @@ def prop_vis(prop: Any, vis_dir: str, name: str, dt_str: str) -> None:
     y = radius * np.sin(u) * np.sin(v)
     z = radius * np.cos(v)
     ax.plot_wireframe(x, y, z, color="r")
-    lim = 10 * 10 ** 6
+    lim = 10 * 10**6
     ax.set_xlim3d(-lim, lim)
     ax.set_ylim3d(-lim, lim)
     ax.set_zlim3d(-lim, lim)

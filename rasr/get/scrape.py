@@ -133,7 +133,9 @@ def download_link(link, dirname, timerange):
                 filename = link.split("/")[-1]
                 # print('Writing to file {}'.format(filename))
                 write_to_file(filename, dirname, response)
-        except ValueError:  # This protects from the Nexrad .tar files which needs looking at
+        except (
+            ValueError
+        ):  # This protects from the Nexrad .tar files which needs looking at
             print(
                 "Not downloading due to filename extension error - '' file extension "
             )
@@ -158,7 +160,9 @@ def download_link(link, dirname, timerange):
                 filename = link.split("/")[-1]
                 # print('Writing to file {}'.format(filename))
                 write_to_file(filename, dirname, response)
-        except ValueError:  # This protects from the Nexrad .tar files which needs looking at
+        except (
+            ValueError
+        ):  # This protects from the Nexrad .tar files which needs looking at
             print(
                 "Not downloading due to filename extension error - for all other file extensions"
             )

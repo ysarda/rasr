@@ -64,16 +64,14 @@ def evaluate_falls(img, radar, file, locdat, sweep, vis_dir, vis, conf_int, mode
                 ax.imshow(img)
                 ax.set_xticks([0, 500, 1000, 1500, 2000])
                 ax.set_xticks([0, 500, 1000, 1500, 2000])
-                ax.set_xticklabels(
-                    [-250, -150, -50, 50, 150])
+                ax.set_xticklabels([-250, -150, -50, 50, 150])
                 ax.set_yticklabels([0, 250, 150, 50, -50, -150])
                 rect = patches.Rectangle(
                     (x0p, y0p), w, h, linewidth=1, edgecolor="r", facecolor="none"
                 )
                 ax.add_patch(rect)
                 detstr = pred[0][n] + ": " + str(round(float(pred[2][n]), 2))
-                boxsize = str(round(float(w), 2)) + ", " + \
-                    str(round(float(h), 2)) + "m"
+                boxsize = str(round(float(w), 2)) + ", " + str(round(float(h), 2)) + "m"
                 plt.text(
                     x0p + w / 2, y0p - 15, detstr, fontsize=8, color="red", ha="center"
                 )
@@ -84,7 +82,7 @@ def evaluate_falls(img, radar, file, locdat, sweep, vis_dir, vis, conf_int, mode
                 plt.savefig(imname, bbox_inches="tight")
 
             # Finding Geodetic coordinates from relative distance to site:
-            z = np.sqrt(x ** 2 + y ** 2) * np.tan(np.radians(float(sweep)))
+            z = np.sqrt(x**2 + y**2) * np.tan(np.radians(float(sweep)))
             sitealt, sitelon, sitelat = (
                 float(radar.altitude["data"]),
                 float(radar.longitude["data"]),
@@ -92,12 +90,10 @@ def evaluate_falls(img, radar, file, locdat, sweep, vis_dir, vis, conf_int, mode
             )
 
             lon0, lat0 = np.around(
-                pyart.core.cartesian_to_geographic_aeqd(
-                    x0, y0, sitelon, sitelat), 3
+                pyart.core.cartesian_to_geographic_aeqd(x0, y0, sitelon, sitelat), 3
             )
             lon1, lat1 = np.around(
-                pyart.core.cartesian_to_geographic_aeqd(
-                    x1, y1, sitelon, sitelat), 3
+                pyart.core.cartesian_to_geographic_aeqd(x1, y1, sitelon, sitelat), 3
             )
             lon0, lon1 = -lon0, -lon1
             alt = round(z + sitealt, 2)

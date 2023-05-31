@@ -27,8 +27,7 @@ def dat_to_img(radar, field):
             field, x, mask_tuple=None, filter_transitions=True, gatefilter=None
         )
         if np.any(data) > 0:
-            x_dat, y_dat = plotter._get_x_y(
-                x, edges=True, filter_transitions=True)
+            x_dat, y_dat = plotter._get_x_y(x, edges=True, filter_transitions=True)
             data = data * (70 / np.max(np.abs(data)))
             ax.pcolormesh(x_dat, y_dat, data)
             canvas = FigureCanvas(fig)
@@ -50,11 +49,10 @@ def dat_to_img(radar, field):
 
 
 def save_vis(im_list, file, save_dir):
-
     for img, sweep_angle, _ in im_list:
         # if sweep_angle[-1] == '0':
         #     sweep_angle = sweep_angle[:-1]
-        file_short = file.split('/')
+        file_short = file.split("/")
         imname = "vel_" + file_short[-1] + "_" + sweep_angle
         print(imname)
 
@@ -68,17 +66,15 @@ def save_vis(im_list, file, save_dir):
 
 
 def save_vis_compare(im_list, file, save_dir, compare_dir, field):
-
     for img, sweep_angle, _ in im_list:
-        if sweep_angle[-1] == '0':
+        if sweep_angle[-1] == "0":
             sweep_angle = sweep_angle[:-1]
-        file_short = file.split('/')
+        file_short = file.split("/")
         imname = "vel_" + file_short[-1] + ".g_" + sweep_angle
 
         # print(imname)
 
         if imname in compare_dir:
-
             imname = field[:3] + "_" + file_short[-1] + ".g_" + sweep_angle
 
             if os.path.exists(save_dir + imname + ".jpg"):

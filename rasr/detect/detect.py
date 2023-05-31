@@ -15,14 +15,14 @@ def run_detect(files, file_dir, output_dir, vis_dir, conf_int, model_name, vis):
     for file in files:
         allr = []  # declare output array for display
 
-        file = file[len(file_dir):]
+        file = file[len(file_dir) :]
 
         name, _, b_time, _ = string_convert(file)
         print("\n")
         print("Checking " + name + " at " + b_time)
 
         radar = pyart.io.read(file_dir + file)
-        im_list = dat_to_img(radar, 'velocity')
+        im_list = dat_to_img(radar, "velocity")
 
         for img, sweep_angle, loc_dat in im_list:
             print("Reading velocity at sweep angle:", sweep_angle)
@@ -47,7 +47,7 @@ plt.cla()
 plt.clf()
 plt.close("all")
 
-if(len(allr) >= 1):
+if len(allr) >= 1:
     # output JSON of detection bounding data
     square_out(file, allr, output_dir)
 
