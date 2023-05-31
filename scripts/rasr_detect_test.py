@@ -10,7 +10,6 @@ from rasr.util.fileio import get_list_of_files
 from rasr.detect.detect import run_detect
 
 if __name__ == "__main__":
-
     # Relevant paths, confidence value, and visualization toggle:
     file_dir = "test/data/"
     output_dir = "test/falls/"

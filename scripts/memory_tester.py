@@ -64,9 +64,12 @@ if __name__ == "__main__":
         link_dir=link_dir,
         stime=stime,
         etime=etime,
-        date_list=date_list
+        date_list=date_list,
     )
     pool.map(run_function_partial, radar_sites)
     pool.close()
-    print("--- %s megabytes ---" % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1000))
+    print(
+        "--- %s megabytes ---"
+        % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1000)
+    )
     print("--- %s seconds ---" % (time.time() - start_time))
