@@ -162,3 +162,5 @@ cython_debug/
 # Custom ignores
 *.pth
 *.pyc
+test/*
+training/*
