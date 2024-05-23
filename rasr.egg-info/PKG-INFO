@@ -2,11 +2,8 @@ Metadata-Version: 2.1
 Name: rasr
 Version: 0.0.1
 Summary: Re-entry Analysis of Serendipitious Radar data
-Home-page: UNKNOWN
 Author: Yash Sarda
 Author-email: ysarda9@gmail.com
-License: UNKNOWN
-Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
@@ -111,5 +108,3 @@ python scripts/rasr_pipeline.py
 These commands will scrape data from NOAA repositories online, run the loaded model for detections, and flag daily detections placing the detection and the raw file in an archive in the rasr repository.
 
 RASR should be run daily, either manually with a bash file (not recommended) or as part of a cron job. Note that the radar sweeps this is run on everyday can easily be edited in the rasr_get.py file.
-
-

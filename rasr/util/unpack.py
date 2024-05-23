@@ -52,8 +52,8 @@ def save_vis(im_list, file, save_dir):
     for img, sweep_angle, _ in im_list:
         # if sweep_angle[-1] == '0':
         #     sweep_angle = sweep_angle[:-1]
-        file_short = file.split("/")
-        imname = "vel_" + file_short[-1] + "_" + sweep_angle
+        file_short = file.split("\\")
+        imname = file_short[-1] + "_" + sweep_angle
         print(imname)
 
         if os.path.exists(save_dir + imname + ".jpg"):

@@ -16,8 +16,8 @@ from rasr.util.fileio import get_list_of_files, clear_files
 from rasr.util.unpack import dat_to_img, save_vis
 
 if __name__ == "__main__":
-    data_dir = "training/all/raw"
-    im_dir = "training/all/images"
+    data_dir = "test/raw"
+    im_dir = "test/images"
     link_dir = "links"
 
     clear_files(link_dir)

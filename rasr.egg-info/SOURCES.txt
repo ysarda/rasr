@@ -15,9 +15,11 @@ rasr/get/__init__.py
 rasr/get/get.py
 rasr/get/scrape.py
 rasr/network/__init__.py
-rasr/network/experimental_classifier.py
+rasr/network/cae.py
+rasr/network/cnn.py
 rasr/network/rcnn.py
 rasr/util/__init__.py
 rasr/util/fileio.py
+rasr/util/sites.py
 rasr/util/unpack.py
 rasr/util/video_dataset.py
