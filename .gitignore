@@ -162,5 +162,7 @@ cython_debug/
 # Custom ignores
 *.pth
 *.pyc
+*.jpg
+data/*
 test/*
 training/*
