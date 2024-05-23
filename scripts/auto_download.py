@@ -52,8 +52,8 @@ if __name__ == "__main__":
     images_dir = "training/all/images"
     link_dir = "links"
     product = "AAL2"
-    run_num = cpu_count()
-    delay = 60
+    run_num = cpu_count() // 2
+    delay = 3600
 
     clear_files(link_dir)
 
