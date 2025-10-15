@@ -67,15 +67,15 @@ For training on other data fields such as reflectivity, labelled data can be fou
 To test if your environment is set up properly, run the following:
 ~~~
 conda activate rasr
-python scripts/rasr_get_test.py
-python scripts/rasr_detect_test.py
+python scripts/test_data_collection.py
+python scripts/test_detection.py
 conda deactivate
 ~~~
 You should get example detection images and a json file with relevant data in test/. Similarly, you can test the full code:
 ~~~
 conda activate rasr
-python scripts/rasr_get.py x
-python scripts/rasr_detect.py x
+python scripts/collect_radar_data.py x
+python scripts/detect_reentries.py x
 conda deactivate
 ~~~
 **Include x to specify the number of processes, useful for running with parallel computing capable machines. If you omit x, RASR will automatically detect how many CPUs you have available and proceed from there.
@@ -88,10 +88,10 @@ conda activate rasr
 ~~~
 Jobs will be submitted under rasr_TACC files which call the following python scripts from the main repo:
 ~~~
-python scripts/rasr_get.py
-python scripts/rasr_detect.py
-python scripts/rasr_pipeline.py
+python scripts/collect_radar_data.py
+python scripts/detect_reentries.py
+python scripts/archive_results.py
 ~~~
 These commands will scrape data from NOAA repositories online, run the loaded model for detections, and flag daily detections placing the detection and the raw file in an archive in the rasr repository.
 
-RASR should be run daily, either manually with a bash file (not recommended) or as part of a cron job. Note that the radar sweeps this is run on everyday can easily be edited in the rasr_get.py file.
+RASR should be run daily, either manually with a bash file (not recommended) or as part of a cron job. Note that the radar sweeps this is run on everyday can easily be edited in the collect_radar_data.py file.

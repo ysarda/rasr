@@ -1,0 +1,21 @@
+name: rasr
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - arm_pyart
+  - geojson
+  - matplotlib
+  - netcdf4
+  - numpy
+  - pip
+  - pymap3d
+  - pyyaml
+  - requests
+  - scikit-learn
+  - pytorch
+  - tqdm
+  - pip:
+    - boto3
+    - botocore

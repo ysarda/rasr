@@ -1,118 +1,251 @@
-from datetime import timedelta, date
+"""
+RASR Get v3
+Rewritten to use boto3 for direct AWS S3 downloads
 
-from rasr.get.scrape import save_links, download_link
-from rasr.util.fileio import clear_files
+@authors: Yash Sarda, Carson Lansdowne, Benjamin Miller
+"""
+
+from datetime import datetime, timedelta, date
+import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+import boto3
+from botocore import UNSIGNED
+from botocore.client import Config
+
+
+# NEXRAD AWS S3 configuration
+NEXRAD_BUCKET = 'unidata-nexrad-level2'
+NEXRAD_REGION = 'us-east-1'
+
+
+def get_s3_client():
+    """Create and return an S3 client configured for NEXRAD data."""
+    return boto3.client(
+        's3',
+        region_name=NEXRAD_REGION,
+        config=Config(signature_version=UNSIGNED, user_agent_extra='Resource')
+    )
 
 
 def date_range(start_date, end_date):
+    """Generate date range between two dates."""
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
 
-def run_get(sites, date_list, time_range, data_dir, link_dir):
-    # Parse input
-    origin_year = date_list[0]
-    origin_month = date_list[1]
-    origin_day = date_list[2]
-    end_year = date_list[3]
-    end_month = date_list[4]
-    end_day = date_list[5]
+def time_in_range(time_str, time_range):
+    """
+    Check if a time string is in the given range.
 
-    # Run Main
+    Args:
+        time_str: Time string in HHMMSS format
+        time_range: [start, end] time range in HHMMSS format
+
+    Returns:
+        True if time is in range, False otherwise
+    """
     try:
-        product = "AAL2"
-        # Level-II data include the original three meteorological base data quantities: reflectivity,
-        # mean radial velocity, and spectrum width, as well as the dual-polarization base data of differential
-        # reflectivity, correlation coefficient, and differential phase.
-        start_date = date(origin_year, origin_month, origin_day)
-        end_date = date(
-            end_year, end_month, end_day
-        )  # date(now.year, now.month, now.day+1)
+        time_int = int(time_str)
+        return time_range[0] <= time_int <= time_range[1]
+    except (ValueError, TypeError):
+        return False
 
+
+def extract_time_from_filename(filename):
+    """
+    Extract time from NEXRAD filename.
+
+    NEXRAD files follow format: SITEYYYYYMMDD_HHMMSS_V06
+    Example: KTLX20240101_000004_V06
+
+    Args:
+        filename: NEXRAD filename
+
+    Returns:
+        Time string in HHMMSS format or None
+    """
+    try:
+        parts = filename.split('_')
+        if len(parts) >= 2:
+            time_str = parts[1]  # HHMMSS part (index 1, not 2)
+            return time_str
+    except Exception:
+        pass
+    return None
+
+
+def get_station_files(s3_client, station, year, month, day):
+    """
+    Get list of files for a specific radar station and date from S3.
+
+    Args:
+        s3_client: boto3 S3 client
+        station: Radar station ID (e.g., 'KTLX')
+        year: Year string (e.g., '2024')
+        month: Month string with leading zero (e.g., '01')
+        day: Day string with leading zero (e.g., '15')
+
+    Returns:
+        List of S3 keys for matching files
+    """
+    prefix = f"{year}/{month}/{day}/{station}/"
+
+    files = []
+    paginator = s3_client.get_paginator('list_objects_v2')
+
+    try:
+        for page in paginator.paginate(Bucket=NEXRAD_BUCKET, Prefix=prefix):
+            if 'Contents' in page:
+                files.extend([obj['Key'] for obj in page['Contents']])
+    except Exception as e:
+        print(f"Error listing files for {station}: {e}")
+
+    return files
+
+
+def download_s3_file(s3_client, s3_key, local_path, max_retries=3):
+    """
+    Download a file from S3 with retry logic.
+
+    Args:
+        s3_client: boto3 S3 client
+        s3_key: S3 object key
+        local_path: Local file path to save to
+        max_retries: Maximum number of retry attempts
+
+    Returns:
+        True if successful, False otherwise
+    """
+    for attempt in range(max_retries):
+        try:
+            s3_client.download_file(NEXRAD_BUCKET, s3_key, local_path)
+            return True
+        except Exception as e:
+            if attempt < max_retries - 1:
+                print(f"Retry {attempt + 1}/{max_retries} for {os.path.basename(local_path)}: {e}")
+            else:
+                print(f"Failed to download {os.path.basename(local_path)}: {e}")
+                return False
+    return False
+
+
+def run_get(sites, date_list, time_range, data_dir, link_dir=None, tracker=None, config=None):
+    """
+    Download radar data for given sites and date range using boto3.
+
+    Args:
+        sites: List of radar site IDs
+        date_list: [origin_year, origin_month, origin_day, end_year, end_month, end_day]
+        time_range: [start_time, end_time] in HHMMSS format
+        data_dir: Directory to save data files
+        link_dir: Directory for temporary link files (unused, kept for compatibility)
+        tracker: DownloadTracker instance (optional)
+        config: Config instance (optional)
+    """
+    # Parse input
+    origin_year, origin_month, origin_day = date_list[0:3]
+    end_year, end_month, end_day = date_list[3:6]
+
+    # Get download settings
+    if config:
+        max_retries = config.download_retries
+        concurrent_downloads = config.concurrent_downloads
+    else:
+        max_retries = 5
+        concurrent_downloads = 6
+
+    # Setup date range
+    start_date = date(origin_year, origin_month, origin_day)
+    end_date = date(end_year, end_month, end_day)
+
+    # Initialize S3 client
+    s3_client = get_s3_client()
+
+    try:
         for single_date in date_range(start_date, end_date):
-            # --OPTION 2 DOWNLOAD WEATHER DATA FROM THE ORIGIN DATE TILL TODAY (usually run for the first time to
-            # download all the files, and then go to OPTION 2)
-            date_n = single_date.strftime("%Y %m %d")
-            date_arr = [int(s) for s in date_n.split() if s.isdigit()]
-            year = date_arr[0]
-            month = date_arr[1]
-            day = date_arr[2]
+            year = str(single_date.year)
+            month = f"{single_date.month:02d}"
+            day = f"{single_date.day:02d}"
 
-            if month < 10:  # formats the month to be 01,02,03,...09 for month < 10
-                for i in range(1, 10):
-                    if month == i:
-                        month = "{num:02d}".format(num=i)
+            print(f"\n----------------------------------------")
+            print(f"Downloading data for {month}/{day}/{year}")
+            print(f"----------------------------------------")
 
-            if day < 10:  # formats the day variable to be 01,02,03,...09 for day < 10
-                for i in range(1, 10):
-                    # Having 9 as the max will cause a formatting and link problem,
-                    # i.e. creating a folder with 07/9/xxxx instead of 07/09/xxxx
-                    if day == i:
-                        day = "{num:02d}".format(num=i)
-
-            print("\n")
-            print(
-                "\n----------------------------------------Downloading data as of",
-                str(month) + "/" + str(day) + "/" + str(year),
-                "----------------------------------------",
-            )
-
-            # This is a list of radar sites that have specific end dates and not among the list of "registered" radar
-            # sites, usually are considered test sites or decommissioned sites: they usually start with a T for test
-            # sites, the other letters for decommissioned sites
-
-            # DAN1(05/26-2010-11/29/2016), DOP1(05/27/2010-09/30/2016),FOP1(06/09/2010-03/20/2018),
-            # KABQ(10/16/2003 - 10/23/2003), KAFD(05/01/2003-05/24/2004), KBTV(03/19/2003-06/16/2003),
-            # KDOG(02/27/200-04/23/2004), KERI(01/15/2009-02/15/2017), KILM(11/16/2000-03/13/2001),
-            # KJUA(02/27/2009-0826/2016), KLBF(02/01/2009-02/01/2009),KMES(02/23/2004-06/07/2004),
-            # KNAW(06/08/2017-08/16/2018),LORT(03/17/2009-03/17/2009), KQYA(10/31/2017-10/31/2017),
-            # KUNR(04/26/2002-12/01/2003), NOP3(10/10/2007-11/12/2014),NOP4(05/24/2010-09/29/2017),
-            # PGUM(09/16/2002-09/16/2002),ROP3(07/23/2012-01/03/2017), ROP4(07/21/2010-07/30/2018),
-            # TIC(03/03/2009-03/03/2009),TJBQ(10/30/2017-06/28/2018),TJRV(10/30/2017-06/27/2018),
-            # TLSX(03/03/2009-03/03/2009),TNAW(06/09/2017-08/16/2018),TTBW(03/03/2009-03/03/2009),KCRI(10/31/2014-10/31/2014)
-
-            # radar_sites = sites
-
+            # Process each radar site
             for site_id in sites:
-                print('\nDownloading data from radar: "' + site_id + '"')
-                page_url_base = (
-                    "https://www.ncdc.noaa.gov/nexradinv/bdp-download.jsp"
-                    "?yyyy={year}&mm={month}&dd={day}&id={site_id}&product={product}"
-                )
-                # print(page_url_base)
-                page_url = page_url_base.format(
-                    year=year, month=month, day=day, site_id=site_id, product=product
-                )
-                # print(page_url)
-                links = save_links(page_url)
+                print(f'\nDownloading data from radar: "{site_id}"')
 
-                for link in links:
-                    print(link)
-                    download_link(link, data_dir, time_range)
+                try:
+                    # Get available files for this radar and date
+                    s3_files = get_station_files(s3_client, site_id, year, month, day)
 
-                clear_files(link_dir)
+                    if not s3_files:
+                        print(f"No files found for {site_id} on {month}/{day}/{year}")
+                        continue
+
+                    print(f"Found {len(s3_files)} total files for {site_id}")
+
+                    # Filter files by time range and check if already downloaded
+                    files_to_download = []
+                    for s3_key in s3_files:
+                        filename = s3_key.split('/')[-1]
+                        time_str = extract_time_from_filename(filename)
+
+                        if time_str and time_in_range(time_str, time_range):
+                            # Check if already downloaded
+                            if tracker and tracker.is_downloaded(filename):
+                                print(f"Skipping {filename} - already downloaded")
+                                continue
+                            files_to_download.append((s3_key, filename))
+
+                    if not files_to_download:
+                        print(f"No files in time range {time_range[0]:06d}-{time_range[1]:06d}")
+                        continue
+
+                    print(f"Downloading {len(files_to_download)} files in time range")
+
+                    # Create site-specific directory
+                    site_data_dir = os.path.join(data_dir, site_id)
+                    os.makedirs(site_data_dir, exist_ok=True)
+
+                    # Download files with concurrent threads
+                    success_count = 0
+                    failed_count = 0
+
+                    def download_worker(s3_key, filename):
+                        """Worker function for downloading a single file."""
+                        # Create a new S3 client for this thread (boto3 clients are not thread-safe)
+                        thread_s3_client = get_s3_client()
+                        local_path = os.path.join(site_data_dir, filename)
+                        if download_s3_file(thread_s3_client, s3_key, local_path, max_retries):
+                            if tracker:
+                                tracker.mark_downloaded(filename, file_path=local_path)
+                            print(f"Downloaded: {filename}")
+                            return True
+                        return False
+
+                    # Use ThreadPoolExecutor for concurrent downloads
+                    with ThreadPoolExecutor(max_workers=concurrent_downloads) as executor:
+                        futures = {
+                            executor.submit(download_worker, s3_key, filename): filename
+                            for s3_key, filename in files_to_download
+                        }
+
+                        for future in as_completed(futures):
+                            if future.result():
+                                success_count += 1
+                            else:
+                                failed_count += 1
+
+                    print(f"Download complete: {success_count} succeeded, {failed_count} failed")
+
+                except Exception as e:
+                    print(f"Error downloading from {site_id}: {e}")
+                    import traceback
+                    traceback.print_exc()
+                    continue
 
     except KeyboardInterrupt:
-        site_info = "The last data downloaded was from the site:  " + site_id
-        date_info = (
-            "The last attempted download date was in the following format:"
-            "  MONTH / DAY / YEAR:    " + str(month) + "/" + str(day) + "/" + str(year)
-        )
-        note = (
-            "NOTE: Last download date usually means an incomplete download of all the weather files. "
-            "Set the new date to be one day before the last download date to ensure all files are downloaded."
-        )
-        print("\n\n", site_info)
-        print("\n", date_info)
-        file = open("../data/last_download_date.txt", "w")
-        file.write(site_info + "\n" + date_info + "\n" + note)
-        file.close()
-        print(
-            "\nExported the last known dates before program ended to last_download_date.txt "
-            "located in the same directory as scraper.py"
-        )
-        print(
-            "\nChange the origin_month, origin_day, and origin_year variables accordingly "
-            "from the last_download_date.txt\n"
-        )
-        print(note)
+        print(f"\n\nDownload interrupted by user")
+        print(f"NOTE: Partial downloads may have occurred. Check data directory.")
