@@ -25,9 +25,9 @@ if __name__ == "__main__":
         base_dir = sys.argv[2]
         output_dir = sys.argv[3]
     else:
-        raw_dir = input("Enter raw data directory (e.g., 'training/2500/All_raw_detections/'): ").strip()
-        base_dir = input("Enter base comparison directory (e.g., 'training/2500/Reflectivity/all/'): ").strip()
-        output_dir = input("Enter output directory (e.g., 'training/all_fields/corrected/'): ").strip()
+        raw_dir = input("Enter raw data directory (e.g., 'data/positive/' or 'data/null/'): ").strip()
+        base_dir = input("Enter base comparison directory (e.g., 'training/reflectivity/'): ").strip()
+        output_dir = input("Enter output directory (e.g., 'training/images/'): ").strip()
 
     # Ensure directories exist
     make_dir(output_dir)

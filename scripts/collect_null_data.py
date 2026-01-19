@@ -17,18 +17,14 @@ from rasr.config import get_config
 from rasr.get.get import run_get
 from rasr.util.fileio import make_dir
 from rasr.util.sites import load_radar_sites
-from rasr.util.tracker import get_tracker
 
 
 if __name__ == "__main__":
     # Load configuration
     config = get_config()
-    tracker = get_tracker()
 
-    # Ensure directories exist
-    folders = [config.links_dir, config.data_dir, config.vis_dir, config.falls_dir]
-    for folder in folders:
-        make_dir(folder)
+    # Ensure data directory exists
+    make_dir(config.null_data_dir)
 
     # Get date range (default: yesterday to today)
     now = datetime.now()
@@ -56,21 +52,21 @@ if __name__ == "__main__":
     # Load radar sites
     radar_sites = load_radar_sites()
 
-    print(f"Starting RASR data collection")
+    print(f"Starting RASR data collection (null/negative examples)")
     print(f"Date range: {yesterday.strftime('%Y-%m-%d')} to {now.strftime('%Y-%m-%d')}")
     print(f"Time range: {timerange[0]:06d} to {timerange[1]:06d}")
     print(f"Sites to process: {len(radar_sites)}")
     print(f"Parallel workers: {run_num}")
-    print(f"Data directory: {config.data_dir}")
+    print(f"Data directory: {config.null_data_dir}")
 
     # Setup partial function with config
     run_function_partial = partial(
         run_get,
         date_list=date_list,
         time_range=timerange,
-        data_dir=config.data_dir,
-        link_dir=config.links_dir,
-        tracker=tracker,
+        data_dir=config.null_data_dir,
+        link_dir=None,
+        tracker=None,
         config=config,
     )
 
@@ -80,7 +76,4 @@ if __name__ == "__main__":
     pool.close()
     pool.join()
 
-    # Print statistics
-    stats = tracker.get_stats()
     print(f"\nCollection complete!")
-    print(f"Total files tracked: {stats['total_files']}")

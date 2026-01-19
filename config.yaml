@@ -2,9 +2,11 @@
 # Simple, centralized configuration file
 
 # Directories
-data_dir: "data"
-falls_dir: "falls"
-vis_dir: "vis"
+data_dir: "data"  # Parent directory for training data
+positive_data_dir: "data/positive"  # Confirmed meteorite fall events (labeled positives)
+null_data_dir: "data/null"  # General radar scans with no known events (unlabeled negatives)
+falls_dir: "falls"  # Detection outputs
+vis_dir: "vis"  # Visualizations
 links_dir: "links"
 archive_dir: "archive"
 
@@ -14,16 +16,12 @@ batch_size: 160  # files per batch
 confidence_threshold: 0.75
 visualization: true
 
-# Data Collection
+# Null Data Collection
 time_range:
   start: 0  # HHMMSS format
   end: 235959
 download_retries: 5
 concurrent_downloads: 6  # Number of parallel download threads per site (boto3)
-
-# Model
-model_path: "RASRmodl.pth"
-model_classes: ["fall"]
 
 # Legacy NOAA Settings (deprecated - now using direct S3 access)
 noaa_base_url: "https://www.ncdc.noaa.gov/nexradinv/bdp-download.jsp"

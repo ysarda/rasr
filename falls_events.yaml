@@ -1,0 +1,265 @@
+# Confirmed Meteorite Fall Events for RASR Data Collection
+# Source: NASA ARES Meteorite Falls Database
+# URL: https://ares.jsc.nasa.gov/meteorite-falls/events/
+#
+# This file contains confirmed meteorite falls detected by NEXRAD radar.
+# Each event includes the necessary parameters to download radar data from AWS S3.
+#
+# Fields:
+#   name: Event identifier
+#   date: Date in YYYY-MM-DD format
+#   time_start_utc: Start time for data collection window (HH:MM:SS)
+#   time_end_utc: End time for data collection window (HH:MM:SS)
+#   location: Geographic coordinates
+#   radar_stations: List of NEXRAD stations that detected the event
+#   notes: Description and additional details
+#   source_url: Link to NASA ARES event page
+
+events:
+  # 2025 Events
+  - name: "Pebble AL"
+    date: "2025-11-06"
+    time_start_utc: "06:00:00"
+    time_end_utc: "07:30:00"
+    location:
+      latitude: 34.353008
+      longitude: -87.53902
+    radar_stations:
+      - KGWX
+    radar_details:
+      - station: KGWX
+        sweep_time: "06:34:00"
+        sweep_angle: 4.48
+        altitude_km: 7.1
+    notes: "Steeply inclined meteor (82° below horizontal) that survived to <14km altitude. Single radar signature detected 137s after bolide. Estimated 1g mass. Orbital path entirely within Mars' orbit."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/pebble-al"
+
+  - name: "Gateway AR"
+    date: "2025-08-17"
+    time_start_utc: "01:00:00"
+    time_end_utc: "02:30:00"
+    location:
+      latitude: 36.470542
+      longitude: -93.901816
+    radar_stations:
+      - KEAX
+    radar_details:
+      - station: KEAX
+        sweep_time: "01:34:00"
+    notes: "Flat-trajectory, long-lasting fireball over northern Arkansas. Small radar signature detected. Ground track azimuth 300° (NW). AMS Event #4996 of 2025."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/gateway-ar"
+
+  - name: "McDonough GA"
+    date: "2025-06-26"
+    time_start_utc: "16:00:00"
+    time_end_utc: "17:30:00"
+    location:
+      latitude: 33.395741
+      longitude: -84.204474
+    radar_stations:
+      - KFFC  # Primary NEXRAD for Atlanta area
+      # Seven other NEXRAD radars also detected this event
+      # Plus Atlanta Hartsfield TDWR
+    notes: "Very bright daytime bolide (superbolide) south of Atlanta. Detected by 8 radars (7 NEXRAD + 1 TDWR). ~1m diameter object at 13 km/s. Strong westward winds (~150 mph) created wide strewn field. Multiple meteorite recoveries. Originally named Blacksville."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/mcdonough-ga"
+
+  # 2024 Events
+  - name: "Amo IN"
+    date: "2024-12-10"
+    time_start_utc: "08:30:00"
+    time_end_utc: "10:00:00"
+    location:
+      latitude: 39.648753
+      longitude: -86.701441
+    radar_stations:
+      - KIND  # Indianapolis area NEXRAD
+      # Plus 4 other NEXRAD radars and Indianapolis airport radar
+    notes: "Bright nighttime bolide west of Indianapolis. Massive fall with many stones (1g to 670g). Steep infall angle, north-south trajectory. High altitude winds up to 63 m/s (142 mph). AMS Event #7647 of 2024. Provisional name."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/amo-in"
+
+  - name: "Pontiac KS"
+    date: "2024-12-02"
+    time_start_utc: "18:45:00"
+    time_end_utc: "20:00:00"
+    location:
+      latitude: 37.781231
+      longitude: -96.698163
+    radar_stations:
+      - KICT  # Wichita, KS
+      - KINX  # Tulsa, OK
+      - KTWX  # Topeka, KS
+      - KVNX  # Vance AFB, OK
+    notes: "Long-lasting daytime fireball near Wichita. Detected by 4 NEXRAD radars plus GLM satellites. Meteorites 1-133g. ~23km strewn field. Extreme winds >100 mph at 13km altitude. First identified by citizen scientist Eric Rasmussen."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/pontiac-ks"
+
+  # 2018 Events - Well-documented cases
+  - name: "Hamburg MI"
+    date: "2018-01-17"
+    time_start_utc: "01:00:00"
+    time_end_utc: "02:00:00"
+    location:
+      latitude: 42.441864
+      longitude: -83.820635
+    radar_stations:
+      - KDTX  # Detroit area
+      # Plus Detroit airport TDWR
+    radar_details:
+      - station: KDTX
+        sweep_time: "01:07:00"
+        first_signature: "01:13:03"
+        altitude_m: 2234
+        final_signature: "01:40:58"
+    notes: "Bright fireball over Detroit area, traveling E-W. H4 chondrite. Meteorite signatures detected across 7 radar sweeps. Sonic booms on seismometers. Fragmentation at ~20km altitude. AMS Event #168 of 2018."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/hamburg-michigan"
+
+  - name: "Pacific Coast WA"
+    date: "2018-03-08"
+    time_start_utc: "03:00:00"
+    time_end_utc: "03:30:00"
+    location:
+      latitude: 47.4312
+      longitude: -124.3448
+    radar_stations:
+      - KRTX  # Portland, OR
+      - KLGX  # Langley Hill, WA
+      - KATX  # Seattle, WA
+    radar_details:
+      - station: KRTX
+        sweep_time: "03:05:26"
+        altitude_m: 19750
+      - final_detection: "03:15:42"  # All three radars
+    notes: "Most massive fireball seen in weather radar to date. ~31x Park Forest IL mass. Western Olympic peninsula. 10 minutes of radar detection (03:05-03:15). Fell into ocean. 22 eyewitnesses, 4 sonic boom reports. Seafloor search conducted."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/pacific-coast-washington"
+
+  # 2012 Events
+  - name: "Battle Mountain NV"
+    date: "2012-08-22"
+    time_start_utc: "06:00:00"
+    time_end_utc: "06:45:00"
+    location:
+      latitude: 40.64717
+      longitude: -117.16569
+    radar_stations:
+      - KLRX  # Elko, NV
+    radar_details:
+      - station: KLRX
+        dataset_time: "06:17:00"
+        first_signature: "06:19:27"
+        altitude_m: 3150
+        sweep_angle: 2.4
+        final_signature: "06:21:03"
+    notes: "Large meteorite fall in remote Nevada. L6 chondrite. Lightly reported (11 AMS witnesses) but many meteorites recovered. ~0.4x Park Forest IL mass. Detected across 8 radar sweeps."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/battle-mountain-nevada"
+
+  # Additional 2025 Events
+  - name: "La Petite Belgique QC"
+    date: "2025-06-24"
+    time_start_utc: "07:30:00"
+    time_end_utc: "08:30:00"
+    location:
+      latitude: 46.280013
+      longitude: -72.018
+    radar_stations:
+      - KCXX  # Burlington, VT
+    notes: "Slow-moving, shallow entry trajectory fireball that fragmented over Quebec. Single radar signature detected by KCXX. Low mass fall, challenging recovery. FRIPON documented event. AMS Event #3406 of 2025."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/la-petite-belgique-quebec"
+
+  - name: "Whitefish Lake AK"
+    date: "2025-04-24"
+    time_start_utc: "18:15:00"
+    time_end_utc: "18:50:00"
+    location:
+      latitude: 61.0389
+      longitude: -154.119973
+    radar_stations:
+      - PAHG  # Anchorage, AK
+    radar_details:
+      - station: PAHG
+        first_signature: "18:32:10"
+        final_signature: "18:36:16"
+        altitude_range_km: "17.95 to 4.9"
+    notes: "Daytime fireball west of Anchorage. 4 min radar detection span. Three sweeps showed 'candy striping' indicating 100g+ meteorites. Azimuth ~294°. Vegetated glacial terrain with rocky areas for recovery."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/whitefish-lake-ak"
+
+  - name: "Muses Mills KY"
+    date: "2025-03-18"
+    time_start_utc: "03:00:00"
+    time_end_utc: "04:00:00"
+    location:
+      latitude: 38.35011
+      longitude: -83.547775
+    radar_stations: []  # Single uncertain signature
+    notes: "Single radar signature (possibly spurious). 112 eyewitness reports across KY/OH. Dense radar coverage but signature in only one radar reduces confidence. Heavily wooded terrain. Low certainty event. AMS Event #1624 of 2025."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/muses-mills-ky"
+
+  - name: "Codyville ME"
+    date: "2025-02-21"
+    time_start_utc: "00:45:00"
+    time_end_utc: "01:30:00"
+    location:
+      latitude: 45.463787
+      longitude: -67.822154
+    radar_stations:
+      - KCBW  # Houlton, ME
+    radar_details:
+      - station: KCBW
+        dataset_time_1: "01:02:00"
+        sweep_angle_1: 5.1
+        dataset_time_2: "01:09:00"
+        sweep_angles_2: "0.88 and 1.32"
+    notes: "Low-mass meteorite fall in eastern Maine. Higher speed than typical falls. Doppler turbulence signature. Widespread sonic boom reports. Heavily forested terrain challenges recovery. AMS Event #1052."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/codyville-me"
+
+  # 2024 Events (continued)
+  - name: "Ingalls NC"
+    date: "2024-08-30"
+    time_start_utc: "05:00:00"
+    time_end_utc: "06:00:00"
+    location:
+      latitude: 35.95212
+      longitude: -82.00403
+    radar_stations:
+      - KFCX
+      - KGSP
+      - KJKL
+      - KMRX
+    notes: "Widely reported bright bolide after 1 AM. Detected by 4 NEXRAD radars. Flat trajectory, long-lasting. GLM satellite data available. Altitude range 15.5km to 4.3km. Estimated masses up to 3.5g. Heavily wooded fall site. AMS Event #4759 of 2024."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/ingalls-nc"
+
+  - name: "Edison NJ"
+    date: "2024-07-16"
+    time_start_utc: "15:00:00"
+    time_end_utc: "15:45:00"
+    location:
+      latitude: 40.512663
+      longitude: -74.428437
+    radar_stations:
+      - KDIX  # Fort Dix, NJ NEXRAD (2 sweeps)
+      # Plus Newark airport radar (25 sweeps)
+    notes: "Daytime bolide in NYC metro area. ~15 min radar observation across 27 sweeps total. Low density meteorites fell slowly creating elongated strewn field. Winds from WSW, fireball traveled into wind. AMS Event #3491 of 2024."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/edison-nj"
+
+  - name: "Clanton Well AZ"
+    date: "2024-04-17"
+    time_start_utc: "02:40:00"
+    time_end_utc: "03:15:00"
+    location:
+      latitude: 33.319924
+      longitude: -113.324176
+    radar_stations:
+      - KYUX  # Yuma, AZ
+    radar_details:
+      - station: KYUX
+        sweep_time: "02:55:00"
+        sweep_angle: 3.16
+        altitude_km: 10
+    notes: "FIRST US MARTIAN METEORITE FALL! Ten shergottite martian meteorites recovered. Long-lasting bolide west of Phoenix. 0.05g fragments at 10km altitude. Displayed at Tucson Gem & Mineral Show. Corrected strewn field models (DFM 03/04) available."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/clanton-well-az"
+
+# Notes:
+# - time_start_utc and time_end_utc define the data collection window
+# - Typically set to ±30-90 minutes around the event time
+# - radar_stations can be manually specified or auto-detected based on location
+# - radar_details provide specific sweep information for validation
+# - Events marked as satellite de-orbits or debris re-entries should be used cautiously
+#   as they have different characteristics than natural meteorite falls

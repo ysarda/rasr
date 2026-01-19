@@ -29,10 +29,8 @@ class Config:
         """Create required directories if they don't exist."""
         dirs = [
             self.data_dir,
-            self.falls_dir,
-            self.vis_dir,
-            self.links_dir,
-            self.archive_dir,
+            self.positive_data_dir,
+            self.null_data_dir,
         ]
         for d in dirs:
             Path(d).mkdir(parents=True, exist_ok=True)
@@ -52,6 +50,14 @@ class Config:
     @property
     def data_dir(self) -> str:
         return self.get('data_dir', 'data')
+
+    @property
+    def positive_data_dir(self) -> str:
+        return self.get('positive_data_dir', 'data/positive')
+
+    @property
+    def null_data_dir(self) -> str:
+        return self.get('null_data_dir', 'data/null')
 
     @property
     def falls_dir(self) -> str:
