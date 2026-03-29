@@ -162,8 +162,10 @@ cython_debug/
 # Custom ignores
 .claude
 *.pth
+*.pt
 *.pyc
 *.jpg
 data/*
 test/*
 training/*
+checkpoints/
