@@ -13,6 +13,8 @@ import boto3
 from botocore import UNSIGNED
 from botocore.client import Config
 
+from rasr.util.fileio import is_valid_nexrad_file
+
 
 # NEXRAD AWS S3 configuration
 NEXRAD_BUCKET = 'unidata-nexrad-level2'
@@ -186,10 +188,17 @@ def run_get(sites, date_list, time_range, data_dir, link_dir=None, tracker=None,
 
                     print(f"Found {len(s3_files)} total files for {site_id}")
 
-                    # Filter files by time range and check if already downloaded
+                    # Filter files by validity, time range, and check if already downloaded
                     files_to_download = []
+                    skipped_invalid = 0
                     for s3_key in s3_files:
                         filename = s3_key.split('/')[-1]
+
+                        # Check if valid NEXRAD file (exclude _MDM, _SLC, etc.)
+                        if not is_valid_nexrad_file(filename):
+                            skipped_invalid += 1
+                            continue
+
                         time_str = extract_time_from_filename(filename)
 
                         if time_str and time_in_range(time_str, time_range):
@@ -198,6 +207,9 @@ def run_get(sites, date_list, time_range, data_dir, link_dir=None, tracker=None,
                                 print(f"Skipping {filename} - already downloaded")
                                 continue
                             files_to_download.append((s3_key, filename))
+
+                    if skipped_invalid > 0:
+                        print(f"Filtered out {skipped_invalid} non-standard files (_MDM, _SLC, etc.)")
 
                     if not files_to_download:
                         print(f"No files in time range {time_range[0]:06d}-{time_range[1]:06d}")
