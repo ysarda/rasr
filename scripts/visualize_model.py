@@ -121,9 +121,9 @@ def visualize_anomaly_scores(model, dataset, device, output_dir, num_samples=20)
 
         with torch.no_grad():
             reconstruction, _ = model(data, mask)
-            score = model.compute_anomaly_score(data, reconstruction, mask)
+            _, sample_score = model.compute_anomaly_score(data, reconstruction, mask)
 
-        scores.append(score.cpu().numpy()[0])
+        scores.append(sample_score.cpu().numpy()[0])
         filenames.append(metadata[0]['filename'])
 
     # Plot anomaly score distribution

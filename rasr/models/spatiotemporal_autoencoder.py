@@ -285,7 +285,11 @@ class SpatioTemporalAutoencoder(nn.Module):
 
     def compute_anomaly_score(self, x, reconstruction, mask=None):
         """
-        Compute anomaly score based on reconstruction error.
+        Compute per-sweep anomaly scores based on reconstruction error.
+
+        Returns per-sweep scores so that individual anomalous sweeps aren't
+        diluted by averaging with normal ones. Downstream consumers can
+        aggregate (max, mean, threshold count) as needed.
 
         Args:
             x: Original input (B, max_sweeps, num_fields, H, W)
@@ -293,7 +297,9 @@ class SpatioTemporalAutoencoder(nn.Module):
             mask: Valid sweep mask (B, max_sweeps)
 
         Returns:
-            anomaly_scores: Tensor of shape (batch_size,) with anomaly scores
+            per_sweep_scores: Tensor of shape (B, max_sweeps) with per-sweep anomaly scores
+                              (invalid sweeps are set to 0)
+            sample_scores: Tensor of shape (B,) with max per-sweep score per sample
         """
         # Compute per-pixel MSE, masked to non-zero signal pixels only
         mse = (x - reconstruction) ** 2  # (B, max_sweeps, num_fields, H, W)
@@ -302,16 +308,23 @@ class SpatioTemporalAutoencoder(nn.Module):
         # Per-sweep masked MSE: average only over non-zero pixels
         masked_mse = (mse * signal_mask).sum(dim=[2, 3, 4])  # (B, max_sweeps)
         pixel_counts = signal_mask.sum(dim=[2, 3, 4]).clamp(min=1)  # (B, max_sweeps)
-        per_sweep_score = masked_mse / pixel_counts  # (B, max_sweeps)
+        per_sweep_scores = masked_mse / pixel_counts  # (B, max_sweeps)
 
-        # Average over valid sweeps
+        # Zero out invalid sweeps
         if mask is not None:
-            per_sweep_score = per_sweep_score * mask.float()
-            anomaly_scores = per_sweep_score.sum(dim=1) / mask.sum(dim=1).float()
-        else:
-            anomaly_scores = per_sweep_score.mean(dim=1)
+            per_sweep_scores = per_sweep_scores * mask.float()
 
-        return anomaly_scores
+        # Sample-level score: max across sweeps (catches single anomalous sweep)
+        if mask is not None:
+            # Use -inf for invalid sweeps so they don't affect max
+            masked_scores = per_sweep_scores.masked_fill(~mask, float('-inf'))
+            sample_scores = masked_scores.max(dim=1).values
+            # Handle fully-masked samples
+            sample_scores = sample_scores.clamp(min=0)
+        else:
+            sample_scores = per_sweep_scores.max(dim=1).values
+
+        return per_sweep_scores, sample_scores
 
 
 # Testing
@@ -340,6 +353,7 @@ if __name__ == "__main__":
     print(f"Latent shape: {latent.shape}")
 
     # Compute anomaly scores
-    scores = model.compute_anomaly_score(dummy_input, reconstruction, dummy_mask)
-    print(f"Anomaly scores shape: {scores.shape}")
-    print(f"Anomaly scores: {scores}")
+    per_sweep_scores, sample_scores = model.compute_anomaly_score(dummy_input, reconstruction, dummy_mask)
+    print(f"Per-sweep scores shape: {per_sweep_scores.shape}")
+    print(f"Sample scores shape: {sample_scores.shape}")
+    print(f"Sample scores: {sample_scores}")

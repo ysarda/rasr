@@ -35,9 +35,9 @@ def compute_anomaly_scores(model, dataloader, device):
             mask = mask.to(device)
 
             reconstruction, _ = model(data, mask)
-            scores = model.compute_anomaly_score(data, reconstruction, mask)
+            _, sample_scores = model.compute_anomaly_score(data, reconstruction, mask)
 
-            all_scores.extend(scores.cpu().numpy().tolist())
+            all_scores.extend(sample_scores.cpu().numpy().tolist())
             all_metadata.extend(metadata)
 
     return np.array(all_scores), all_metadata

@@ -114,9 +114,9 @@ def validate_epoch(model, dataloader, device, use_amp=False, signal_weight=0.95)
             total_loss += loss.item()
             num_batches += 1
 
-            # Compute anomaly scores
-            scores = model.compute_anomaly_score(data, reconstruction, mask)
-            anomaly_scores.extend(scores.cpu().numpy().tolist())
+            # Compute anomaly scores (use sample-level max-over-sweeps)
+            _, sample_scores = model.compute_anomaly_score(data, reconstruction, mask)
+            anomaly_scores.extend(sample_scores.cpu().numpy().tolist())
 
     return total_loss / num_batches, np.array(anomaly_scores)
 
