@@ -201,6 +201,22 @@ python scripts/visualize_model.py [OPTIONS]
 | `--device` | str | `cuda`/`cpu` (auto) | Device to use |
 | `--image_size` | int | `128` | Image size for radar grid |
 
+#### `visualize_sweeps_3d.py` — 3D sweep visualization
+
+Plots all sweeps of a single radar file in 3D Cartesian space (east, north, altitude), colored by a radar field, with a marker at the radar origin.
+
+```bash
+python scripts/visualize_sweeps_3d.py FILE [OPTIONS]
+```
+
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `FILE` | str (positional, required) | — | Path to a NEXRAD Level II radar file |
+| `--field` | str | `reflectivity` | Radar field to color by |
+| `--max-range-km` | float | `150` | Maximum range in km to plot |
+| `--downsample` | int | `2` | Plot every Nth gate (reduces point count) |
+| `--output` | str | `None` | Save as HTML to path instead of opening in browser |
+
 ### Utilities
 
 #### `save_run.py` — Archive a training run

@@ -19,6 +19,7 @@ dependencies = [
     "netcdf4",
     "numpy",
     "pillow",
+    "plotly>=6.7.0",
     "pymap3d",
     "pyyaml",
     "requests",
