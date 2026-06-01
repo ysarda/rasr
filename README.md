@@ -40,30 +40,214 @@ RASR consists of data collection and analysis components:
 5. Output detection confidence, location, and state vectors
 
 
-## Requirements & Setup
+## Installation
 
-### Dependencies
-- Python 3.8+
-- arm_pyart - Weather radar data processing
-- boto3 - AWS S3 access for NEXRAD data
-- pyyaml - Configuration and event database management
-- matplotlib - Visualization
-- netCDF4 - Radar file format support
-- numpy - Numerical processing
-- pymap3d - Coordinate transformations
-- scipy - Trajectory integration
+### Requirements
 
-### Installation
+- Python 3.11+
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
-From the main rasr directory:
+### Setup
+
 ```bash
-cd envs
-conda env create --file rasrenv.yml
-conda activate rasr
-pip install -e .
+# Clone the repo
+git clone https://github.com/ysarda/rasr.git
+cd rasr
+
+# Create venv and install all dependencies
+uv sync
+
+# Activate the virtual environment
+# Linux/macOS:
+source .venv/bin/activate
+# Windows:
+.venv\Scripts\activate
 ```
 
-**Note:** Ensure that the arm_pyart library has installed correctly. It may need to be installed manually from their GitHub: https://arm-doe.github.io/pyart/userguide/INSTALL.html
+To install with GPU support for PyTorch, see the [PyTorch install guide](https://pytorch.org/get-started/locally/) and configure the appropriate index in `pyproject.toml` if needed.
+
+## Scripts
+
+All scripts are in the `scripts/` directory. Run them from the project root with the virtual environment activated.
+
+### Data Collection
+
+#### `collect_null_data.py` — Download null (negative) radar data
+
+Downloads random NEXRAD scans with no known events for training the anomaly detector.
+
+```bash
+python scripts/collect_null_data.py [NUM_WORKERS]
+```
+
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `NUM_WORKERS` | int (positional, optional) | `config.max_workers` | Number of parallel download workers |
+
+Uses `config.yaml` for paths, date ranges, and site list.
+
+#### `collect_positive_data.py` — Download confirmed fall radar data
+
+Downloads NEXRAD data for confirmed meteorite fall events defined in `falls_events.yaml`.
+
+```bash
+python scripts/collect_positive_data.py [EVENT_NAME]
+```
+
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `EVENT_NAME` | str (positional, optional) | all events | Name of a specific fall event to download (must match a key in `falls_events.yaml`) |
+
+#### `convert_radar_to_images.py` — Convert radar files to images
+
+Converts raw NEXRAD Level II files into images for training.
+
+```bash
+python scripts/convert_radar_to_images.py [RAW_DIR] [BASE_DIR] [OUTPUT_DIR]
+```
+
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `RAW_DIR` | str (positional) | interactive prompt | Directory containing raw radar files |
+| `BASE_DIR` | str (positional) | interactive prompt | Base comparison directory |
+| `OUTPUT_DIR` | str (positional) | interactive prompt | Output directory for images |
+
+If fewer than 3 arguments are provided, the script prompts for input interactively.
+
+### Training
+
+#### `train_autoencoder.py` — Train the spatio-temporal autoencoder
+
+Trains the anomaly detection model on null radar data.
+
+```bash
+python scripts/train_autoencoder.py [CONFIG]
+```
+
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `CONFIG` | str (positional, optional) | `configs/train_poc.json` | Path to JSON training config file |
+
+The JSON config file supports the following parameters:
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `data_dir` | str | `data/null` | Training data directory |
+| `checkpoint_dir` | str | `checkpoints` | Model checkpoint directory |
+| `batch_size` | int | `4` | Training batch size |
+| `num_epochs` | int | `200` | Number of training epochs |
+| `learning_rate` | float | `1e-4` | Learning rate |
+| `val_split` | float | `0.15` | Validation split ratio |
+| `device` | str | `cuda` | Device (`cuda` or `cpu`) |
+| `mixed_precision` | bool | `true` | Use mixed precision training |
+| `image_size` | int | `128` | Radar image size (height=width) |
+| `spatial_latent_dim` | int | `512` | Spatial encoder latent dimension |
+| `temporal_hidden_dim` | int | `256` | Temporal LSTM hidden dimension |
+| `max_sweeps` | int | `6` | Maximum sweeps per sample |
+| `cache_dir` | str | `data/cache` | Preprocessed data cache directory |
+| `max_samples` | int | `null` | Limit number of samples (null = all) |
+| `preload_workers` | int | `16` | Number of data loading workers |
+| `fields` | list | `["reflectivity"]` | Radar fields to use |
+| `signal_weight` | float | `0.99` | Signal loss weight |
+| `resume` | str | `null` | Checkpoint path to resume from |
+
+### Evaluation
+
+#### `evaluate_autoencoder.py` — Evaluate model on positive/negative data
+
+Produces ROC curves, precision-recall curves, and threshold analysis.
+
+```bash
+python scripts/evaluate_autoencoder.py [CONFIG] [OPTIONS]
+```
+
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `CONFIG` | str (positional, optional) | `configs/train_poc.json` | Training config (for model architecture) |
+| `--positive_data_dir` | str | `data/positive` | Directory containing positive (fall) radar data |
+| `--output_dir` | str | `evaluation_results` | Directory to save evaluation results |
+| `--target_fpr` | float | `0.01` | Target false positive rate for threshold selection |
+| `--max_samples` | int | `None` | Limit samples per dataset (for quick testing) |
+
+#### `inspect_positives.py` — Analyze positive samples in detail
+
+Visualizes the top anomalous sweeps from positive (confirmed fall) data.
+
+```bash
+python scripts/inspect_positives.py [CONFIG] [OPTIONS]
+```
+
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `CONFIG` | str (positional, optional) | `configs/train_poc.json` | Training config |
+| `--positive_data_dir` | str | `data/positive` | Positive samples directory |
+| `--output_dir` | str | `evaluation_results/inspect_positives` | Output directory |
+| `--top_n` | int | `20` | Number of top anomalies to visualize |
+
+#### `visualize_model.py` — Visualize model reconstructions
+
+Shows original vs. reconstructed radar images and error maps.
+
+```bash
+python scripts/visualize_model.py [OPTIONS]
+```
+
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `--model_path` | str | `checkpoints/best_model.pt` | Path to trained model checkpoint |
+| `--data_dir` | str | `data/null` | Directory containing radar data |
+| `--output_dir` | str | `checkpoints/visualizations` | Output directory for visualizations |
+| `--num_samples` | int | `5` | Number of samples to visualize |
+| `--device` | str | `cuda`/`cpu` (auto) | Device to use |
+| `--image_size` | int | `128` | Image size for radar grid |
+
+### Utilities
+
+#### `save_run.py` — Archive a training run
+
+Copies model checkpoints, config, and training artifacts into a timestamped run directory.
+
+```bash
+python scripts/save_run.py [NAME] [OPTIONS]
+```
+
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `NAME` | str (positional, optional) | auto-generated | Run name |
+| `--config` | str | `configs/train_poc.json` | Training config used for this run |
+| `--runs_dir` | str | `runs` | Base directory for saved runs |
+
+#### `archive_results.py` — Archive detection results
+
+Archives processed radar data and detection results. No arguments.
+
+```bash
+python scripts/archive_results.py
+```
+
+#### `check_radar_fields.py` — Inspect radar file fields
+
+Prints available fields in radar files from `data/null`. No arguments.
+
+```bash
+python scripts/check_radar_fields.py
+```
+
+#### `debug_dataloader.py` — Debug the data loader
+
+Loads a batch from the dataset and saves a debug visualization. No arguments.
+
+```bash
+python scripts/debug_dataloader.py
+```
+
+#### `test_boto3_download.py` — Test S3 download connectivity
+
+Downloads a single NEXRAD file to verify AWS S3 access. No arguments.
+
+```bash
+python scripts/test_boto3_download.py
+```
 
 
 ## Anomaly Detection Approach
@@ -143,19 +327,13 @@ This allows:
 ### Implementation Status
 
 **Current State**:
-- ✅ Data collection infrastructure (AWS S3 integration)
-- ✅ Confirmed falls database (15 events with metadata)
-- ✅ Null data collection pipeline
-- ✅ Radar data processing (PyART integration)
-- 🔄 Anomaly detection models (in development)
-- 🔄 Temporal analysis framework (planned)
-
-**Next Steps**:
-1. Build training dataset from confirmed falls
-2. Implement autoencoder baseline for anomaly scoring
-3. Add temporal analysis across radar sweeps
-4. Validate on historical events
-5. Deploy for real-time continental monitoring
+- Data collection infrastructure (AWS S3 integration)
+- Confirmed falls database (15 events with metadata)
+- Null data collection pipeline
+- Radar data processing (PyART integration)
+- Spatio-temporal autoencoder model
+- Training and evaluation pipeline
+- Per-sweep anomaly scoring
 
 ## Data Sources
 
