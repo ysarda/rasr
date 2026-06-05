@@ -63,6 +63,19 @@ events:
     notes: "Very bright daytime bolide (superbolide) south of Atlanta. Detected by 8 radars (7 NEXRAD + 1 TDWR). ~1m diameter object at 13 km/s. Strong westward winds (~150 mph) created wide strewn field. Multiple meteorite recoveries. Originally named Blacksville."
     source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/mcdonough-ga"
 
+  # 2026 Events
+  - name: "Artemis II Splashdown"
+    date: "2026-04-11"
+    time_start_utc: "00:00:00"
+    time_end_utc: "00:45:00"
+    location:
+      latitude: 32.4175
+      longitude: -117.707
+    radar_stations:
+      - KNKX
+    notes: "Artemis II capsule 'Integrity' splashdown. Official splashdown 00:07:27 UTC April 11 (5:07 PM PDT April 10). ARES page lists date as April 10 at 0007 UTC which appears to be a date error (used local date with UTC time). Radar signature shows descent under parachutes."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/artemis-ii-splashdown"
+
   # 2024 Events
   - name: "Amo IN"
     date: "2024-12-10"
