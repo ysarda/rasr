@@ -98,6 +98,26 @@ python scripts/collect_positive_data.py [EVENT_NAME]
 |----------|------|---------|-------------|
 | `EVENT_NAME` | str (positional, optional) | all events | Name of a specific fall event to download (must match a key in `falls_events.yaml`) |
 
+#### `sample_null_data.py` — Stratified null-data sampler
+
+Builds a varied "normal" training set by sampling NEXRAD scans uniformly across **date** (stratified by month for seasonal coverage), **station** (uniform-random over the full site list, covering coastal/mountain/inland types), and **time of day**. This is the preferred way to build `data/null` — single-day sets cause the model to flag any unseen day/scene as anomalous.
+
+```bash
+python scripts/sample_null_data.py [OPTIONS]
+```
+
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `--num-samples` | int | `20000` | Target number of scans to download |
+| `--start-date` | str | `2025-06-01` | Start of date range (YYYY-MM-DD) |
+| `--end-date` | str | `2026-05-31` | End of date range (YYYY-MM-DD) |
+| `--out-dir` | str | `data/null` | Output directory |
+| `--workers` | int | `12` | Concurrent download workers |
+| `--per-draw` | int | `1` | Scans per (station, day) draw |
+| `--seed` | int | `None` | Random seed |
+
+Known fall-event dates (from `falls_events.yaml`) are automatically excluded to avoid contaminating the null set.
+
 #### `convert_radar_to_images.py` — Convert radar files to images
 
 Converts raw NEXRAD Level II files into images for training.
@@ -114,92 +134,76 @@ python scripts/convert_radar_to_images.py [RAW_DIR] [BASE_DIR] [OUTPUT_DIR]
 
 If fewer than 3 arguments are provided, the script prompts for input interactively.
 
-### Training
+### Detection
 
-#### `train_autoencoder.py` — Train the spatio-temporal autoencoder
+The detector is a classical, **training-free** pipeline run on real pyART-decoded
+NEXRAD moments: a per-gate signature filter, then a descent-coherence stage that
+links gate candidates into 3D tracks. See [Detection Approach](#detection-approach).
 
-Trains the anomaly detection model on null radar data.
+#### `signature_detector.py` — per-gate signature filter
+
+Stage 1 rejects weather by correlation coefficient (ρhv ≥ `rho-max` → discard);
+stage 2 keeps spatially isolated point returns. Pairs split-cut sweeps so each
+candidate carries ρhv (surveillance sweep) and velocity (Doppler sweep), converts
+to lat/lon/altitude with 4/3-earth geometry, and classifies kinematically.
 
 ```bash
-python scripts/train_autoencoder.py [CONFIG]
+python scripts/signature_detector.py FILE [OPTIONS]
 ```
 
 | Argument | Type | Default | Description |
 |----------|------|---------|-------------|
-| `CONFIG` | str (positional, optional) | `configs/train_poc.json` | Path to JSON training config file |
+| `FILE` | str (positional, required) | — | Path to a NEXRAD Level II file |
+| `--rho-max` | float | `0.85` | ρhv weather-rejection threshold (gates ≥ this are discarded) |
+| `--iso-db` | float | `8.0` | Reflectivity an isolated gate must exceed its neighbours by |
 
-The JSON config file supports the following parameters:
+#### `descent_coherence.py` — link candidates into descent tracks
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `data_dir` | str | `data/null` | Training data directory |
-| `checkpoint_dir` | str | `checkpoints` | Model checkpoint directory |
-| `batch_size` | int | `4` | Training batch size |
-| `num_epochs` | int | `200` | Number of training epochs |
-| `learning_rate` | float | `1e-4` | Learning rate |
-| `val_split` | float | `0.15` | Validation split ratio |
-| `device` | str | `cuda` | Device (`cuda` or `cpu`) |
-| `mixed_precision` | bool | `true` | Use mixed precision training |
-| `image_size` | int | `128` | Radar image size (height=width) |
-| `spatial_latent_dim` | int | `512` | Spatial encoder latent dimension |
-| `temporal_hidden_dim` | int | `256` | Temporal LSTM hidden dimension |
-| `max_sweeps` | int | `6` | Maximum sweeps per sample |
-| `cache_dir` | str | `data/cache` | Preprocessed data cache directory |
-| `max_samples` | int | `null` | Limit number of samples (null = all) |
-| `preload_workers` | int | `16` | Number of data loading workers |
-| `fields` | list | `["reflectivity"]` | Radar fields to use |
-| `signal_weight` | float | `0.99` | Signal loss weight |
-| `resume` | str | `null` | Checkpoint path to resume from |
-
-### Evaluation
-
-#### `evaluate_autoencoder.py` — Evaluate model on positive/negative data
-
-Produces ROC curves, precision-recall curves, and threshold analysis.
+Clusters the filter's candidate gates (grid-hash, near-linear) and scores each
+cluster for physical coherence: multiple elevation beams, altitude span,
+elevation↔altitude monotonicity, compactness, and non-met ρhv. Returns ranked
+tracks with a descent profile.
 
 ```bash
-python scripts/evaluate_autoencoder.py [CONFIG] [OPTIONS]
+python scripts/descent_coherence.py FILE [OPTIONS]
 ```
 
 | Argument | Type | Default | Description |
 |----------|------|---------|-------------|
-| `CONFIG` | str (positional, optional) | `configs/train_poc.json` | Training config (for model architecture) |
-| `--positive_data_dir` | str | `data/positive` | Directory containing positive (fall) radar data |
-| `--output_dir` | str | `evaluation_results` | Directory to save evaluation results |
-| `--target_fpr` | float | `0.01` | Target false positive rate for threshold selection |
-| `--max_samples` | int | `None` | Limit samples per dataset (for quick testing) |
+| `FILE` | str (positional, required) | — | Path to a NEXRAD Level II file |
+| `--corridor-km` | float | `10.0` | Horizontal link radius for clustering candidates into a track |
+| `--min-alt-m` | float | `300.0` | Surface floor; candidates below this are dropped (no altitude *seed*) |
+| `--top` | int | `5` | Number of top tracks to print |
 
-#### `inspect_positives.py` — Analyze positive samples in detail
+#### `eval_signature_detector.py` — evaluate against known events
 
-Visualizes the top anomalous sweeps from positive (confirmed fall) data.
+Runs the detector over `data/positive` (events keyed by station+date from
+`falls_events.yaml`) and a sample of `data/null`, then reports per-event recall
+and the recall-vs-false-alarm tradeoff over a score-threshold sweep.
 
 ```bash
-python scripts/inspect_positives.py [CONFIG] [OPTIONS]
+python scripts/eval_signature_detector.py [OPTIONS]
 ```
 
 | Argument | Type | Default | Description |
 |----------|------|---------|-------------|
-| `CONFIG` | str (positional, optional) | `configs/train_poc.json` | Training config |
-| `--positive_data_dir` | str | `data/positive` | Positive samples directory |
-| `--output_dir` | str | `evaluation_results/inspect_positives` | Output directory |
-| `--top_n` | int | `20` | Number of top anomalies to visualize |
+| `--events` | str | `falls_events.yaml` | Event truth file |
+| `--positive_dir` | str | `data/positive` | Positive (event) data |
+| `--null_dir` | str | `data/null` | Null data for false-alarm rate |
+| `--dist_km` | float | `25.0` | Hit radius around the known event location |
+| `--null_sample` | int | `120` | Number of null scans to score |
+| `--corridor_km` | float | `10.0` | Coherence link radius |
+| `--min_alt_m` | float | `300.0` | Surface floor |
+| `--workers` | int | `10` | Parallel worker processes |
 
-#### `visualize_model.py` — Visualize model reconstructions
+#### `download_events.py` — fetch event data
 
-Shows original vs. reconstructed radar images and error maps.
+Downloads NEXRAD Level II files for the re-entry events (KBRO/KGSP/KMRX/KAMX)
+into `data/positive/`. No arguments.
 
 ```bash
-python scripts/visualize_model.py [OPTIONS]
+python scripts/download_events.py
 ```
-
-| Argument | Type | Default | Description |
-|----------|------|---------|-------------|
-| `--model_path` | str | `checkpoints/best_model.pt` | Path to trained model checkpoint |
-| `--data_dir` | str | `data/null` | Directory containing radar data |
-| `--output_dir` | str | `checkpoints/visualizations` | Output directory for visualizations |
-| `--num_samples` | int | `5` | Number of samples to visualize |
-| `--device` | str | `cuda`/`cpu` (auto) | Device to use |
-| `--image_size` | int | `128` | Image size for radar grid |
 
 #### `visualize_sweeps_3d.py` — 3D sweep visualization
 
@@ -219,20 +223,6 @@ python scripts/visualize_sweeps_3d.py FILE [OPTIONS]
 
 ### Utilities
 
-#### `save_run.py` — Archive a training run
-
-Copies model checkpoints, config, and training artifacts into a timestamped run directory.
-
-```bash
-python scripts/save_run.py [NAME] [OPTIONS]
-```
-
-| Argument | Type | Default | Description |
-|----------|------|---------|-------------|
-| `NAME` | str (positional, optional) | auto-generated | Run name |
-| `--config` | str | `configs/train_poc.json` | Training config used for this run |
-| `--runs_dir` | str | `runs` | Base directory for saved runs |
-
 #### `archive_results.py` — Archive detection results
 
 Archives processed radar data and detection results. No arguments.
@@ -249,14 +239,6 @@ Prints available fields in radar files from `data/null`. No arguments.
 python scripts/check_radar_fields.py
 ```
 
-#### `debug_dataloader.py` — Debug the data loader
-
-Loads a batch from the dataset and saves a debug visualization. No arguments.
-
-```bash
-python scripts/debug_dataloader.py
-```
-
 #### `test_boto3_download.py` — Test S3 download connectivity
 
 Downloads a single NEXRAD file to verify AWS S3 access. No arguments.
@@ -266,59 +248,66 @@ python scripts/test_boto3_download.py
 ```
 
 
-## Anomaly Detection Approach
+## Detection Approach
 
 ### The Challenge
 
-Meteorite falls are **extremely rare events** in radar data:
-- Only ~0.3% of re-entries are detected through any means
-- Millions of radar scans per day across 159 stations
-- ~1 in millions of scans contain meteorite signatures
-- Class imbalance makes this a textbook anomaly detection problem
+Re-entry / fall signatures are **extremely rare and compact**:
+- Millions of radar scans per day across 159 stations; a fall touches a handful of gates in 1–2 volumes
+- The target is a small, hard, non-meteorological point return embedded in ordinary weather and clutter
 
-### Current Development Focus
+An earlier **reconstruction-error autoencoder** was tried and removed: at the known
+fall locations its reconstruction error was *lower* than at random weather echoes
+(ROC AUC ≈ 0.33–0.52). An autoencoder reconstructs smooth, compact point targets
+trivially and instead flags busy weather — anti-correlated with the goal. The
+current approach is a physics-based signature detector instead of a learned one.
 
-RASR is being rebuilt from the ground up with a focus on **semi-supervised anomaly detection**:
+### Signature Filter (stage 1)
 
-#### Data Collection Strategy
-1. **Positive Examples (Confirmed Falls)**:
-   - 15+ confirmed meteorite fall events from NASA ARES database
-   - Events include: Pebble AL, Hamburg MI, McDonough GA, Clanton Well AZ (first US Martian meteorite!)
-   - Each event has precise UTC time windows, radar stations, and geographic coordinates
-   - Stored in `data/positive/` for training
+Per-gate, per-sweep, on real pyART-decoded moments (`signature_detector.py`):
 
-2. **Null Examples (Normal Radar Patterns)**:
-   - Random samples from dates with no known events
-   - Weather phenomena (rain, snow, ground clutter)
-   - Biological signatures (birds, insects)
-   - Atmospheric noise patterns
-   - Stored in `data/null/` for training
+- **ρhv (correlation coefficient) weather rejection** — the primary discriminant.
+  Rain/snow/hail are clouds of similar hydrometeors (ρhv > 0.97); metal, parachute
+  fabric, ablating rock and debris are irregular (ρhv ≈ 0.2–0.7). Gates with
+  ρhv ≥ 0.85 are discarded, removing ~99% of weather.
+- **Spatial isolation** — a re-entering object is a point source: its reflectivity
+  must exceed its neighbours by > 8 dBZ. Relaxed when ρhv strongly confirms non-met.
+- **Split-cut pairing & geometry** — ρhv lives in the surveillance sweep, velocity in
+  the Doppler sweep; they are paired by elevation. Gates are converted to
+  lat/lon/**altitude** with the 4/3-earth beam model, then classified kinematically
+  (meteor / intact_aso / debris).
 
-#### Anomaly Detection Framework
+The filter recovers real signatures (e.g. the Artemis II capsule at 2.9 km from
+splashdown, ρhv 0.38, −22 m/s at 7.6 km altitude) but is permissive on its own —
+sea/ground clutter and biota are all low-ρhv too.
 
-**One-Class Learning**:
-- Train models to learn "what normal looks like" from abundant null data
-- Falls are so rare that contamination in null data (~0.0006%) doesn't affect learned distribution
-- Confirmed falls serve as validation set to measure detection capability
+### Descent-Coherence Stage (stage 2)
 
-**Advantages**:
-- No need to verify every scan is truly null
-- Leverages extreme class imbalance as a feature, not a bug
-- Scales to continental-wide monitoring
-- Can detect novel fall signatures not in training set
+`descent_coherence.py` links the filter's candidate gates into 3D tracks (grid-hash
+clustering, near-linear) and scores each for physical coherence:
 
-**Potential Approaches**:
-- Autoencoders: Learn to reconstruct normal patterns, falls have high reconstruction error
-- Isolation Forest: Anomalies are easier to isolate in feature space
-- One-Class SVM: Learn decision boundary around normal data
-- Temporal analysis: Leverage multi-sweep patterns unique to falling objects
+- **multi-beam presence** — a descending object is caught by several elevation beams
+  across the ~5-minute volume; a clutter gate sits in one beam.
+- **altitude span & elevation↔altitude monotonicity** — one body seen by several beams.
+- **compactness** — a real object is a thin structure (few gates per beam, small
+  per-beam extent); extended clutter blobs are penalised to ~0.
+- **non-met ρhv** — lower ρhv scores higher.
+
+There is **no altitude seed**: low-altitude meteorite falls are kept; the coherence
+score itself rejects surface clutter. Output is a ranked, soft-thresholded score so
+few-beam events still surface (at lower score).
+
+**Known limitation:** within a single volume, **aircraft** produce nearly identical
+compact, low-ρhv, multi-beam coherent tracks and are the dominant false-alarm
+source. Separating them needs either a horizontal-speed gate (aircraft traverse far
+between beams) or multi-scan temporal persistence, or operating in a
+location/time-cued mode against externally predicted re-entries.
 
 #### Multi-Field Integration
-Incorporating multiple radar products improves discrimination:
-- **Velocity**: Primary signature of high-speed re-entry
-- **Reflectivity**: Distinguishes solid objects from weather
-- **Spectrum Width**: Measures turbulence and fragmentation
-- **Correlation Coefficient**: Separates meteorological from non-meteorological targets
+- **Correlation coefficient (ρhv)**: separates non-meteorological targets from weather (primary)
+- **Velocity**: approach/recession speed; kinematic class and aircraft discrimination
+- **Reflectivity**: RCS proxy / isolation test
+- **Spectrum width**: fragmentation and tumbling
 
 ### Kinematic Validation
 
@@ -344,12 +333,14 @@ This allows:
 
 **Current State**:
 - Data collection infrastructure (AWS S3 integration)
-- Confirmed falls database (15 events with metadata)
-- Null data collection pipeline
-- Radar data processing (PyART integration)
-- Spatio-temporal autoencoder model
-- Training and evaluation pipeline
-- Per-sweep anomaly scoring
+- Confirmed event database (meteorite falls + anthropogenic re-entries: Artemis II, Starship F5, Crew-7, ISS EP9)
+- Stratified null-data sampler (seasonal × station coverage)
+- Radar data processing (PyART integration), real AR2V moment decoding
+- Signature filter: ρhv weather rejection + spatial isolation + 4/3-earth geometry
+- Descent-coherence stage: grid-hash track linking + physical coherence scoring
+- Event evaluation: per-event recall and recall-vs-false-alarm sweep against known locations
+
+**Open problem:** single-scan aircraft rejection (horizontal-speed gate / multi-scan tracking / cued operation).
 
 ## Data Sources
 

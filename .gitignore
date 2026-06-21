@@ -170,3 +170,7 @@ test/*
 training/*
 checkpoints/
 runs/
+rasr-project/
+rasr-project.zip
+event_validation/
+evaluation_results/

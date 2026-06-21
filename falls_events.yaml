@@ -269,6 +269,46 @@ events:
     notes: "FIRST US MARTIAN METEORITE FALL! Ten shergottite martian meteorites recovered. Long-lasting bolide west of Phoenix. 0.05g fragments at 10km altitude. Displayed at Tucson Gem & Mineral Show. Corrected strewn field models (DFM 03/04) available."
     source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/clanton-well-az"
 
+  # Anthropogenic re-entry / landing events (ASOs) — different signature class
+  # than natural meteorite falls; used to tune the signature + descent-coherence
+  # detector. Truth locations from cross-referenced public records.
+  - name: "Starship F5 Booster"
+    date: "2024-10-13"
+    time_start_utc: "12:10:00"
+    time_end_utc: "12:40:00"
+    location:
+      latitude: 25.997
+      longitude: -97.155
+    radar_stations:
+      - KBRO  # Brownsville, TX (~28 km from Starbase)
+    notes: "SpaceX Starship Flight 5 Super Heavy booster return and tower catch at Starbase, TX. Liftoff ~12:25:32 UTC, catch ~12:31:56 UTC. Powered descent of a very large metallic body toward the catch tower. Anthropogenic re-entry test case."
+    source_url: "https://www.spacex.com/launches/"
+
+  - name: "Crew-7 Trunk"
+    date: "2024-05-22"
+    time_start_utc: "23:45:00"
+    time_end_utc: "00:20:00"
+    location:
+      latitude: 35.533
+      longitude: -82.836
+    radar_stations:
+      - KGSP  # Greer, SC
+      - KMRX  # Morristown, TN
+    notes: "SpaceX Crew Dragon Endurance (Crew-7) trunk uncontrolled re-entry; carbon-fiber composite debris recovered near Canton NC. Crew-7 deliverable triangulation was a null result (stations could not be reconciled). Hard test case."
+    source_url: "https://ares.jsc.nasa.gov/"
+
+  - name: "ISS EP9 Pallet"
+    date: "2024-03-08"
+    time_start_utc: "10:00:00"
+    time_end_utc: "12:00:00"
+    location:
+      latitude: 26.14
+      longitude: -81.8
+    radar_stations:
+      - KAMX  # Miami, FL
+    notes: "ISS EP9 battery pallet (Inconel stanchions) re-entry over SW Florida; a fragment struck a home in Naples. Documented sub-threshold/null radar case: small dense fragments below NEXRAD detection at range. Hard negative for the detector."
+    source_url: "https://ares.jsc.nasa.gov/"
+
 # Notes:
 # - time_start_utc and time_end_utc define the data collection window
 # - Typically set to ±30-90 minutes around the event time
