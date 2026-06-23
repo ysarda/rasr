@@ -23,6 +23,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 import pyart
 import yaml
 
@@ -121,7 +122,9 @@ def render_event(name, idx, path, dist, profile, truth, out_dir):
             if abs(p['elev'] - cand['elev']) < 0.6:
                 pex, pny = truth_xy(rlat, rlon, p['lat'], p['lon'])
                 ax.plot(pex, pny, 'o', mfc='none', mec='white', mew=1.6, ms=12)
-        ax.plot(tex, tny, '*', color='red', ms=20, mec='black', label='ARES truth')
+        # ARES truth as an open box so the signature underneath stays visible
+        ax.add_patch(Rectangle((tex - 4, tny - 4), 8, 8, fill=False,
+                               edgecolor='red', lw=1.8))
         ax.set_xlim(cex - W, cex + W); ax.set_ylim(cny - W, cny + W)
         ax.set_aspect('equal')
         ax.set_title(f"{field}  (el {radar.fixed_angle['data'][sweep]:.2f}°)")

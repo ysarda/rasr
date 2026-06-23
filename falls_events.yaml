@@ -194,17 +194,6 @@ events:
     notes: "Daytime fireball west of Anchorage. 4 min radar detection span. Three sweeps showed 'candy striping' indicating 100g+ meteorites. Azimuth ~294°. Vegetated glacial terrain with rocky areas for recovery."
     source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/whitefish-lake-ak"
 
-  - name: "Muses Mills KY"
-    date: "2025-03-18"
-    time_start_utc: "03:00:00"
-    time_end_utc: "04:00:00"
-    location:
-      latitude: 38.35011
-      longitude: -83.547775
-    radar_stations: []  # Single uncertain signature
-    notes: "Single radar signature (possibly spurious). 112 eyewitness reports across KY/OH. Dense radar coverage but signature in only one radar reduces confidence. Heavily wooded terrain. Low certainty event. AMS Event #1624 of 2025."
-    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/muses-mills-ky"
-
   - name: "Codyville ME"
     date: "2025-02-21"
     time_start_utc: "00:45:00"
@@ -308,6 +297,482 @@ events:
       - KAMX  # Miami, FL
     notes: "ISS EP9 battery pallet (Inconel stanchions) re-entry over SW Florida; a fragment struck a home in Naples. Documented sub-threshold/null radar case: small dense fragments below NEXRAD detection at range. Hard negative for the detector."
     source_url: "https://ares.jsc.nasa.gov/"
+
+  # Historical well-documented fall (pre-dual-pol: reflectivity/velocity only, no rho_hv/Zdr)
+  - name: "Park Forest IL"
+    date: "2003-03-27"
+    time_start_utc: "05:30:00"
+    time_end_utc: "06:10:00"
+    location:
+      latitude: 41.487994
+      longitude: -87.679289
+    radar_stations:
+      - KMKX  # Milwaukee, WI (first detection)
+      - KLOT  # Chicago, IL (closest to fall)
+      - KILX  # Lincoln, IL
+      - KIND  # Indianapolis, IN
+      - KIWX  # Ft. Wayne, IN
+      - KGRR  # Grand Rapids, MI
+    radar_details:
+      - station: KMKX
+        first_signature: "05:50:16"
+        final_signature: "05:57:39"
+        sweep_time: "05:46:00"
+        sweep_angle: 4.2
+        altitude_m: 15520
+    notes: "Large nighttime fall south of Chicago (~18 kg recovered, fragments struck homes). Detected by 6 NEXRAD radars across 12 sweeps, 05:50-05:58 UTC; first detection KMKX 4.2deg at 15.5 km altitude. Classic well-documented radar-detected fall, but PRE-DUAL-POL (2003): no rho_hv or differential_reflectivity."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/park-forest-illinois"
+
+  - name: "Cockburn Island ON"
+    date: "2026-06-20"
+    time_start_utc: "23:48:00"
+    time_end_utc: "00:28:00"
+    location:
+      latitude: 45.939476
+      longitude: -83.324361
+    radar_stations:
+      - KAPX  # nearest NEXRAD, 158 km
+    radar_details:
+      - station: KAPX
+        sweep_time: "00:08:00"
+    notes: "18 sweeps, 4 NEXRAD. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/cockburn-island-ontario"
+
+  - name: "Cape Cod Bay MA"
+    date: "2026-05-30"
+    time_start_utc: "17:46:00"
+    time_end_utc: "18:26:00"
+    location:
+      latitude: 41.87754
+      longitude: -70.35239
+    radar_stations:
+      - KBOX  # nearest NEXRAD, 65 km
+    radar_details:
+      - station: KBOX
+        sweep_time: "18:06:00"
+    notes: "iron, fell in Cape Cod Bay (water). Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/cape-cod-bay-ma"
+
+  - name: "Houston TX"
+    date: "2026-03-21"
+    time_start_utc: "21:20:00"
+    time_end_utc: "22:00:00"
+    location:
+      latitude: 30.048492
+      longitude: -95.47391
+    radar_stations:
+      - KHGX  # nearest NEXRAD, 75 km
+    radar_details:
+      - station: KHGX
+        sweep_time: "21:40:00"
+    notes: "~1 ton meteoroid, ~8 min radar; KHGX. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/houston-tx"
+
+  - name: "Windfall OH"
+    date: "2026-03-17"
+    time_start_utc: "12:36:00"
+    time_end_utc: "13:16:00"
+    location:
+      latitude: 41.057158
+      longitude: -81.800047
+    radar_stations:
+      - KCLE  # nearest NEXRAD, 40 km
+    radar_details:
+      - station: KCLE
+        sweep_time: "12:56:00"
+    notes: "achondrites recovered. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/windfall-oh"
+
+  - name: "CZ-4C Rocket Body MN"
+    date: "2026-01-24"
+    time_start_utc: "06:00:00"
+    time_end_utc: "06:40:00"
+    location:
+      latitude: 46.62914
+      longitude: -93.23138
+    radar_stations:
+      - KDLH  # nearest NEXRAD, 81 km
+    radar_details:
+      - station: KDLH
+        sweep_time: "06:20:00"
+    notes: "Chinese rocket body re-entry, linear track. Kind: debris."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/cz-4c-rocket-body-re-entry-minnesota"
+
+  - name: "Gunsight Butte AZ"
+    date: "2023-11-23"
+    time_start_utc: "02:35:00"
+    time_end_utc: "03:15:00"
+    location:
+      latitude: 33.991066
+      longitude: -110.896376
+    radar_stations:
+      - KFSX  # nearest NEXRAD, 71 km
+    radar_details:
+      - station: KFSX
+        sweep_time: "02:55:00"
+    notes: "possible fall, no GLM, rough time. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/gunsight-butte-az"
+
+  - name: "Kingsport TN 02"
+    date: "2023-08-02"
+    time_start_utc: "05:53:00"
+    time_end_utc: "06:33:00"
+    location:
+      latitude: 36.587573
+      longitude: -82.614954
+    radar_stations:
+      - KMRX  # nearest NEXRAD, 84 km
+    radar_details:
+      - station: KMRX
+        sweep_time: "06:13:00"
+        altitude_m: 2400
+    notes: "single signature 2.4 km, ~36 g. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/kingsport-tn-02"
+
+  - name: "Hopewell NJ"
+    date: "2023-05-08"
+    time_start_utc: "16:03:00"
+    time_end_utc: "16:43:00"
+    location:
+      latitude: 40.3069
+      longitude: -74.84
+    radar_stations:
+      - KDIX  # nearest NEXRAD, 54 km
+    radar_details:
+      - station: KDIX
+        sweep_time: "16:23:00"
+    notes: "small, TDWR-heavy detection. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/hopewell-nj"
+
+  - name: "Colorado Debris"
+    date: "2023-04-27"
+    time_start_utc: "08:32:00"
+    time_end_utc: "09:12:00"
+    location:
+      latitude: 39.053202
+      longitude: -103.479592
+    radar_stations:
+      - KPUX  # nearest NEXRAD, 90 km
+    radar_details:
+      - station: KPUX
+        sweep_time: "08:52:00"
+    notes: "SpaceX Crew-5 trunk re-entry SE of Limon CO. Kind: debris."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/colorado-debris-de-orbit"
+
+  - name: "Waite ME"
+    date: "2023-04-08"
+    time_start_utc: "15:37:00"
+    time_end_utc: "16:17:00"
+    location:
+      latitude: 45.369249
+      longitude: -67.516169
+    radar_stations:
+      - KCBW  # nearest NEXRAD, 78 km
+    radar_details:
+      - station: KCBW
+        sweep_time: "15:57:00"
+        altitude_m: 7440
+    notes: "KCBW 7440->2376 m over 4m40s. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/waite-me"
+
+  - name: "El Sauz TX"
+    date: "2023-02-15"
+    time_start_utc: "23:02:00"
+    time_end_utc: "23:42:00"
+    location:
+      latitude: 26.592252
+      longitude: -98.629942
+    radar_stations:
+      - KBRO  # nearest NEXRAD, 142 km
+    radar_details:
+      - station: KBRO
+        sweep_time: "23:22:00"
+    notes: "~1000 lb meteoroid. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/el-sauz-tx"
+
+  - name: "Muskogee OK"
+    date: "2023-01-20"
+    time_start_utc: "09:18:00"
+    time_end_utc: "09:58:00"
+    location:
+      latitude: 35.668006
+      longitude: -95.358036
+    radar_stations:
+      - KINX  # nearest NEXRAD, 59 km
+    radar_details:
+      - station: KINX
+        sweep_time: "09:38:00"
+    notes: "5 NEXRAD, slow fireball to low altitude. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/muskogee-ok"
+
+  - name: "Lake Ontario WJ1"
+    date: "2022-11-19"
+    time_start_utc: "08:07:00"
+    time_end_utc: "08:47:00"
+    location:
+      latitude: 43.182036
+      longitude: -79.557401
+    radar_stations:
+      - KBUF  # nearest NEXRAD, 72 km
+    radar_details:
+      - station: KBUF
+        sweep_time: "08:27:00"
+        altitude_m: 15000
+    notes: "KBUF 15 km->850 m, fell in Lake Ontario. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/lake-ontario-meteoroid-2022-wj1"
+
+  - name: "Junction City GA"
+    date: "2022-09-26"
+    time_start_utc: "03:45:00"
+    time_end_utc: "04:25:00"
+    location:
+      latitude: 32.629034
+      longitude: -84.396568
+    radar_stations:
+      - KFFC  # nearest NEXRAD, 83 km
+    radar_details:
+      - station: KFFC
+        sweep_time: "04:05:00"
+        altitude_m: 16027
+    notes: "KMXX 16027 m, 5m31s. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/junction-city-ga"
+
+  - name: "Great Salt Lake UT"
+    date: "2022-08-13"
+    time_start_utc: "14:12:00"
+    time_end_utc: "14:52:00"
+    location:
+      latitude: 40.733638
+      longitude: -112.419765
+    radar_stations:
+      - KMTX  # nearest NEXRAD, 59 km
+    radar_details:
+      - station: KMTX
+        sweep_time: "14:32:00"
+        altitude_m: 6360
+    notes: "6360 m, fell in/near Great Salt Lake. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/great-salt-lake-ut"
+
+  - name: "Cranfield MS"
+    date: "2022-04-27"
+    time_start_utc: "12:44:00"
+    time_end_utc: "13:24:00"
+    location:
+      latitude: 31.553773
+      longitude: -91.181204
+    radar_stations:
+      - KDGX  # nearest NEXRAD, 139 km
+    radar_details:
+      - station: KDGX
+        sweep_time: "13:04:00"
+        altitude_m: 11257
+    notes: "KDGX 11257 m, H3-5 chondrite. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/cranfield-ms"
+
+  - name: "Patch Grove WI"
+    date: "2022-01-20"
+    time_start_utc: "12:28:00"
+    time_end_utc: "13:08:00"
+    location:
+      latitude: 42.939029
+      longitude: -90.972408
+    radar_stations:
+      - KARX  # nearest NEXRAD, 100 km
+    radar_details:
+      - station: KARX
+        sweep_time: "12:48:00"
+    notes: "KARX/KGRB. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/patch-grove-wi"
+
+  - name: "Yakima WA Debris"
+    date: "2021-03-26"
+    time_start_utc: "03:34:00"
+    time_end_utc: "04:14:00"
+    location:
+      latitude: 46.83516
+      longitude: -120.031275
+    radar_stations:
+      - KPDT  # nearest NEXRAD, 156 km
+    radar_details:
+      - station: KPDT
+        sweep_time: "03:54:00"
+        altitude_m: 8000
+    notes: "SpaceX F9 upper stage re-entry. Kind: debris."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/yakima-wa-debris-de-orbit"
+
+  - name: "Prescott AZ"
+    date: "2020-02-16"
+    time_start_utc: "13:58:00"
+    time_end_utc: "14:38:00"
+    location:
+      latitude: 34.717562
+      longitude: -112.747969
+    radar_stations:
+      - KFSX  # nearest NEXRAD, 143 km
+    radar_details:
+      - station: KFSX
+        sweep_time: "14:18:00"
+        altitude_m: 16400
+    notes: "KFSX 16400 m, probable. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/prescott-az"
+
+  - name: "St Louis MO"
+    date: "2019-11-12"
+    time_start_utc: "02:36:00"
+    time_end_utc: "03:16:00"
+    location:
+      latitude: 38.769045
+      longitude: -91.310246
+    radar_stations:
+      - KLSX  # nearest NEXRAD, 55 km
+    radar_details:
+      - station: KLSX
+        sweep_time: "02:56:00"
+        altitude_m: 1729
+    notes: "KLSX 1729 m, low altitude. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/st-louis-missouri"
+
+  - name: "White Springs FL"
+    date: "2019-04-04"
+    time_start_utc: "03:45:00"
+    time_end_utc: "04:25:00"
+    location:
+      latitude: 30.40967
+      longitude: -82.568493
+    radar_stations:
+      - KVAX  # nearest NEXRAD, 68 km
+    radar_details:
+      - station: KVAX
+        sweep_time: "04:05:00"
+        altitude_m: 4029
+    notes: "KVAX/KJAX 4029 m, probable. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/white-springs-florida"
+
+  - name: "Vinales Cuba"
+    date: "2019-02-01"
+    time_start_utc: "17:58:00"
+    time_end_utc: "18:38:00"
+    location:
+      latitude: 22.613415
+      longitude: -83.7129
+    radar_stations:
+      - KBYX  # nearest NEXRAD, 301 km
+    radar_details:
+      - station: KBYX
+        sweep_time: "18:18:00"
+        altitude_m: 10600
+    notes: "KBYX at ~300 km, Cuba. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/vinales-cuba"
+
+  - name: "Hanford CA Debris"
+    date: "2018-10-11"
+    time_start_utc: "07:55:00"
+    time_end_utc: "08:35:00"
+    location:
+      latitude: 36.324251
+      longitude: -119.619102
+    radar_stations:
+      - KHNX  # nearest NEXRAD, 2 km
+    radar_details:
+      - station: KHNX
+        sweep_time: "08:15:00"
+    notes: "satellite re-entry, ~200 km debris path. Kind: debris."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/hanford-ca-satellite-de-orbit"
+
+  - name: "Glendale AZ"
+    date: "2018-07-27"
+    time_start_utc: "03:07:00"
+    time_end_utc: "03:47:00"
+    location:
+      latitude: 33.683881
+      longitude: -112.222128
+    radar_stations:
+      - KFSX  # nearest NEXRAD, 137 km
+    radar_details:
+      - station: KFSX
+        sweep_time: "03:27:00"
+        altitude_m: 3710
+    notes: "KIWA 3710 m. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/glendale-arizona"
+
+  - name: "Dishchiibikoh AZ"
+    date: "2016-06-02"
+    time_start_utc: "10:37:00"
+    time_end_utc: "11:17:00"
+    location:
+      latitude: 33.855281
+      longitude: -110.654072
+    radar_stations:
+      - KFSX  # nearest NEXRAD, 94 km
+    radar_details:
+      - station: KFSX
+        sweep_time: "10:57:00"
+        altitude_m: 9740
+    notes: "KFSX 9740 m, LL7 chondrite. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/dishchiibikoh-arizona"
+
+  - name: "Mount Blanco TX"
+    date: "2016-02-18"
+    time_start_utc: "03:26:00"
+    time_end_utc: "04:06:00"
+    location:
+      latitude: 33.754207
+      longitude: -101.248789
+    radar_stations:
+      - KLBB  # nearest NEXRAD, 53 km
+    radar_details:
+      - station: KLBB
+        sweep_time: "03:46:00"
+        altitude_m: 7265
+    notes: "7265 m, L5 chondrite. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/mount-blanco-texas"
+
+  - name: "Osceola FL"
+    date: "2016-01-24"
+    time_start_utc: "15:07:00"
+    time_end_utc: "15:47:00"
+    location:
+      latitude: 30.463389
+      longitude: -82.485716
+    radar_stations:
+      - KVAX  # nearest NEXRAD, 68 km
+    radar_details:
+      - station: KVAX
+        sweep_time: "15:27:00"
+        altitude_m: 4380
+    notes: "4380 m, L6, 11 sweeps. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/osceola-florida"
+
+  - name: "Creston CA"
+    date: "2015-10-24"
+    time_start_utc: "05:29:00"
+    time_end_utc: "06:09:00"
+    location:
+      latitude: 35.572766
+      longitude: -120.473317
+    radar_stations:
+      - KVBX  # nearest NEXRAD, 82 km
+    radar_details:
+      - station: KVBX
+        sweep_time: "05:49:00"
+        altitude_m: 16460
+    notes: "16460 m, L6, ~1.7x Park Forest mass. Kind: fall."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/creston-california"
+
+  - name: "Gaojing De-Orbit"
+    date: "2024-12-22"
+    time_start_utc: "03:48:00"
+    time_end_utc: "04:28:00"
+    location:
+      latitude: 33.820552
+      longitude: -90.310355
+    radar_stations:
+      - KDGX  # nearest NEXRAD, 174 km
+    radar_details:
+      - station: KDGX
+        sweep_time: "04:08:00"
+    notes: "satellite re-entry, LA->MO linear track. Kind: debris."
+    source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/gaojing-1-02-de-orbit"
 
 # Notes:
 # - time_start_utc and time_end_utc define the data collection window
