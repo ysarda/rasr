@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2026-03-21_Houston_TX</folder>
+  <filename>KHGX_214954Z__cross_correlation_ratio__el0.9.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>539</xmin><ymin>521</ymin><xmax>699</xmax><ymax>837</ymax></bndbox>
+  </object>
+</annotation>

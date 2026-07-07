@@ -40,23 +40,25 @@ def track_min_dist(track, lat, lon):
 
 
 def _worker(args):
-    """Returns (path, max_score_any, best_near_score, best_near_dist)."""
+    """Returns (path, max_score_any, best_near_score, best_near_dist, error)."""
     path, truth, corridor, min_alt = args
     try:
         tracks = detect_tracks(path, corridor_km=corridor, min_alt_m=min_alt)
-    except Exception:
-        return path, 0.0, 0.0, None
+    except Exception as e:
+        return path, 0.0, 0.0, None, None, f"{type(e).__name__}: {e}"
     if not tracks:
-        return path, 0.0, 0.0, None
+        return path, 0.0, 0.0, None, None, None
     max_any = max(t['score'] for t in tracks)
-    best_near, best_dist = 0.0, None
+    best_near, best_dist, min_dist = 0.0, None, None
     if truth is not None:
         lat, lon, dist_km = truth
         for t in tracks:
             d = track_min_dist(t, lat, lon)
+            if min_dist is None or d < min_dist:
+                min_dist = d
             if d <= dist_km and t['score'] > best_near:
                 best_near, best_dist = t['score'], d
-    return path, max_any, best_near, best_dist
+    return path, max_any, best_near, best_dist, min_dist, None
 
 
 def main():
@@ -99,16 +101,29 @@ def main():
 
     # run positives
     best_per_event = {}   # name -> (score, dist, station)
+    min_dist_event = {}   # name -> closest track member to truth (any score)
+    errors = []
     with ProcessPoolExecutor(max_workers=args.workers) as ex:
         futs = {ex.submit(_worker, j[:4]): j for j in pos_jobs}
         for fut in as_completed(futs):
             j = futs[fut]
             name = j[4]
-            _, _max, near, dist = fut.result()
+            _, _max, near, dist, min_d, err = fut.result()
+            if err:
+                errors.append((name, os.path.basename(j[0]), err))
+                continue
+            if min_d is not None:
+                cur_d = min_dist_event.get(name)
+                if cur_d is None or min_d < cur_d:
+                    min_dist_event[name] = min_d
             cur = best_per_event.get(name)
             if cur is None or near > cur[0]:
                 st, _ = parse_station_date(os.path.basename(j[0]))
                 best_per_event[name] = (near, dist, st)
+    if errors:
+        print(f"\n!! {len(errors)} positive files FAILED (excluded from best-score table):")
+        for name, fn, err in errors:
+            print(f"   {name:<26}{fn:<28}{err[:60]}")
 
     # run null
     null_files = []
@@ -118,23 +133,31 @@ def main():
             null_files.append(fl[0])
     null_files = null_files[:args.null_sample]
     null_scores = []
+    null_errors = 0
     with ProcessPoolExecutor(max_workers=args.workers) as ex:
         futs = [ex.submit(_worker, (f, None, args.corridor_km, args.min_alt_m)) for f in null_files]
         for fut in as_completed(futs):
-            _, max_any, _, _ = fut.result()
+            _, max_any, _, _, _, err = fut.result()
+            if err:
+                null_errors += 1
+                continue
             null_scores.append(max_any)
+    if null_errors:
+        print(f"!! {null_errors} null files FAILED (excluded)")
     null_scores = np.array(null_scores)
 
     # per-event table
     print("\n" + "=" * 74)
     print("PER-EVENT best near-truth track score")
-    print(f"{'event':<26}{'station':<8}{'score':>7}{'dist_km':>9}")
+    print(f"{'event':<26}{'station':<8}{'score':>7}{'dist_km':>9}{'nearest_any':>13}")
     ev_scores = []
     for name in sorted(best_per_event):
         sc, dist, st = best_per_event[name]
         ev_scores.append(sc)
         ds = f"{dist:.1f}" if dist is not None else "  -"
-        print(f"{name:<26}{st:<8}{sc:>7.3f}{ds:>9}")
+        md = min_dist_event.get(name)
+        ms = f"{md:.1f}" if md is not None else "  -"
+        print(f"{name:<26}{st:<8}{sc:>7.3f}{ds:>9}{ms:>13}")
     ev_scores = np.array(ev_scores)
 
     # threshold sweep

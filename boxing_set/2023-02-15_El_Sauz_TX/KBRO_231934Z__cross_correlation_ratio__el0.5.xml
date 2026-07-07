@@ -1,0 +1,20 @@
+<annotation>
+  <folder>2023-02-15_El_Sauz_TX</folder>
+  <filename>KBRO_231934Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>236</xmin><ymin>506</ymin><xmax>438</xmax><ymax>940</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>410</xmin><ymin>391</ymin><xmax>721</xmax><ymax>671</ymax></bndbox>
+  </object>
+</annotation>

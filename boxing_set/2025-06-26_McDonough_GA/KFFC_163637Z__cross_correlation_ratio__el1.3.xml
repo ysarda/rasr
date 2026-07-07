@@ -1,0 +1,27 @@
+<annotation>
+  <folder>2025-06-26_McDonough_GA</folder>
+  <filename>KFFC_163637Z__cross_correlation_ratio__el1.3.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>824</xmin><ymin>777</ymin><xmax>927</xmax><ymax>900</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>823</xmin><ymin>753</ymin><xmax>863</xmax><ymax>787</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>770</xmin><ymin>785</ymin><xmax>902</xmax><ymax>899</ymax></bndbox>
+  </object>
+</annotation>

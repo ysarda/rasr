@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2022-09-26_Junction_City_GA</folder>
+  <filename>KFFC_040324Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>670</xmin><ymin>879</ymin><xmax>880</xmax><ymax>1290</ymax></bndbox>
+  </object>
+</annotation>

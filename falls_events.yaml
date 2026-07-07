@@ -42,9 +42,9 @@ events:
       latitude: 36.470542
       longitude: -93.901816
     radar_stations:
-      - KEAX
+      - KSGF  # Springfield, MO (~95 km; KEAX was mis-assigned at 262 km, beyond usable range)
     radar_details:
-      - station: KEAX
+      - station: KSGF
         sweep_time: "01:34:00"
     notes: "Flat-trajectory, long-lasting fireball over northern Arkansas. Small radar signature detected. Ground track azimuth 300° (NW). AMS Event #4996 of 2025."
     source_url: "https://ares.jsc.nasa.gov/meteorite-falls/events/gateway-ar"

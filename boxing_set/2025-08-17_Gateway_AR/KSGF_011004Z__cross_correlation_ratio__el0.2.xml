@@ -1,0 +1,20 @@
+<annotation>
+  <folder>2025-08-17_Gateway_AR</folder>
+  <filename>KSGF_011004Z__cross_correlation_ratio__el0.2.png</filename>
+  <size><width>1000</width><height>1000</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>363</xmin><ymin>446</ymin><xmax>449</xmax><ymax>687</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>389</xmin><ymin>564</ymin><xmax>483</xmax><ymax>718</ymax></bndbox>
+  </object>
+</annotation>

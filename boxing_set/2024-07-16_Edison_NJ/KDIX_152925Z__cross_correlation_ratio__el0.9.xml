@@ -1,0 +1,34 @@
+<annotation>
+  <folder>2024-07-16_Edison_NJ</folder>
+  <filename>KDIX_152925Z__cross_correlation_ratio__el0.9.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>653</xmin><ymin>585</ymin><xmax>896</xmax><ymax>927</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>610</xmin><ymin>576</ymin><xmax>851</xmax><ymax>866</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>665</xmin><ymin>602</ymin><xmax>900</xmax><ymax>1070</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>626</xmin><ymin>622</ymin><xmax>705</xmax><ymax>786</ymax></bndbox>
+  </object>
+</annotation>

@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2025-08-17_Gateway_AR</folder>
+  <filename>KSGF_011004Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1000</width><height>1000</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>384</xmin><ymin>425</ymin><xmax>516</xmax><ymax>559</ymax></bndbox>
+  </object>
+</annotation>

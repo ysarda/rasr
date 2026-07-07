@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2022-11-19_Lake_Ontario_WJ1</folder>
+  <filename>KBUF_083545Z__cross_correlation_ratio__el1.3.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>323</xmin><ymin>664</ymin><xmax>711</xmax><ymax>944</ymax></bndbox>
+  </object>
+</annotation>

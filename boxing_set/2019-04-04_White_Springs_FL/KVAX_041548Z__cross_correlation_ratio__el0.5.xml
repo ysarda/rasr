@@ -1,0 +1,20 @@
+<annotation>
+  <folder>2019-04-04_White_Springs_FL</folder>
+  <filename>KVAX_041548Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>755</xmin><ymin>694</ymin><xmax>1289</xmax><ymax>1235</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>885</xmin><ymin>945</ymin><xmax>1131</xmax><ymax>1206</ymax></bndbox>
+  </object>
+</annotation>

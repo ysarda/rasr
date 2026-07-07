@@ -34,6 +34,7 @@ FN_RE = re.compile(r"(\w{4})(\d{8})_(\d{6})")
 FEATURES = [
     'n_elev', 'n_gates', 'gates_per_beam', 'beam_extent_km',
     'alt_span_m', 'alt_max_m', 'alt_min_m', 'monotonicity', 'non_met',
+    'frac_isolated',
     'rho_min', 'rho_mean', 'range_alt_corr', 'range_span_km', 'horiz_disp_km',
     'vmean_abs', 'vmax_abs', 'frac_inbound', 'vel_std', 'n_with_vel',
     'refl_mean', 'refl_max', 'coherence_score',

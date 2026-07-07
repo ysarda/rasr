@@ -1,0 +1,20 @@
+<annotation>
+  <folder>2012-08-22_Battle_Mountain_NV</folder>
+  <filename>KLRX_062145Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>599</xmin><ymin>866</ymin><xmax>842</xmax><ymax>1199</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>533</xmin><ymin>423</ymin><xmax>1036</xmax><ymax>876</ymax></bndbox>
+  </object>
+</annotation>

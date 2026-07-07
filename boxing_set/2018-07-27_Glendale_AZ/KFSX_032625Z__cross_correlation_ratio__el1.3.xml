@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2018-07-27_Glendale_AZ</folder>
+  <filename>KFSX_032625Z__cross_correlation_ratio__el1.3.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>505</xmin><ymin>1004</ymin><xmax>580</xmax><ymax>1070</ymax></bndbox>
+  </object>
+</annotation>

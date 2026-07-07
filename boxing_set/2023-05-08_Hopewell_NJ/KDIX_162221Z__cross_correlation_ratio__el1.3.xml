@@ -1,0 +1,20 @@
+<annotation>
+  <folder>2023-05-08_Hopewell_NJ</folder>
+  <filename>KDIX_162221Z__cross_correlation_ratio__el1.3.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>697</xmin><ymin>686</ymin><xmax>790</xmax><ymax>783</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>643</xmin><ymin>673</ymin><xmax>693</xmax><ymax>755</ymax></bndbox>
+  </object>
+</annotation>

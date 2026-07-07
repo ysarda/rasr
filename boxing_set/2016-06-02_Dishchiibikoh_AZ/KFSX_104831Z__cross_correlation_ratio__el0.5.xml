@@ -1,0 +1,20 @@
+<annotation>
+  <folder>2016-06-02_Dishchiibikoh_AZ</folder>
+  <filename>KFSX_104831Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>931</xmin><ymin>1033</ymin><xmax>964</xmax><ymax>1082</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>835</xmin><ymin>984</ymin><xmax>925</xmax><ymax>1099</ymax></bndbox>
+  </object>
+</annotation>

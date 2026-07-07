@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2024-03-08_ISS_EP9_Pallet</folder>
+  <filename>KAMX_110737Z__cross_correlation_ratio__el1.3.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>338</xmin><ymin>596</ymin><xmax>350</xmax><ymax>608</ymax></bndbox>
+  </object>
+</annotation>

@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2026-06-20_Cockburn_Island_ON</folder>
+  <filename>KAPX_001534Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>1148</xmin><ymin>419</ymin><xmax>1172</xmax><ymax>443</ymax></bndbox>
+  </object>
+</annotation>

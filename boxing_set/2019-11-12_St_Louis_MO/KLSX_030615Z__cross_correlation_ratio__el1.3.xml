@@ -1,0 +1,20 @@
+<annotation>
+  <folder>2019-11-12_St_Louis_MO</folder>
+  <filename>KLSX_030615Z__cross_correlation_ratio__el1.3.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>627</xmin><ymin>611</ymin><xmax>868</xmax><ymax>925</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>554</xmin><ymin>834</ymin><xmax>566</xmax><ymax>846</ymax></bndbox>
+  </object>
+</annotation>

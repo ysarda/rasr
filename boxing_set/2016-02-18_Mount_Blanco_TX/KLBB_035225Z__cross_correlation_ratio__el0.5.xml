@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2016-02-18_Mount_Blanco_TX</folder>
+  <filename>KLBB_035225Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>678</xmin><ymin>746</ymin><xmax>1139</xmax><ymax>1229</ymax></bndbox>
+  </object>
+</annotation>

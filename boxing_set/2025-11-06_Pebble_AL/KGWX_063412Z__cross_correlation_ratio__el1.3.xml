@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2025-11-06_Pebble_AL</folder>
+  <filename>KGWX_063412Z__cross_correlation_ratio__el1.3.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>747</xmin><ymin>733</ymin><xmax>867</xmax><ymax>854</ymax></bndbox>
+  </object>
+</annotation>

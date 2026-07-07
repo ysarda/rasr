@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2023-04-27_Colorado_Debris</folder>
+  <filename>KPUX_084437Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>835</xmin><ymin>529</ymin><xmax>1017</xmax><ymax>743</ymax></bndbox>
+  </object>
+</annotation>

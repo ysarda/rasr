@@ -10,8 +10,11 @@ sibling track of the same event).
 """
 
 import argparse
+import csv
+import os
 
 import numpy as np
+import yaml
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.inspection import permutation_importance
 from sklearn.model_selection import GroupKFold
@@ -20,18 +23,42 @@ from sklearn.metrics import (average_precision_score, roc_auc_score,
 from sklearn.utils.class_weight import compute_sample_weight
 
 
-def load(path, max_pos_dist=None):
-    """Load the regions .npz. If max_pos_dist is set, positive regions farther
-    than that from the event truth are dropped (cleaner positive labels)."""
-    d = np.load(path, allow_pickle=True)
-    X = d['X_feat'].astype(float)
-    y = d['y'].astype(int)
-    groups = d['groups']
-    dist = d['dist'].astype(float)
-    feat_names = list(d['feat_names'])
+def _load_csv(path):
+    """Load a tracks CSV from extract_tracks.py."""
+    meta = {'label', 'group', 'station', 'file', 'dist_km'}
+    with open(path, newline='') as f:
+        rows = list(csv.DictReader(f))
+    feat_names = [c for c in rows[0] if c not in meta]
+    X = np.array([[float(r[c]) for c in feat_names] for r in rows])
+    y = np.array([int(r['label']) for r in rows])
+    groups = np.array([r['group'] for r in rows])
+    dist = np.array([float(r['dist_km']) if r['dist_km'] else np.nan for r in rows])
+    return X, y, groups, dist, feat_names
+
+
+def load(path, max_pos_dist=None, drop=()):
+    """Load regions .npz or tracks .csv. If max_pos_dist is set, positive rows
+    farther than that from the event truth are dropped (cleaner positive labels).
+    `drop` removes named features (e.g. leaky absolute geometry)."""
+    if str(path).endswith('.csv'):
+        X, y, groups, dist, feat_names = _load_csv(path)
+    else:
+        d = np.load(path, allow_pickle=True)
+        X = d['X_feat'].astype(float)
+        y = d['y'].astype(int)
+        groups = d['groups']
+        dist = d['dist'].astype(float)
+        feat_names = list(d['feat_names'])
     if max_pos_dist is not None:
         keep = ~((y == 1) & (dist > max_pos_dist))
         X, y, groups, dist = X[keep], y[keep], groups[keep], dist[keep]
+    if drop:
+        idx = [i for i, n in enumerate(feat_names) if n not in drop]
+        missing = set(drop) - set(feat_names)
+        if missing:
+            raise SystemExit(f"--drop names not in features: {sorted(missing)}")
+        X = X[:, idx]
+        feat_names = [feat_names[i] for i in idx]
     return X, y, groups, feat_names
 
 
@@ -47,9 +74,25 @@ def main():
     ap.add_argument('--folds', type=int, default=5)
     ap.add_argument('--max_pos_dist', type=float, default=None,
                     help='Drop positive regions farther than this (km) from truth')
+    ap.add_argument('--drop', default='',
+                    help='Comma-separated feature names to exclude (e.g. leaky '
+                         'absolute geometry: alt_max_m,alt_min_m)')
+    ap.add_argument('--holdout', default='holdout_events.yaml',
+                    help='Locked holdout file; its events are excluded entirely. '
+                         'Pass an empty string to disable (final frozen eval only).')
     args = ap.parse_args()
 
-    X, y, groups, feats = load(args.data, args.max_pos_dist)
+    drop = tuple(s for s in args.drop.split(',') if s)
+    X, y, groups, feats = load(args.data, args.max_pos_dist, drop)
+
+    if args.holdout and os.path.exists(args.holdout):
+        h = yaml.safe_load(open(args.holdout))
+        held = {n for lst in h['strata'].values() for n in lst}
+        keep = ~np.isin(groups, sorted(held))
+        n_removed = int((~keep).sum())
+        X, y, groups = X[keep], y[keep], groups[keep]
+        print(f"Holdout ({args.holdout}): excluded {len(held)} events, "
+              f"{n_removed} tracks")
     n_pos = int(y.sum())
     pos_groups = sorted(set(groups[y == 1]))
     print(f"Loaded {len(y)} regions: {n_pos} positive ({len(pos_groups)} events), "

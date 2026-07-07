@@ -1,0 +1,27 @@
+<annotation>
+  <folder>2018-01-17_Hamburg_MI</folder>
+  <filename>KDTX_014909Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>741</xmin><ymin>875</ymin><xmax>755</xmax><ymax>888</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>705</xmin><ymin>880</ymin><xmax>717</xmax><ymax>893</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>684</xmin><ymin>849</ymin><xmax>699</xmax><ymax>863</ymax></bndbox>
+  </object>
+</annotation>

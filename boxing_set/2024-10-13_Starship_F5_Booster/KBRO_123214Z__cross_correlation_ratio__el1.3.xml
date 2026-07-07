@@ -1,0 +1,20 @@
+<annotation>
+  <folder>2024-10-13_Starship_F5_Booster</folder>
+  <filename>KBRO_123214Z__cross_correlation_ratio__el1.3.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>722</xmin><ymin>726</ymin><xmax>891</xmax><ymax>853</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>883</xmin><ymin>792</ymin><xmax>895</xmax><ymax>804</ymax></bndbox>
+  </object>
+</annotation>

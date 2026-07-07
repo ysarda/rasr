@@ -1,0 +1,20 @@
+<annotation>
+  <folder>2023-01-20_Muskogee_OK</folder>
+  <filename>KINX_092832Z__cross_correlation_ratio__el0.9.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>728</xmin><ymin>669</ymin><xmax>1016</xmax><ymax>991</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>862</xmin><ymin>932</ymin><xmax>937</xmax><ymax>1015</ymax></bndbox>
+  </object>
+</annotation>

@@ -1,0 +1,29 @@
+# Locked evaluation holdout — DO NOT use these events for training, feature
+# design, threshold tuning, or any pipeline decision. Evaluate against them only
+# when the pipeline is frozen, and record every such evaluation below.
+#
+# Selection (2026-07-06): seeded stratified draw (seed 0) over the 40 events with
+# clean (<=5 km) positive tracks. Strata measured from data (median near-truth
+# track size in tracks.csv) + event type; constraint: >=3 events from 2025+.
+# Caveat: all events were visible during pipeline design up to 2026-07-06, so
+# this holdout guards FUTURE tuning; it is not pristine for decisions before then.
+
+strata:
+  aso:        # anthropogenic re-entry / debris (7 total, 2 held out)
+    - "Crew-7 Trunk"          # 2024-05-22, compact-ish (med 179 gates)
+    - "Hanford CA Debris"     # 2018-10-11, dense scene (med 24k gates)
+  compact:    # point-target falls, median track < 700 gates (10 total, 3 held out)
+    - "Cockburn Island ON"    # 2026-06-20
+    - "El Sauz TX"            # 2023-02-15
+    - "Whitefish Lake AK"     # 2025-04-24
+  dense:      # fragment-cloud / dense-scene falls (23 total, 5 held out)
+    - "Amo IN"                # 2024-12-10
+    - "Gateway AR"            # 2025-08-17
+    - "Junction City GA"      # 2022-09-26
+    - "Pebble AL"             # 2025-11-06
+    - "White Springs FL"      # 2019-04-04
+
+# Null data: no reserved null scans needed — sample FRESH null files (never used
+# in any tracks.csv extraction) for the negative side of a final evaluation.
+
+evaluations: []   # append {date, pipeline_commit, roc, pr_auc, notes} per eval

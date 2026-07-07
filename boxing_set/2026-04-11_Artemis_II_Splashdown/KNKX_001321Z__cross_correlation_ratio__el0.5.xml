@@ -1,0 +1,20 @@
+<annotation>
+  <folder>2026-04-11_Artemis_II_Splashdown</folder>
+  <filename>KNKX_001321Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>609</xmin><ymin>945</ymin><xmax>621</xmax><ymax>957</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>595</xmin><ymin>1014</ymin><xmax>636</xmax><ymax>1050</ymax></bndbox>
+  </object>
+</annotation>

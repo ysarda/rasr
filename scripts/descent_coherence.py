@@ -157,6 +157,7 @@ def score_track(track):
     mono = max(0.0, mono)
 
     non_met = float(np.mean(1.0 - rhos))            # higher = more non-met
+    frac_isolated = float(np.mean([bool(d.get('isolated')) for d in track]))
 
     # velocity coherence: some real radial motion, not a stationary smear
     if vels:
@@ -224,6 +225,7 @@ def score_track(track):
         'alt_min_m': float(alts.min()),
         'monotonicity': mono,
         'non_met': non_met,
+        'frac_isolated': frac_isolated,
         'rho_min': float(rhos.min()),
         'rho_mean': float(rhos.mean()),
         'range_alt_corr': range_alt_corr,

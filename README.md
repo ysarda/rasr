@@ -270,8 +270,11 @@ Per-gate, per-sweep, on real pyART-decoded moments (`signature_detector.py`):
   Rain/snow/hail are clouds of similar hydrometeors (ρhv > 0.97); metal, parachute
   fabric, ablating rock and debris are irregular (ρhv ≈ 0.2–0.7). Gates with
   ρhv ≥ 0.85 are discarded, removing ~99% of weather.
-- **Spatial isolation** — a re-entering object is a point source: its reflectivity
-  must exceed its neighbours by > 8 dBZ. Relaxed when ρhv strongly confirms non-met.
+- **Spatial isolation (feature, not a gate)** — a single intact body is a
+  sub-resolution point source (reflectivity > 8 dBZ above neighbours), but real
+  fall signatures are usually fragment clouds spanning many gates. Isolation is
+  recorded per gate and passed downstream as classifier evidence rather than
+  used as a veto.
 - **Split-cut pairing & geometry** — ρhv lives in the surveillance sweep, velocity in
   the Doppler sweep; they are paired by elevation. Gates are converted to
   lat/lon/**altitude** with the 4/3-earth beam model, then classified kinematically

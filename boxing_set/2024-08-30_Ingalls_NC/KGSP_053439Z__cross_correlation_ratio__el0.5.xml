@@ -1,0 +1,27 @@
+<annotation>
+  <folder>2024-08-30_Ingalls_NC</folder>
+  <filename>KGSP_053439Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>841</xmin><ymin>449</ymin><xmax>859</xmax><ymax>464</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>881</xmin><ymin>451</ymin><xmax>894</xmax><ymax>466</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>885</xmin><ymin>410</ymin><xmax>897</xmax><ymax>422</ymax></bndbox>
+  </object>
+</annotation>

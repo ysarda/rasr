@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2023-04-08_Waite_ME</folder>
+  <filename>KCBW_155821Z__cross_correlation_ratio__el1.3.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>885</xmin><ymin>1031</ymin><xmax>897</xmax><ymax>1043</ymax></bndbox>
+  </object>
+</annotation>

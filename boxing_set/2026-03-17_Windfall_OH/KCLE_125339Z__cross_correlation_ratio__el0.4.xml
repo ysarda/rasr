@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2026-03-17_Windfall_OH</folder>
+  <filename>KCLE_125339Z__cross_correlation_ratio__el0.4.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>603</xmin><ymin>894</ymin><xmax>785</xmax><ymax>1139</ymax></bndbox>
+  </object>
+</annotation>

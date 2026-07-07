@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2022-01-20_Patch_Grove_WI</folder>
+  <filename>KARX_124647Z__cross_correlation_ratio__el2.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>838</xmin><ymin>1102</ymin><xmax>852</xmax><ymax>1117</ymax></bndbox>
+  </object>
+</annotation>

@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2021-03-26_Yakima_WA_Debris</folder>
+  <filename>KPDT_040036Z__cross_correlation_ratio__el2.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>506</xmin><ymin>428</ymin><xmax>523</xmax><ymax>446</ymax></bndbox>
+  </object>
+</annotation>

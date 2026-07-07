@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2023-11-23_Gunsight_Butte_AZ</folder>
+  <filename>KFSX_025617Z__cross_correlation_ratio__el-0.2.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>1049</xmin><ymin>462</ymin><xmax>1188</xmax><ymax>636</ymax></bndbox>
+  </object>
+</annotation>

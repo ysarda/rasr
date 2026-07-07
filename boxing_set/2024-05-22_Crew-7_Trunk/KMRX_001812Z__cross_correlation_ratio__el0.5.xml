@@ -1,0 +1,27 @@
+<annotation>
+  <folder>2024-05-22_Crew-7_Trunk</folder>
+  <filename>KMRX_001812Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>947</xmin><ymin>1059</ymin><xmax>987</xmax><ymax>1095</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>883</xmin><ymin>772</ymin><xmax>1080</xmax><ymax>1032</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>926</xmin><ymin>942</ymin><xmax>970</xmax><ymax>986</ymax></bndbox>
+  </object>
+</annotation>

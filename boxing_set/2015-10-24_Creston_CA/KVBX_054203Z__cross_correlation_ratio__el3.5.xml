@@ -1,0 +1,27 @@
+<annotation>
+  <folder>2015-10-24_Creston_CA</folder>
+  <filename>KVBX_054203Z__cross_correlation_ratio__el3.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>709</xmin><ymin>625</ymin><xmax>865</xmax><ymax>882</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>673</xmin><ymin>633</ymin><xmax>783</xmax><ymax>768</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>664</xmin><ymin>575</ymin><xmax>755</xmax><ymax>697</ymax></bndbox>
+  </object>
+</annotation>

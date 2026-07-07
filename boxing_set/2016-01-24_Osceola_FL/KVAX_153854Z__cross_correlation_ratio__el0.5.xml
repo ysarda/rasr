@@ -1,0 +1,20 @@
+<annotation>
+  <folder>2016-01-24_Osceola_FL</folder>
+  <filename>KVAX_153854Z__cross_correlation_ratio__el0.5.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>989</xmin><ymin>957</ymin><xmax>1001</xmax><ymax>969</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>872</xmin><ymin>870</ymin><xmax>929</xmax><ymax>970</ymax></bndbox>
+  </object>
+</annotation>

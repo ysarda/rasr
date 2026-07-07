@@ -1,0 +1,13 @@
+<annotation>
+  <folder>2025-02-21_Codyville_ME</folder>
+  <filename>KCBW_010213Z__cross_correlation_ratio__el1.8.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>749</xmin><ymin>782</ymin><xmax>913</xmax><ymax>952</ymax></bndbox>
+  </object>
+</annotation>

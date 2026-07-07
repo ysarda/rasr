@@ -1,0 +1,27 @@
+<annotation>
+  <folder>2018-10-11_Hanford_CA_Debris</folder>
+  <filename>KHNX_082431Z__cross_correlation_ratio__el1.8.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>757</xmin><ymin>517</ymin><xmax>1083</xmax><ymax>942</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>691</xmin><ymin>520</ymin><xmax>982</xmax><ymax>855</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>724</xmin><ymin>617</ymin><xmax>821</xmax><ymax>779</ymax></bndbox>
+  </object>
+</annotation>

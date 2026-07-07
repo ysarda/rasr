@@ -1,0 +1,20 @@
+<annotation>
+  <folder>2024-12-02_Pontiac_KS</folder>
+  <filename>KICT_191006Z__cross_correlation_ratio__el1.3.png</filename>
+  <size><width>1600</width><height>1600</height><depth>3</depth></size>
+  <segmented>0</segmented>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>771</xmin><ymin>666</ymin><xmax>970</xmax><ymax>980</ymax></bndbox>
+  </object>
+  <object>
+    <name>fall</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox><xmin>846</xmin><ymin>848</ymin><xmax>997</xmax><ymax>949</ymax></bndbox>
+  </object>
+</annotation>

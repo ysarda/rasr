@@ -8,10 +8,14 @@ results). The detector is a classical two-stage filter + kinematic classifier:
   Stage 1 - rho_hv gate: weather (rain/snow) has correlation coefficient
             rho_hv > ~0.97; metal / parachute / debris is 0.2-0.6. Gates with
             rho_hv >= rho_max are rejected as meteorological.
-  Stage 2 - spatial isolation: a re-entering object is a point source - its
-            reflectivity must exceed neighbouring gates by > iso_db, with few
-            valid neighbours. If rho_hv strongly confirms non-met (< rho_strict)
-            the isolation requirement is relaxed (a large body fills gates).
+  Spatial isolation (feature, not a gate): whether reflectivity exceeds all
+            neighbouring gates by > iso_db with few valid neighbours. A single
+            intact body is a sub-resolution point target (isolated); but real
+            fall signatures are usually fragment CLOUDS spanning many gates, so
+            isolation is recorded per gate and passed downstream as evidence
+            rather than used as a veto. (Measured on the 46-event truth set:
+            requiring isolation dropped 39% of truth-adjacent candidates and
+            uniquely kept <0.1%.)
 
 NEXRAD low tilts are split cuts: rho_hv lives in the surveillance sweep, radial
 velocity in the paired Doppler sweep. We detect on the surveillance sweep and
@@ -134,9 +138,14 @@ def _velocity_lookup(radar, dop_sweep, az_deg, gate_idx):
     return float(v)
 
 
-def detect_file(path, rho_max=0.85, rho_strict=0.7, iso_db=8.0,
-                refl_min=5.0, refl_max=65.0, rng_min_km=5.0, rng_max_km=200.0,
+def detect_file(path, rho_max=0.85, iso_db=8.0,
+                refl_min=-10.0, refl_max=65.0, rng_min_km=5.0, rng_max_km=300.0,
                 max_targets=30):
+    # refl_min -10 (was 5): confirmed falls are often weak echoes -- Hamburg MI,
+    # Dishchiibikoh AZ and Patch Grove WI signatures near truth are ALL below
+    # 5 dBZ (down to -6) with rho_hv 0.2-0.3; the 5 dBZ floor hid those events.
+    # rng_max 300 (was 200): La Petite Belgique QC sits 216 km from the nearest
+    # radar (KCXX); dual-pol moments extend to ~300 km.
     """Run the signature detector on one NEXRAD file. Returns list of detections."""
     radar = pyart.io.read(str(path))
     lat0 = float(radar.latitude['data'][0])
@@ -202,10 +211,8 @@ def detect_file(path, rho_max=0.85, rho_strict=0.7, iso_db=8.0,
         n_valid_nb = nb_vmask.sum(axis=0)
 
         isolated = ((rf - max_nb) > iso_db) & (n_valid_nb < 3)
-        rho_confirmed = rho_f < rho_strict
-        keep = cand & (isolated | rho_confirmed)
 
-        idx = np.argwhere(keep)
+        idx = np.argwhere(cand)
         for (ri, gi) in idx:
             a = float(az[ri])
             slant = float(rng_m[gi])
@@ -220,6 +227,7 @@ def detect_file(path, rho_max=0.85, rho_strict=0.7, iso_db=8.0,
                 'reflectivity': float(rf[ri, gi]),
                 'velocity': vel,
                 'rhohv': float(rho_f[ri, gi]),
+                'isolated': bool(isolated[ri, gi]),
                 'objectClass': cls, 'confidence': conf,
             })
 
